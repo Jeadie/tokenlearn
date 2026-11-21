@@ -19,6 +19,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from common import EXPERIMENT_DIR
+from featurize_texts import output_dir
 from make_spicepods import Model, models, render
 from run_benchmarks import Job, run_job, sha256
 from sweep_finetune import SWEEP_MODELS_DIR
@@ -54,6 +55,15 @@ class TrainSpec:
         extras = "".join(f"+{e}" for e in sorted(self.extras))
         full = f"-full{self.full_epochs}" if self.full_epochs else ""
         return f"sw-{self.base}{scale}-{self.target}-{self.dataset}{extras}-lr{self.lr:g}{full}-s{self.seed}"
+
+    def data_ready(self) -> bool:
+        """True when every featurized dataset this run reads exists."""
+        sources = ("corpus", *self.extras)
+        return all(output_dir(self.dataset, source, self.target).is_dir() for source in sources) and all(
+            (output_dir(self.dataset, source, self.target) / "featurize_info.json").exists()
+            for source in sources
+            if (source, self.target) != ("corpus", "mean")
+        )
 
     def command(self, threads: int) -> list[str]:
         """The sweep_finetune.py command line."""
@@ -225,8 +235,10 @@ async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
     free_slots = list(range(args.search_workers))
     failures = 0
     while train_queue or search_queue or training or searching:
-        while train_queue and len(training) < args.train_workers:
-            train_spec = train_queue.pop(0)
+        for train_spec in [t for t in train_queue if t.data_ready()]:
+            if len(training) >= args.train_workers:
+                break
+            train_queue.remove(train_spec)
             training[asyncio.create_task(train(train_spec, args.threads))] = train_spec
         search_queue = [s for s in search_queue if s.model not in failed_models]
         for search_spec in [s for s in search_queue if ready(s)]:
@@ -236,6 +248,10 @@ async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
             slot = free_slots.pop(0)
             searching[asyncio.create_task(search(search_spec, slot, args, sha, version))] = (search_spec, slot)
         pending = list(training) + list(searching)
+        if not pending and train_queue:
+            # Featurized data for the remaining runs is still being made.
+            await asyncio.sleep(POLL_SECONDS * 12)
+            continue
         if not pending:
             if search_queue:
                 failures += len(search_queue)

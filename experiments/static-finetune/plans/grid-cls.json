@@ -6,36 +6,6 @@
       "dataset": "scifact",
       "lr": 0.001,
       "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "scifact",
-      "lr": 0.01,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "scifact",
-      "lr": 0.03,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "scifact",
-      "lr": 0.001,
-      "seed": 42,
       "scale": 10.5,
       "target": "cls",
       "extras": [],
@@ -55,6 +25,16 @@
       "base": "potion",
       "dataset": "scifact",
       "lr": 0.03,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "scifact",
+      "lr": 0.1,
       "seed": 42,
       "scale": 10.5,
       "target": "cls",
@@ -92,30 +72,10 @@
       "full_epochs": null
     },
     {
-      "base": "potion",
+      "base": "distill",
       "dataset": "scifact",
-      "lr": 0.001,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "scifact",
-      "lr": 0.01,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "scifact",
-      "lr": 0.03,
-      "seed": 43,
+      "lr": 0.1,
+      "seed": 42,
       "scale": 1.0,
       "target": "cls",
       "extras": [],
@@ -152,6 +112,16 @@
       "full_epochs": null
     },
     {
+      "base": "potion",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
       "base": "distill",
       "dataset": "scifact",
       "lr": 0.001,
@@ -175,6 +145,176 @@
       "base": "distill",
       "dataset": "scifact",
       "lr": 0.03,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.001,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.01,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.1,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.001,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.01,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.1,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.001,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.01,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.1,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.001,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.01,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "nfcorpus",
+      "lr": 0.1,
       "seed": 43,
       "scale": 1.0,
       "target": "cls",
@@ -186,36 +326,6 @@
       "dataset": "fiqa",
       "lr": 0.001,
       "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "fiqa",
-      "lr": 0.01,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "fiqa",
-      "lr": 0.03,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "fiqa",
-      "lr": 0.001,
-      "seed": 42,
       "scale": 10.5,
       "target": "cls",
       "extras": [],
@@ -235,6 +345,16 @@
       "base": "potion",
       "dataset": "fiqa",
       "lr": 0.03,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "cls",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "potion",
+      "dataset": "fiqa",
+      "lr": 0.1,
       "seed": 42,
       "scale": 10.5,
       "target": "cls",
@@ -272,180 +392,10 @@
       "full_epochs": null
     },
     {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
-      "seed": 42,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 42,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 42,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
       "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
+      "dataset": "fiqa",
+      "lr": 0.1,
       "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 42,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
-      "seed": 43,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 43,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "potion",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 43,
-      "scale": 10.5,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.001,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.01,
-      "seed": 43,
-      "scale": 1.0,
-      "target": "cls",
-      "extras": [],
-      "full_epochs": null
-    },
-    {
-      "base": "distill",
-      "dataset": "nfcorpus",
-      "lr": 0.03,
-      "seed": 43,
       "scale": 1.0,
       "target": "cls",
       "extras": [],
@@ -453,21 +403,6 @@
     }
   ],
   "search": [
-    {
-      "model": "sw-potion-cls-scifact-lr0.001-s42",
-      "eval_dataset": "scifact",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-scifact-lr0.01-s42",
-      "eval_dataset": "scifact",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-scifact-lr0.03-s42",
-      "eval_dataset": "scifact",
-      "split": "dev"
-    },
     {
       "model": "sw-potion-x10.5-cls-scifact-lr0.001-s42",
       "eval_dataset": "scifact",
@@ -480,6 +415,11 @@
     },
     {
       "model": "sw-potion-x10.5-cls-scifact-lr0.03-s42",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-scifact-lr0.1-s42",
       "eval_dataset": "scifact",
       "split": "dev"
     },
@@ -499,17 +439,7 @@
       "split": "dev"
     },
     {
-      "model": "sw-potion-cls-scifact-lr0.001-s43",
-      "eval_dataset": "scifact",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-scifact-lr0.01-s43",
-      "eval_dataset": "scifact",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-scifact-lr0.03-s43",
+      "model": "sw-distill-cls-scifact-lr0.1-s42",
       "eval_dataset": "scifact",
       "split": "dev"
     },
@@ -529,6 +459,11 @@
       "split": "dev"
     },
     {
+      "model": "sw-potion-x10.5-cls-scifact-lr0.1-s43",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
       "model": "sw-distill-cls-scifact-lr0.001-s43",
       "eval_dataset": "scifact",
       "split": "dev"
@@ -544,63 +479,8 @@
       "split": "dev"
     },
     {
-      "model": "sw-potion-cls-fiqa-lr0.001-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-fiqa-lr0.01-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-fiqa-lr0.03-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-x10.5-cls-fiqa-lr0.001-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-x10.5-cls-fiqa-lr0.01-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-x10.5-cls-fiqa-lr0.03-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-distill-cls-fiqa-lr0.001-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-distill-cls-fiqa-lr0.01-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-distill-cls-fiqa-lr0.03-s42",
-      "eval_dataset": "fiqa",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-nfcorpus-lr0.001-s42",
-      "eval_dataset": "nfcorpus",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-nfcorpus-lr0.01-s42",
-      "eval_dataset": "nfcorpus",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-nfcorpus-lr0.03-s42",
-      "eval_dataset": "nfcorpus",
+      "model": "sw-distill-cls-scifact-lr0.1-s43",
+      "eval_dataset": "scifact",
       "split": "dev"
     },
     {
@@ -615,6 +495,11 @@
     },
     {
       "model": "sw-potion-x10.5-cls-nfcorpus-lr0.03-s42",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-nfcorpus-lr0.1-s42",
       "eval_dataset": "nfcorpus",
       "split": "dev"
     },
@@ -634,17 +519,7 @@
       "split": "dev"
     },
     {
-      "model": "sw-potion-cls-nfcorpus-lr0.001-s43",
-      "eval_dataset": "nfcorpus",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-nfcorpus-lr0.01-s43",
-      "eval_dataset": "nfcorpus",
-      "split": "dev"
-    },
-    {
-      "model": "sw-potion-cls-nfcorpus-lr0.03-s43",
+      "model": "sw-distill-cls-nfcorpus-lr0.1-s42",
       "eval_dataset": "nfcorpus",
       "split": "dev"
     },
@@ -664,6 +539,11 @@
       "split": "dev"
     },
     {
+      "model": "sw-potion-x10.5-cls-nfcorpus-lr0.1-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
       "model": "sw-distill-cls-nfcorpus-lr0.001-s43",
       "eval_dataset": "nfcorpus",
       "split": "dev"
@@ -676,6 +556,51 @@
     {
       "model": "sw-distill-cls-nfcorpus-lr0.03-s43",
       "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-cls-nfcorpus-lr0.1-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-fiqa-lr0.001-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-fiqa-lr0.01-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-fiqa-lr0.03-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-potion-x10.5-cls-fiqa-lr0.1-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-cls-fiqa-lr0.001-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-cls-fiqa-lr0.01-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-cls-fiqa-lr0.03-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-cls-fiqa-lr0.1-s42",
+      "eval_dataset": "fiqa",
       "split": "dev"
     }
   ]

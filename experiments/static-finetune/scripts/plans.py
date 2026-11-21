@@ -24,18 +24,30 @@ STARTS = (("potion", 1.0), ("potion", 10.5), ("distill", 1.0))
 LRS = (1e-3, 1e-2, 3e-2)
 # The SciFact grid was best at its top learning rate (3e-2), so the grid is extended upward.
 HIGH_LRS = (1e-1, 3e-1)
+# The CLS grid: unscaled potion is left out, because on SciFact it scored like potion ÷10.5 at a
+# 10× lower learning rate; 1e-1 is added, the best SciFact learning rate of the mean grid.
+CLS_STARTS = (("potion", 10.5), ("distill", 1.0))
+CLS_LRS = (1e-3, 1e-2, 3e-2, 1e-1)
+# Short SciFact and NFCorpus runs first; FiQA waits for its CLS targets.
+CLS_ORDER = ("scifact", "nfcorpus", "fiqa")
 GRID_SEEDS = {"scifact": (42, 43), "fiqa": (42,), "nfcorpus": (42, 43)}
 # Long FiQA runs before the short NFCorpus runs, so the short ones fill the end.
 GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
 
 
-def grid(target: str, lrs: tuple[float, ...] = LRS, name: str = "") -> Plan:
+def grid(
+    target: str,
+    lrs: tuple[float, ...] = LRS,
+    name: str = "",
+    starts: tuple[tuple[str, float], ...] = STARTS,
+    order: tuple[str, ...] = GRID_ORDER,
+) -> Plan:
     """Every starting model and learning rate on every dataset, scored on dev."""
     train = [
         TrainSpec(base=base, scale=scale, dataset=ds, lr=lr, seed=seed, target=target)
-        for ds in GRID_ORDER
+        for ds in order
         for seed in GRID_SEEDS[ds]
-        for base, scale in STARTS
+        for base, scale in starts
         for lr in lrs
     ]
     search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev") for t in train]
@@ -74,6 +86,8 @@ def main() -> None:
             write(baselines())
         elif name == "grid-mean-hi":
             write(grid("mean", HIGH_LRS, name))
+        elif name == "grid-cls":
+            write(grid("cls", CLS_LRS, name, CLS_STARTS, CLS_ORDER))
         else:
             write(grid(name.removeprefix("grid-")))
 
