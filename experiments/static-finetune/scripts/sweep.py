@@ -15,7 +15,7 @@ import os
 import re
 import subprocess
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from common import EXPERIMENT_DIR
@@ -220,56 +220,80 @@ def ready(spec: SearchSpec) -> bool:
     return not spec.model.startswith("sw-") or (SWEEP_MODELS_DIR / spec.model).is_dir()
 
 
+@dataclass
+class Runner:
+    """The queues and running tasks of one plan."""
+
+    args: argparse.Namespace
+    sha: str
+    version: str
+    train_queue: list[TrainSpec]
+    search_queue: list[SearchSpec]
+    training: dict[asyncio.Task[bool], TrainSpec] = field(default_factory=dict)
+    searching: dict[asyncio.Task[bool], tuple[SearchSpec, int]] = field(default_factory=dict)
+    free_slots: list[int] = field(default_factory=list)
+    failed_models: set[str] = field(default_factory=set)
+    failures: int = 0
+
+    def start_ready(self) -> None:
+        """Start the training and search runs whose inputs exist, up to the worker limits."""
+        for train_spec in [t for t in self.train_queue if t.data_ready()]:
+            if len(self.training) >= self.args.train_workers:
+                break
+            self.train_queue.remove(train_spec)
+            self.training[asyncio.create_task(train(train_spec, self.args.threads))] = train_spec
+        self.search_queue = [s for s in self.search_queue if s.model not in self.failed_models]
+        for search_spec in [s for s in self.search_queue if ready(s)]:
+            if not self.free_slots:
+                break
+            self.search_queue.remove(search_spec)
+            slot = self.free_slots.pop(0)
+            task = asyncio.create_task(search(search_spec, slot, self.args, self.sha, self.version))
+            self.searching[task] = (search_spec, slot)
+
+    def finish(self, task: asyncio.Task[bool]) -> None:
+        """Record one finished task."""
+        if task in self.training:
+            spec = self.training.pop(task)
+            if not task.result():
+                self.failures += 1
+                self.failed_models.add(spec.name)
+        else:
+            _, slot = self.searching.pop(task)
+            self.free_slots.append(slot)
+            self.failures += 0 if task.result() else 1
+
+
 async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
     """Train and search with bounded concurrency; return the number of failures."""
-    sha = sha256(args.testoperator)
-    version = subprocess.run([str(args.spiced), "--version"], capture_output=True, text=True, check=True).stdout.strip()
     done = scored_runs()
-    train_queue = [t for t in plan.train if not (SWEEP_MODELS_DIR / t.name).exists()]
-    search_queue = [s for s in plan.search if (s.run_name, s.eval_dataset) not in done]
-    failed_models: set[str] = set()
-    logger.info(f"plan {plan.name}: {len(train_queue)} to train, {len(search_queue)} to search")
-
-    training: dict[asyncio.Task[bool], TrainSpec] = {}
-    searching: dict[asyncio.Task[bool], tuple[SearchSpec, int]] = {}
-    free_slots = list(range(args.search_workers))
-    failures = 0
-    while train_queue or search_queue or training or searching:
-        for train_spec in [t for t in train_queue if t.data_ready()]:
-            if len(training) >= args.train_workers:
-                break
-            train_queue.remove(train_spec)
-            training[asyncio.create_task(train(train_spec, args.threads))] = train_spec
-        search_queue = [s for s in search_queue if s.model not in failed_models]
-        for search_spec in [s for s in search_queue if ready(s)]:
-            if not free_slots:
-                break
-            search_queue.remove(search_spec)
-            slot = free_slots.pop(0)
-            searching[asyncio.create_task(search(search_spec, slot, args, sha, version))] = (search_spec, slot)
-        pending = list(training) + list(searching)
-        if not pending and train_queue:
+    runner = Runner(
+        args=args,
+        sha=sha256(args.testoperator),
+        version=subprocess.run(
+            [str(args.spiced), "--version"], capture_output=True, text=True, check=True
+        ).stdout.strip(),
+        train_queue=[t for t in plan.train if not (SWEEP_MODELS_DIR / t.name).exists()],
+        search_queue=[s for s in plan.search if (s.run_name, s.eval_dataset) not in done],
+        free_slots=list(range(args.search_workers)),
+    )
+    logger.info(f"plan {plan.name}: {len(runner.train_queue)} to train, {len(runner.search_queue)} to search")
+    while runner.train_queue or runner.search_queue or runner.training or runner.searching:
+        runner.start_ready()
+        pending = list(runner.training) + list(runner.searching)
+        if not pending and runner.train_queue:
             # Featurized data for the remaining runs is still being made.
             await asyncio.sleep(POLL_SECONDS * 12)
             continue
         if not pending:
-            if search_queue:
-                failures += len(search_queue)
-                logger.info(f"no model for: {[s.run_name for s in search_queue]}")
+            runner.failures += len(runner.search_queue)
+            logger.info(f"no model for: {[s.run_name for s in runner.search_queue]}")
             break
         done_tasks, _ = await asyncio.wait(pending, timeout=POLL_SECONDS, return_when=asyncio.FIRST_COMPLETED)
         for task in done_tasks:
-            if task in training:
-                finished = training.pop(task)
-                if not task.result():
-                    failures += 1
-                    failed_models.add(finished.name)
-            else:
-                _, slot = searching.pop(task)
-                free_slots.append(slot)
-                failures += 0 if task.result() else 1
-    logger.info(f"plan {plan.name} finished, {failures} failures")
-    return failures
+            runner.finish(task)
+    logger.info(f"plan {plan.name} finished, {runner.failures} failures")
+    return runner.failures
 
 
 def parse_args() -> argparse.Namespace:

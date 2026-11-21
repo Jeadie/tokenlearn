@@ -17,10 +17,12 @@ Writes FEATURIZED_DIR/<dataset>-<source>-<target> as a datasets directory with `
 
 import json
 import logging
+import multiprocessing
 import random
 import re
 import time
 from argparse import ArgumentParser
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -38,6 +40,9 @@ logger = logging.getLogger(__name__)
 _SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 _MIN_SENTENCE_WORDS = 4
 _SENTENCES_PER_DOC = 2
+# MPS memory grows with every new batch shape and is not given back inside a process, so the
+# CLS target is computed in chunks, each in a new process.
+_CLS_CHUNK = 4096
 
 
 @dataclass
@@ -78,11 +83,34 @@ def load_texts(dataset: str, source: str) -> list[str]:
     return sentences
 
 
-def featurize_cls(texts: list[str], model: SentenceTransformer, out: Path, batch_size: int) -> None:
+def teacher(device: str, max_length: int) -> SentenceTransformer:
+    """The teacher, with its maximum length set."""
+    model = SentenceTransformer(TEACHER, device=device)
+    model.max_seq_length = max_length
+    model.tokenizer.model_max_length = max_length
+    return model
+
+
+def encode_chunk(job: tuple[list[str], int, int]) -> np.ndarray:
+    """Embed one chunk on MPS with the teacher's own pooling (runs in a child process)."""
+    texts, batch_size, max_length = job
+    model = teacher("mps", max_length)
+    return model.encode(texts, batch_size=batch_size, convert_to_numpy=True, show_progress_bar=False)
+
+
+def featurize_cls(texts: list[str], out: Path, batch_size: int, max_length: int) -> None:
     """Embed each text, cut to the teacher's max length, with the teacher's own pooling."""
-    truncated = [_truncate_text(model.tokenizer, t) for t in texts]
-    vectors = model.encode(truncated, batch_size=batch_size, convert_to_numpy=True, show_progress_bar=False)
-    Dataset.from_dict({"text": truncated, "embedding": np.asarray(vectors, dtype=np.float32)}).save_to_disk(str(out))
+    tokenizer = teacher("cpu", max_length).tokenizer
+    truncated = [_truncate_text(tokenizer, t) for t in texts]
+    jobs = [(truncated[i : i + _CLS_CHUNK], batch_size, max_length) for i in range(0, len(truncated), _CLS_CHUNK)]
+    context = multiprocessing.get_context("spawn")
+    chunks = []
+    for job in jobs:
+        # A new executor per chunk: its process exits after the chunk, and frees the MPS memory.
+        with ProcessPoolExecutor(max_workers=1, mp_context=context) as pool:
+            chunks.append(pool.submit(encode_chunk, job).result())
+    vectors = np.concatenate(chunks)
+    Dataset.from_dict({"text": truncated, "embedding": vectors.astype(np.float32)}).save_to_disk(str(out))
 
 
 def main() -> None:
@@ -103,15 +131,12 @@ def main() -> None:
     texts = load_texts(args.dataset, args.source)
     # Longest first: batches of similar length need less padding. Each text is embedded alone.
     texts.sort(key=len, reverse=True)
-    model = SentenceTransformer(TEACHER, device="mps")
-    model.max_seq_length = args.max_length
-    model.tokenizer.model_max_length = args.max_length
     if args.target == "cls":
-        featurize_cls(texts, model, out, args.batch_size)
+        featurize_cls(texts, out, args.batch_size, args.max_length)
     else:
         featurize(
             Dataset.from_dict({"text": texts}),
-            model,
+            teacher("mps", args.max_length),
             str(out),
             max_rows=10_000_000,
             batch_size=1024,
