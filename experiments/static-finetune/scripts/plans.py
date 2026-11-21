@@ -29,6 +29,8 @@ HIGH_LRS = (1e-1, 3e-1)
 # The CLS grid: unscaled potion is left out, because on SciFact it scored like potion ÷10.5 at a
 # 10× lower learning rate; 1e-1 is added, the best SciFact learning rate of the mean grid.
 CLS_STARTS = (("potion", 10.5), ("distill", 1.0))
+# FiQA's best learning rate was the top of the extended grid (3e-1), so it gets one more point.
+FIQA_TOP_LRS = (1.0,)
 CLS_LRS = (1e-3, 1e-2, 3e-2, 1e-1)
 # Short SciFact and NFCorpus runs first; FiQA waits for its CLS targets.
 CLS_ORDER = ("scifact", "nfcorpus", "fiqa")
@@ -182,7 +184,17 @@ def main() -> None:
     parser.add_argument(
         "plans",
         nargs="+",
-        choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines", "confirm", "extras", "final", "cross"),
+        choices=(
+            "grid-mean",
+            "grid-cls",
+            "grid-mean-hi",
+            "baselines",
+            "confirm",
+            "extras",
+            "final",
+            "cross",
+            "grid-mean-fiqa-top",
+        ),
     )
     parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="for confirm")
     parser.add_argument("--top", type=int, default=3, help="for confirm")
@@ -200,6 +212,8 @@ def main() -> None:
             write(baselines())
         elif name == "grid-mean-hi":
             write(grid("mean", HIGH_LRS, name))
+        elif name == "grid-mean-fiqa-top":
+            write(grid("mean", FIQA_TOP_LRS, name, CLS_STARTS, ("fiqa",)))
         elif name == "grid-cls":
             write(grid("cls", CLS_LRS, name, CLS_STARTS, CLS_ORDER))
         else:
