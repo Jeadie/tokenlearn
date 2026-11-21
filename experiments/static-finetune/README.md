@@ -184,10 +184,13 @@ Model 4b (distilled + fine-tune) − model 2:
 2. A corpus fine-tune of potion-base-8M (4 − 3) gives a small gain on all three datasets:
    +0.004 to +0.006 NDCG@10. The CI excludes 0 each time, and all 5 seeds are positive.
 3. A corpus fine-tune of the plain distilled model (4b − 2) gives a gain 10× to 15× larger:
-   +0.04 to +0.07 NDCG@10. After the fine-tune, 4b and 4 are not different on NDCG@10 (the CI
-   includes 0 on all three datasets). On FiQA, 4b has a higher recall@10 (+0.023, CI excludes 0).
-   So a short fine-tune on the search corpus gets about the same result as potion-base-8M's
-   training on C4, but it does not add to that training.
+   +0.04 to +0.07 NDCG@10. After the fine-tune, 4b's NDCG@10 is higher than 4's on all three
+   datasets (+0.002 to +0.010), and each of the 5 seeds of 4 is below 4b's mean. But no 95% CI
+   excludes 0, so the query sample does not establish the difference. At small k it reverses:
+   4 is higher at NDCG@1 on all three datasets (+0.003 to +0.017, CIs include 0). 4b has a
+   higher recall@10 on all three (FiQA: +0.023, CI excludes 0). So a short fine-tune on the
+   search corpus gets about the same result as potion-base-8M's training on C4, or slightly
+   better at k = 10, but it does not add to that training.
 4. No loss of quality on other domains: the off-diagonal cells for model 4 are all within
    ±0.0011 and every CI includes 0. Model 4b, trained on one corpus, is also better on some
    other corpora (for example, trained on FiQA: +0.023 on SciFact).
