@@ -59,7 +59,7 @@ def final_specs(dataset: str) -> dict[str, TrainSpec]:
 
 def sweep_entries(dataset: str) -> list[Entry]:
     """The sweep's final models of one train dataset."""
-    labels = {"new": "new", "new100": "new, 100% corpus", "replay": "new + C4 replay"}
+    labels = {"new": "new", "new100": "new (100% corpus)", "replay": "new + C4 replay"}
     return [
         Entry(key, f"{labels[key]}: {spec.name.removesuffix('-s42')}", seed_runs(spec))
         for key, spec in final_specs(dataset).items()
@@ -73,8 +73,8 @@ def entries(dataset: str) -> list[Entry]:
         Entry("1m", "1m: bge-base-en-v1.5 (mean pooling)", ("hf-mean[bge-base-en-v1.5]-test",)),
         Entry("2", "2: distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",)),
         Entry("3", "3: potion-base-8M", ("model2vec[potion-base-8M]-arrow",)),
-        Entry("4", "4: Part 1, potion", part1_runs("potion", dataset)),
-        Entry("4b", "4b: Part 1, distilled", part1_runs("distill", dataset)),
+        Entry("4", "4: Part 1 potion", part1_runs("potion", dataset)),
+        Entry("4b", "4b: Part 1 distilled", part1_runs("distill", dataset)),
         *sweep_entries(dataset),
     ]
 
@@ -89,9 +89,9 @@ def cross_entries(train_dataset: str) -> list[Entry]:
     """A train dataset's final models and their references, for evaluation on another dataset."""
     base = final_specs(train_dataset)["new"].base
     start = (
-        Entry("start", "start: 3, potion-base-8M", ("model2vec[potion-base-8M]-arrow",))
+        Entry("start", "start (3: potion-base-8M)", ("model2vec[potion-base-8M]-arrow",))
         if base == "potion"
-        else Entry("start", "start: 2, distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",))
+        else Entry("start", "start (2: distilled)", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",))
     )
     part1 = Entry("part1", f"Part 1 fine-tune of the start model on {train_dataset}", part1_runs(base, train_dataset))
     return [start, part1, *sweep_entries(train_dataset)]
