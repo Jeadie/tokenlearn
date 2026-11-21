@@ -16,6 +16,8 @@ from dataclasses import asdict
 
 from common import DATASETS, EXPERIMENT_DIR
 from sweep import Plan, SearchSpec, TrainSpec
+from sweep_finetune import SWEEP_INFO_DIR
+from sweep_report import load_scores, rows_for
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,7 @@ CLS_STARTS = (("potion", 10.5), ("distill", 1.0))
 CLS_LRS = (1e-3, 1e-2, 3e-2, 1e-1)
 # Short SciFact and NFCorpus runs first; FiQA waits for its CLS targets.
 CLS_ORDER = ("scifact", "nfcorpus", "fiqa")
+FINAL_SEEDS = (42, 43, 44, 45, 46)
 GRID_SEEDS = {"scifact": (42, 43), "fiqa": (42,), "nfcorpus": (42, 43)}
 # Long FiQA runs before the short NFCorpus runs, so the short ones fill the end.
 GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
@@ -68,6 +71,30 @@ def baselines() -> Plan:
     return Plan(name="baselines", train=[], search=search)
 
 
+def confirm(datasets: tuple[str, ...], top: int) -> Plan:
+    """The `top` settings of each dataset by dev NDCG@10, trained with seeds 42-46 and scored on dev."""
+    scores = load_scores("dev")
+    train = []
+    for dataset in datasets:
+        rows = [r for r in rows_for(dataset, scores) if r.setting.startswith("sw-")][:top]
+        for row in rows:
+            info = json.loads((SWEEP_INFO_DIR / f"{row.setting}-s42.json").read_text())
+            train += [
+                TrainSpec(
+                    base=info["base"],
+                    scale=info["scale"],
+                    dataset=dataset,
+                    lr=info["lr"],
+                    seed=seed,
+                    target=info["target"],
+                    extras=tuple(info["extras"]),
+                )
+                for seed in FINAL_SEEDS
+            ]
+    search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev") for t in train]
+    return Plan(name=f"confirm-{'-'.join(datasets)}", train=train, search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -79,10 +106,14 @@ def write(plan: Plan) -> None:
 def main() -> None:
     """Write the requested plans."""
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("plans", nargs="+", choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines"))
+    parser.add_argument("plans", nargs="+", choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines", "confirm"))
+    parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="for confirm")
+    parser.add_argument("--top", type=int, default=3, help="for confirm")
     args = parser.parse_args()
     for name in args.plans:
-        if name == "baselines":
+        if name == "confirm":
+            write(confirm(tuple(args.datasets), args.top))
+        elif name == "baselines":
             write(baselines())
         elif name == "grid-mean-hi":
             write(grid("mean", HIGH_LRS, name))
