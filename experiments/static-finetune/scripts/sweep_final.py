@@ -6,12 +6,15 @@ writes results/final/tables.md and CSVs:
   show mean ± sample std over seeds.
 - paired bootstrap 95% CIs over queries (10,000 resamples) for the main comparisons at k = 1, 5
   and 10. A multi-seed model's per-query score is its mean over seeds.
+- the cross-domain check: each final model on the other datasets' test queries, next to its start
+  model, Part 1's fine-tune of that start model, and the final setting with C4 replay.
 
 Before the tables, it checks that each run's metric@k equals the mean of its per-query values.
 """
 
 import json
 import logging
+from argparse import ArgumentParser
 from dataclasses import dataclass, replace
 
 import pandas as pd
@@ -19,6 +22,8 @@ from analyze import BOOTSTRAP_RESAMPLES, bootstrap_ci, fmt, to_markdown
 from collect import AT_K_METRICS, OTLP_PATH, PER_QUERY_METRICS, attrs, point_value
 from common import EXPERIMENT_DIR
 from plans import FINAL_SEEDS, best_setting, full_epochs
+from sweep import TrainSpec
+from sweep_finetune import SWEEP_MODELS_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -30,33 +35,66 @@ KS = tuple(range(1, 11))
 
 @dataclass(frozen=True)
 class Entry:
-    """One model in the tables: a label and the run names of its seeds on one dataset."""
+    """One model in the tables: a short key, a label, and the run names of its seeds."""
 
+    key: str
     label: str
     runs: tuple[str, ...]
 
 
+def seed_runs(spec: TrainSpec) -> tuple[str, ...]:
+    """The test run names of a sweep setting, seeds 42-46."""
+    return tuple(f"{replace(spec, seed=seed).name}-test" for seed in FINAL_SEEDS)
+
+
+def final_specs(dataset: str) -> dict[str, TrainSpec]:
+    """The final setting of a dataset, its 100% retrain, and its C4-replay variant (if trained)."""
+    best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+    specs = {"new": best, "new100": replace(best, full_epochs=full_epochs(best))}
+    replay = replace(best, extras=tuple(sorted((*best.extras, "c4"))))
+    if (SWEEP_MODELS_DIR / replay.name).exists():
+        specs["replay"] = replay
+    return specs
+
+
+def sweep_entries(dataset: str) -> list[Entry]:
+    """The sweep's final models of one train dataset."""
+    labels = {"new": "new", "new100": "new, 100% corpus", "replay": "new + C4 replay"}
+    return [
+        Entry(key, f"{labels[key]}: {spec.name.removesuffix('-s42')}", seed_runs(spec))
+        for key, spec in final_specs(dataset).items()
+    ]
+
+
 def entries(dataset: str) -> list[Entry]:
     """Every model to report on one dataset, in table order."""
-    best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
-    full = replace(best, full_epochs=full_epochs(best))
-    setting = best.name.removesuffix("-s42")
-    full_setting = full.name.removesuffix("-s42")
     return [
-        Entry("1: bge-base-en-v1.5 (CLS)", ("hf[bge-base-en-v1.5]-arrow",)),
-        Entry("1m: bge-base-en-v1.5 (mean pooling)", ("hf-mean[bge-base-en-v1.5]-test",)),
-        Entry("2: distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",)),
-        Entry("3: potion-base-8M", ("model2vec[potion-base-8M]-arrow",)),
-        Entry(
-            "4: old recipe, potion", tuple(f"model2vec[potion-base-8M[ft-{dataset}-s{s}]]-arrow" for s in FINAL_SEEDS)
-        ),
-        Entry(
-            "4b: old recipe, distilled",
-            tuple(f"model2vec[bge-base-en-v1.5-distill-256[ft-{dataset}-s{s}]]-arrow" for s in FINAL_SEEDS),
-        ),
-        Entry(f"new: {setting}", tuple(f"{setting}-s{s}-test" for s in FINAL_SEEDS)),
-        Entry(f"new, 100% corpus: {full_setting}", tuple(f"{full_setting}-s{s}-test" for s in FINAL_SEEDS)),
+        Entry("1", "1: bge-base-en-v1.5 (CLS)", ("hf[bge-base-en-v1.5]-arrow",)),
+        Entry("1m", "1m: bge-base-en-v1.5 (mean pooling)", ("hf-mean[bge-base-en-v1.5]-test",)),
+        Entry("2", "2: distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",)),
+        Entry("3", "3: potion-base-8M", ("model2vec[potion-base-8M]-arrow",)),
+        Entry("4", "4: Part 1, potion", part1_runs("potion", dataset)),
+        Entry("4b", "4b: Part 1, distilled", part1_runs("distill", dataset)),
+        *sweep_entries(dataset),
     ]
+
+
+def part1_runs(base: str, train_dataset: str) -> tuple[str, ...]:
+    """Part 1's fine-tunes of one start model on one train dataset, seeds 42-46."""
+    model = "potion-base-8M" if base == "potion" else "bge-base-en-v1.5-distill-256"
+    return tuple(f"model2vec[{model}[ft-{train_dataset}-s{s}]]-arrow" for s in FINAL_SEEDS)
+
+
+def cross_entries(train_dataset: str) -> list[Entry]:
+    """A train dataset's final models and their references, for evaluation on another dataset."""
+    base = final_specs(train_dataset)["new"].base
+    start = (
+        Entry("start", "start: 3, potion-base-8M", ("model2vec[potion-base-8M]-arrow",))
+        if base == "potion"
+        else Entry("start", "start: 2, distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",))
+    )
+    part1 = Entry("part1", f"Part 1 fine-tune of the start model on {train_dataset}", part1_runs(base, train_dataset))
+    return [start, part1, *sweep_entries(train_dataset)]
 
 
 def parse_points(resource_metrics: dict, key: tuple[str, str]) -> tuple[int, list[tuple], list[tuple]]:
@@ -116,10 +154,10 @@ def scores(per_query: pd.DataFrame, entry: Entry, dataset: str) -> pd.DataFrame:
     return rows.pivot_table(index=["query_id", "metric", "k"], columns="run", values="value")
 
 
-def metric_table(per_query: pd.DataFrame, dataset: str, metric: str) -> pd.DataFrame:
+def metric_table(per_query: pd.DataFrame, dataset: str, metric: str, table_entries: list[Entry]) -> pd.DataFrame:
     """metric@1..10 of every entry on one dataset; mean ± std over seeds."""
     table = {}
-    for entry in entries(dataset):
+    for entry in table_entries:
         per_seed = scores(per_query, entry, dataset).xs(metric, level="metric").groupby(level="k").mean()
         multi = per_seed.shape[1] > 1
         label = entry.label + (f" (n={per_seed.shape[1]} seeds)" if multi else "")
@@ -129,61 +167,92 @@ def metric_table(per_query: pd.DataFrame, dataset: str, metric: str) -> pd.DataF
     return pd.DataFrame.from_dict(table, orient="index").reindex(columns=[f"@{k}" for k in KS])
 
 
-def comparison_rows(per_query: pd.DataFrame, dataset: str) -> list[dict]:
-    """Paired bootstrap comparisons of the new model with the others."""
-    by_label = {e.label.split(":")[0]: e for e in entries(dataset)}
-    new, new_full = by_label["new"], by_label["new, 100% corpus"]
-    pairs = [
-        (new, by_label["4"]),
-        (new, by_label["4b"]),
-        (new, by_label["3"]),
-        (new, by_label["2"]),
-        (new_full, new),
-        (by_label["1"], new),
-        (by_label["1m"], by_label["1"]),
-    ]
+def compare(per_query: pd.DataFrame, dataset: str, a: Entry, b: Entry, context: str) -> list[dict]:
+    """Paired bootstrap comparisons A − B on one dataset, for every metric at k = 1, 5 and 10."""
+    a_scores = scores(per_query, a, dataset).mean(axis=1)
+    b_scores = scores(per_query, b, dataset).mean(axis=1)
     rows = []
-    for a, b in pairs:
-        a_scores = scores(per_query, a, dataset).mean(axis=1)
-        b_scores = scores(per_query, b, dataset).mean(axis=1)
-        for metric in METRICS:
-            for k in (1, 5, 10):
-                paired = pd.concat(
-                    [a_scores.xs((metric, k), level=("metric", "k")), b_scores.xs((metric, k), level=("metric", "k"))],
-                    axis=1,
-                    join="inner",
-                ).dropna()
-                deltas = (paired.iloc[:, 0] - paired.iloc[:, 1]).to_numpy()
-                low, high = bootstrap_ci(deltas)
-                rows.append(
-                    {
-                        "eval": dataset,
-                        "A − B": f"{a.label.split(':')[0]} − {b.label.split(':')[0]}",
-                        "metric": f"{metric}@{k}",
-                        "queries": len(deltas),
-                        "mean Δ": f"{deltas.mean():+.4f}",
-                        "95% CI": f"[{low:+.4f}, {high:+.4f}]",
-                        "excludes 0": "yes" if low > 0 or high < 0 else "no",
-                    }
-                )
+    for metric in METRICS:
+        for k in (1, 5, 10):
+            paired = pd.concat(
+                [a_scores.xs((metric, k), level=("metric", "k")), b_scores.xs((metric, k), level=("metric", "k"))],
+                axis=1,
+                join="inner",
+            ).dropna()
+            deltas = (paired.iloc[:, 0] - paired.iloc[:, 1]).to_numpy()
+            low, high = bootstrap_ci(deltas)
+            rows.append(
+                {
+                    "eval": dataset,
+                    "context": context,
+                    "A − B": f"{a.key} − {b.key}",
+                    "metric": f"{metric}@{k}",
+                    "queries": len(deltas),
+                    "mean Δ": f"{deltas.mean():+.4f}",
+                    "95% CI": f"[{low:+.4f}, {high:+.4f}]",
+                    "excludes 0": "yes" if low > 0 or high < 0 else "no",
+                }
+            )
+    return rows
+
+
+IN_DOMAIN_PAIRS = (
+    ("new", "4"),
+    ("new", "4b"),
+    ("new", "3"),
+    ("new", "2"),
+    ("new100", "new"),
+    ("replay", "new"),
+    ("1", "new"),
+    ("1m", "1"),
+)
+CROSS_PAIRS = (("new", "start"), ("new100", "start"), ("replay", "start"), ("replay", "new"), ("part1", "start"))
+
+
+def comparison_rows(per_query: pd.DataFrame, datasets: tuple[str, ...]) -> list[dict]:
+    """In-domain comparisons on each dataset, then cross-domain ones on the others."""
+    rows = []
+    for dataset in datasets:
+        by_key = {e.key: e for e in entries(dataset)}
+        for a, b in IN_DOMAIN_PAIRS:
+            if a in by_key and b in by_key:
+                rows += compare(per_query, dataset, by_key[a], by_key[b], f"trained on {dataset}")
+    for train_dataset in datasets:
+        by_key = {e.key: e for e in cross_entries(train_dataset)}
+        for eval_dataset in [d for d in DATASETS if d != train_dataset]:
+            for a, b in CROSS_PAIRS:
+                if a in by_key and b in by_key:
+                    rows += compare(per_query, eval_dataset, by_key[a], by_key[b], f"trained on {train_dataset}")
     return rows
 
 
 def main() -> None:
     """Write results/final/tables.md and its CSVs."""
-    wanted = {(run, ds) for ds in DATASETS for e in entries(ds) for run in e.runs}
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="train datasets with final models")
+    datasets = tuple(parser.parse_args().datasets)
+    wanted = {(run, ds) for ds in datasets for e in entries(ds) for run in e.runs}
+    wanted |= {(run, ev) for tr in datasets for e in cross_entries(tr) for run in e.runs for ev in DATASETS if ev != tr}
     per_query, run_level = read_runs(wanted)
     check(per_query, run_level)
     FINAL_DIR.mkdir(parents=True, exist_ok=True)
     sections = []
-    for dataset in DATASETS:
+    for dataset in datasets:
         labels = "\n".join(f"- {e.label}: {len(e.runs)} run(s)" for e in entries(dataset))
         sections.append(f"## {dataset}\n\n{labels}\n")
         for metric in METRICS:
-            table = metric_table(per_query, dataset, metric)
+            table = metric_table(per_query, dataset, metric, entries(dataset))
             table.to_csv(FINAL_DIR / f"{dataset}_{metric}.csv")
             sections.append(f"### {dataset}: {metric}@k (test)\n\n{to_markdown(table)}\n")
-    comparisons = pd.DataFrame([row for ds in DATASETS for row in comparison_rows(per_query, ds)])
+    sections.append("## Cross-domain: final models on the other datasets (test)\n")
+    for train_dataset in datasets:
+        for eval_dataset in [d for d in DATASETS if d != train_dataset]:
+            table = metric_table(per_query, eval_dataset, "ndcg", cross_entries(train_dataset))
+            table.to_csv(FINAL_DIR / f"cross_{train_dataset}_on_{eval_dataset}_ndcg.csv")
+            sections.append(
+                f"### trained on {train_dataset}, evaluated on {eval_dataset}: ndcg@k\n\n{to_markdown(table)}\n"
+            )
+    comparisons = pd.DataFrame(comparison_rows(per_query, datasets))
     comparisons.to_csv(FINAL_DIR / "paired_comparisons.csv", index=False)
     sections.append(
         f"## Paired comparisons (test, bootstrap, {BOOTSTRAP_RESAMPLES} resamples)\n\n"
