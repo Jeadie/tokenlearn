@@ -12,6 +12,7 @@ the mean-pooled target can be.
 import json
 import logging
 from argparse import ArgumentParser
+from collections.abc import Callable
 from dataclasses import asdict, replace
 
 from common import DATASETS, EXPERIMENT_DIR
@@ -191,49 +192,32 @@ def write(plan: Plan) -> None:
     logger.info(f"{path}: {len(plan.train)} training runs, {len(plan.search)} search runs")
 
 
+def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[], Plan]]:
+    """Every plan by name. Plans that depend on earlier results read them when called."""
+    return {
+        "grid-mean": lambda: grid("mean"),
+        "grid-mean-hi": lambda: grid("mean", HIGH_LRS, "grid-mean-hi"),
+        "grid-mean-fiqa-top": lambda: grid("mean", FIQA_TOP_LRS, "grid-mean-fiqa-top", CLS_STARTS, ("fiqa",)),
+        "grid-cls": lambda: grid("cls", CLS_LRS, "grid-cls", CLS_STARTS, CLS_ORDER),
+        "baselines": baselines,
+        "confirm": lambda: confirm(datasets, top),
+        "extras": lambda: extras(datasets),
+        "final": lambda: final(datasets),
+        "cross": lambda: cross(datasets),
+        "replay": lambda: replay(datasets),
+    }
+
+
 def main() -> None:
     """Write the requested plans."""
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "plans",
-        nargs="+",
-        choices=(
-            "grid-mean",
-            "grid-cls",
-            "grid-mean-hi",
-            "baselines",
-            "confirm",
-            "extras",
-            "final",
-            "cross",
-            "grid-mean-fiqa-top",
-            "replay",
-        ),
-    )
-    parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="for confirm")
-    parser.add_argument("--top", type=int, default=3, help="for confirm")
+    parser.add_argument("plans", nargs="+", choices=sorted(plan_builders((), 0)))
+    parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="datasets of the result-based plans")
+    parser.add_argument("--top", type=int, default=3, help="settings per dataset, for confirm")
     args = parser.parse_args()
+    builders = plan_builders(tuple(args.datasets), args.top)
     for name in args.plans:
-        if name == "confirm":
-            write(confirm(tuple(args.datasets), args.top))
-        elif name == "extras":
-            write(extras(tuple(args.datasets)))
-        elif name == "final":
-            write(final(tuple(args.datasets)))
-        elif name == "cross":
-            write(cross(tuple(args.datasets)))
-        elif name == "replay":
-            write(replay(tuple(args.datasets)))
-        elif name == "baselines":
-            write(baselines())
-        elif name == "grid-mean-hi":
-            write(grid("mean", HIGH_LRS, name))
-        elif name == "grid-mean-fiqa-top":
-            write(grid("mean", FIQA_TOP_LRS, name, CLS_STARTS, ("fiqa",)))
-        elif name == "grid-cls":
-            write(grid("cls", CLS_LRS, name, CLS_STARTS, CLS_ORDER))
-        else:
-            write(grid(name.removeprefix("grid-")))
+        write(builders[name]())
 
 
 if __name__ == "__main__":
