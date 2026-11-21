@@ -99,7 +99,12 @@ def confirm(datasets: tuple[str, ...], top: int) -> Plan:
 
 def best_setting(dataset: str, min_seeds: int) -> TrainSpec:
     """The sweep setting with the best mean dev NDCG@10 among those with at least `min_seeds` seeds (seed 42)."""
-    rows = [r for r in rows_for(dataset, load_scores("dev")) if r.setting.startswith("sw-") and r.seeds >= min_seeds]
+    # 100% retrains are results of a setting, not settings to choose from.
+    rows = [
+        r
+        for r in rows_for(dataset, load_scores("dev"))
+        if r.setting.startswith("sw-") and "-full" not in r.setting and r.seeds >= min_seeds
+    ]
     info = json.loads((SWEEP_INFO_DIR / f"{rows[0].setting}-s42.json").read_text())
     return TrainSpec(
         base=info["base"],
@@ -147,6 +152,22 @@ def final(datasets: tuple[str, ...]) -> Plan:
     return Plan(name=f"final-{'-'.join(datasets)}", train=train, search=search)
 
 
+def cross(datasets: tuple[str, ...]) -> Plan:
+    """Each dataset's final models (held-out and 100%), scored on the other datasets' test queries."""
+    search = []
+    for dataset in datasets:
+        best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+        models = [replace(best, seed=seed) for seed in FINAL_SEEDS]
+        models += [replace(best, seed=seed, full_epochs=full_epochs(best)) for seed in FINAL_SEEDS]
+        search += [
+            SearchSpec(model=m.name, eval_dataset=other, split="test")
+            for other in DATASETS
+            if other != dataset
+            for m in models
+        ]
+    return Plan(name=f"cross-{'-'.join(datasets)}", train=[], search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -159,7 +180,9 @@ def main() -> None:
     """Write the requested plans."""
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
-        "plans", nargs="+", choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines", "confirm", "extras", "final")
+        "plans",
+        nargs="+",
+        choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines", "confirm", "extras", "final", "cross"),
     )
     parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="for confirm")
     parser.add_argument("--top", type=int, default=3, help="for confirm")
@@ -171,6 +194,8 @@ def main() -> None:
             write(extras(tuple(args.datasets)))
         elif name == "final":
             write(final(tuple(args.datasets)))
+        elif name == "cross":
+            write(cross(tuple(args.datasets)))
         elif name == "baselines":
             write(baselines())
         elif name == "grid-mean-hi":
