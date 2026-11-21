@@ -1,0 +1,29 @@
+{
+  "finetune": {
+    "base_model": "potion-base-8M",
+    "base_model_source": "minishlab/potion-base-8M",
+    "dataset": "fiqa",
+    "seed": 44,
+    "n_featurized": 57600,
+    "n_train": 51840,
+    "n_val": 5760,
+    "epochs_run": 18,
+    "best_val_loss": 0.09652512520551682,
+    "final_val_loss": 0.09568389505147934,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "device": "cpu",
+    "torch_threads": 2,
+    "wall_time_s": 386.3,
+    "libraries": {
+      "model2vec": "0.8.2",
+      "torch": "2.7.1",
+      "lightning": "2.6.1",
+      "sentence-transformers": "5.4.1",
+      "transformers": "5.3.0",
+      "tokenizers": "0.22.2",
+      "datasets": "4.8.4"
+    },
+    "saved_weights": "last epoch checkpoint (model2vec default)"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "hf[bge-base-en-v1.5]-arrow",
+  "eval_dataset": "scifact",
+  "family": "1",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/hf[bge-base-en-v1.5]-arrow.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "7200",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "18100",
+    "--spiced-flight-port",
+    "18200"
+  ],
+  "ports": {
+    "http": 18100,
+    "flight": 18200
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795242224.379658,
+  "finished_at": 1795243111.379264,
+  "exit_code": 0
+}

@@ -1,0 +1,16 @@
+# Local OTLP collector: testoperator exports over gRPC; every metric point is appended to a JSON-lines file.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        # One search run exports all per-query points in a single request.
+        max_recv_msg_size_mib: 256
+exporters:
+  file:
+    path: /out/metrics.jsonl
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [file]

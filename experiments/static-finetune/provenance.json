@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-11-21T05:51:23+00:00",
+  "models": {
+    "BAAI/bge-base-en-v1.5": "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "minishlab/potion-base-8M": "bf8b056651a2c21b8d2565580b8569da283cab23"
+  },
+  "datasets": {
+    "scifact": {
+      "repo": "mteb/scifact",
+      "main_sha": "cf10ab6856b15b0e670ef8ae5dae4e266c12d035",
+      "convert_parquet_sha": "40ba5b97cb22ea15fa7e5c2e5a0fec5886baba2a"
+    },
+    "nfcorpus": {
+      "repo": "mteb/nfcorpus",
+      "main_sha": "52ac3f19d3449632d9f00aab0ad34a110fc03816",
+      "convert_parquet_sha": "dcf7a6d3be5c3b19802673fb4a37b2b462015f27"
+    },
+    "fiqa": {
+      "repo": "mteb/fiqa",
+      "main_sha": "5e59eeb3a7df6b85882112b747008547c21587ea",
+      "convert_parquet_sha": "d6f9d7877eebac8db500b571b6fe4505f37f06c4"
+    }
+  },
+  "libraries": {
+    "model2vec": "0.8.2",
+    "torch": "2.7.1",
+    "lightning": "2.6.1",
+    "sentence-transformers": "5.4.1",
+    "transformers": "5.3.0",
+    "tokenizers": "0.22.2",
+    "datasets": "4.8.4"
+  }
+}

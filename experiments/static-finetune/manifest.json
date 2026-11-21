@@ -1,0 +1,1982 @@
+[
+  {
+    "name": "hf[bge-base-en-v1.5]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/hf[bge-base-en-v1.5]-arrow.yaml",
+    "model": {
+      "label": "hf[bge-base-en-v1.5]",
+      "source": "huggingface:huggingface.co/BAAI/bge-base-en-v1.5",
+      "family": "1",
+      "params": [
+        [
+          "truncate",
+          "END"
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "BAAI/bge-base-en-v1.5"
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "family": "2",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M]",
+      "source": "model2vec:minishlab/potion-base-8M",
+      "family": "3",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "minishlab/potion-base-8M"
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "scifact",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "hf[bge-base-en-v1.5]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/hf[bge-base-en-v1.5]-arrow.yaml",
+    "model": {
+      "label": "hf[bge-base-en-v1.5]",
+      "source": "huggingface:huggingface.co/BAAI/bge-base-en-v1.5",
+      "family": "1",
+      "params": [
+        [
+          "truncate",
+          "END"
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "BAAI/bge-base-en-v1.5"
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "family": "2",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M]",
+      "source": "model2vec:minishlab/potion-base-8M",
+      "family": "3",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "minishlab/potion-base-8M"
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[potion-base-8M[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "nfcorpus",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "hf[bge-base-en-v1.5]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/hf[bge-base-en-v1.5]-arrow.yaml",
+    "model": {
+      "label": "hf[bge-base-en-v1.5]",
+      "source": "huggingface:huggingface.co/BAAI/bge-base-en-v1.5",
+      "family": "1",
+      "params": [
+        [
+          "truncate",
+          "END"
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "BAAI/bge-base-en-v1.5"
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "family": "2",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M]",
+      "source": "model2vec:minishlab/potion-base-8M",
+      "family": "3",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": null,
+      "seed": null,
+      "local_path": null,
+      "hf_model": "minishlab/potion-base-8M"
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-scifact-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "scifact",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-scifact-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "nfcorpus",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-nfcorpus-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 42,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s42",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 43,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s43",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s44]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 44,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s44",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s45]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 45,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s45",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[potion-base-8M[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[potion-base-8M[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[potion-base-8M[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "family": "4",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/potion-base-8M-ft-fiqa-s46",
+      "hf_model": null
+    }
+  },
+  {
+    "name": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow",
+    "eval_dataset": "fiqa",
+    "spicepod_path": "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]-arrow.yaml",
+    "model": {
+      "label": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s46]]",
+      "source": "model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "family": "4b",
+      "params": [
+        [
+          "embed_max_token_length",
+          512
+        ]
+      ],
+      "train_dataset": "fiqa",
+      "seed": 46,
+      "local_path": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256-ft-fiqa-s46",
+      "hf_model": null
+    }
+  }
+]
