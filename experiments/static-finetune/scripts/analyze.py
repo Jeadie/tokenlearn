@@ -14,6 +14,7 @@ Before any table, it checks that each run-level metric@k equals the mean of its 
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -41,6 +42,9 @@ BOOTSTRAP_RESAMPLES = 10_000
 BOOTSTRAP_SEED = 0
 
 
+logger = logging.getLogger(__name__)
+
+
 @dataclass(frozen=True)
 class Comparison:
     """A paired comparison A − B on one eval dataset, at one metric@k."""
@@ -66,7 +70,9 @@ def check_run_means(run_metrics: pd.DataFrame, per_query: pd.DataFrame) -> None:
     joined = at_k.merge(means, on=["name", "eval_dataset", "metric", "k"], suffixes=("_run", "_mean"))
     worst = (joined["value_run"] - joined["value_mean"]).abs().max()
     missing = len(at_k) - len(joined)
-    print(f"run-level vs per-query mean: {len(joined)} pairs, max |diff| = {worst:.2e}, {missing} without per-query data")
+    logger.info(
+        f"run-level vs per-query mean: {len(joined)} pairs, max |diff| = {worst:.2e}, {missing} without per-query data"
+    )
     if missing or worst > 1e-9:
         raise SystemExit("per-query data does not reproduce the run-level metrics")
 
@@ -81,6 +87,7 @@ def to_markdown(table: pd.DataFrame, index: bool = True) -> str:
 
 
 def fmt(mean: float, std: float | None) -> str:
+    """Format a mean, with ± std when the std is known."""
     return f"{mean:.4f}" if std is None or np.isnan(std) else f"{mean:.4f} ± {std:.4f}"
 
 
@@ -108,6 +115,7 @@ def seed_averaged(per_query: pd.DataFrame, eval_dataset: str, family: str, train
 
 
 def bootstrap_ci(deltas: np.ndarray) -> tuple[float, float]:
+    """The 95% paired bootstrap confidence interval of the mean of `deltas`."""
     # A fresh generator per comparison: the same comparison always gets the same interval.
     rng = np.random.default_rng(BOOTSTRAP_SEED)
     samples = rng.integers(0, len(deltas), size=(BOOTSTRAP_RESAMPLES, len(deltas)))
@@ -123,6 +131,7 @@ def compare(
     metric: str,
     k: int,
 ) -> Comparison:
+    """Compare A − B on the queries of one eval dataset, at one metric@k."""
     a_scores = seed_averaged(per_query, eval_dataset, *a).xs((metric, k), level=("metric", "k"))
     b_scores = seed_averaged(per_query, eval_dataset, *b).xs((metric, k), level=("metric", "k"))
     paired = pd.concat([a_scores, b_scores], axis=1, join="inner").dropna()
@@ -161,6 +170,7 @@ def compare(
 
 
 def comparison_table(comparisons: list[Comparison]) -> pd.DataFrame:
+    """One table row per comparison."""
     return pd.DataFrame(
         [
             {
@@ -178,16 +188,9 @@ def comparison_table(comparisons: list[Comparison]) -> pd.DataFrame:
     )
 
 
-def main() -> None:
-    run_metrics = pd.read_csv(RESULTS_DIR / "run_metrics.csv", dtype={"seed": str, "k": str, "train_dataset": str})
-    run_metrics = run_metrics.fillna({"seed": "", "train_dataset": "", "k": ""})
-    per_query = pd.read_parquet(PER_QUERY_PATH)
-    per_query["seed"] = per_query["seed"].astype(str)
-    check_run_means(run_metrics, per_query)
-    TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    sections: list[str] = []
-
-    # 1. metric@k for every model on every eval dataset.
+def metric_sections(run_metrics: pd.DataFrame) -> list[str]:
+    """Metric@k for every model on every eval dataset."""
+    sections = []
     for eval_dataset in DATASETS:
         for metric in METRICS:
             table = model_rows(run_metrics, eval_dataset, metric)
@@ -195,8 +198,19 @@ def main() -> None:
                 continue
             table.to_csv(TABLES_DIR / f"{eval_dataset}_{metric}.csv")
             sections.append(f"### {eval_dataset}: {metric}@k\n\n{to_markdown(table)}\n")
+    return sections
 
-    # 2. Paired comparisons on each eval dataset (fine-tuned models trained on that dataset).
+
+def try_compare(per_query: pd.DataFrame, *args: object) -> list[Comparison]:
+    """One comparison, or none when a model has no runs on that dataset."""
+    try:
+        return [compare(per_query, *args)]  # type: ignore[arg-type]
+    except KeyError:
+        return []
+
+
+def paired_section(per_query: pd.DataFrame) -> str:
+    """Paired comparisons on each eval dataset (fine-tuned models trained on that dataset)."""
     comparisons: list[Comparison] = []
     for eval_dataset in DATASETS:
         pairs = [
@@ -211,41 +225,51 @@ def main() -> None:
         for a, b in pairs:
             for metric in METRICS:
                 for k in (1, 5, 10):
-                    try:
-                        comparisons.append(compare(per_query, eval_dataset, a, b, metric, k))
-                    except KeyError:
-                        continue
+                    comparisons += try_compare(per_query, eval_dataset, a, b, metric, k)
     table = comparison_table(comparisons)
     table.to_csv(TABLES_DIR / "paired_comparisons.csv", index=False)
-    sections.append(f"### Paired comparisons (bootstrap, {BOOTSTRAP_RESAMPLES} resamples)\n\n{to_markdown(table, index=False)}\n")
+    return f"### Paired comparisons (bootstrap, {BOOTSTRAP_RESAMPLES} resamples)\n\n{to_markdown(table, index=False)}\n"
 
-    # 3. Cross-dataset matrix: fine-tuned minus its starting model, NDCG@10.
+
+def cross_section(per_query: pd.DataFrame) -> str:
+    """Cross-dataset matrix: fine-tuned minus its starting model, NDCG@10."""
     cross: list[Comparison] = []
     for family in BASELINE:
         for train_dataset in DATASETS:
             for eval_dataset in DATASETS:
-                try:
-                    cross.append(
-                        compare(per_query, eval_dataset, (family, train_dataset), (BASELINE[family], None), "ndcg", 10)
-                    )
-                except KeyError:
-                    continue
+                cross += try_compare(
+                    per_query, eval_dataset, (family, train_dataset), (BASELINE[family], None), "ndcg", 10
+                )
     table = comparison_table(cross)
     table.to_csv(TABLES_DIR / "cross_matrix_ndcg10.csv", index=False)
-    sections.append(f"### Cross-dataset matrix: fine-tuned − starting model, ndcg@10\n\n{to_markdown(table, index=False)}\n")
+    return f"### Cross-dataset matrix: fine-tuned − starting model, ndcg@10\n\n{to_markdown(table, index=False)}\n"
 
-    # 4. Run-level timing and memory, as testoperator reports them.
+
+def ops_section(run_metrics: pd.DataFrame) -> str:
+    """Run-level timing and memory, as testoperator reports them."""
     ops = run_metrics[~run_metrics["metric"].isin(METRICS)]
     ops = ops.pivot_table(index=["eval_dataset", "name"], columns="metric", values="value", aggfunc="first")
     ops.to_csv(TABLES_DIR / "testoperator_ops_metrics.csv")
-    sections.append(
+    return (
         "### testoperator timing and memory (raw output; one run each, concurrent runs, P95 only — "
         f"not a performance comparison)\n\n{to_markdown(ops)}\n"
     )
 
+
+def main() -> None:
+    """Check the per-query data, then write results/tables.md and results/tables/*.csv."""
+    run_metrics = pd.read_csv(RESULTS_DIR / "run_metrics.csv", dtype={"seed": str, "k": str, "train_dataset": str})
+    run_metrics = run_metrics.fillna({"seed": "", "train_dataset": "", "k": ""})
+    per_query = pd.read_parquet(PER_QUERY_PATH)
+    per_query["seed"] = per_query["seed"].astype(str)
+    check_run_means(run_metrics, per_query)
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    sections = metric_sections(run_metrics)
+    sections += [paired_section(per_query), cross_section(per_query), ops_section(run_metrics)]
     (RESULTS_DIR / "tables.md").write_text("\n".join(sections))
-    print(f"Wrote {RESULTS_DIR / 'tables.md'}")
+    logger.info(f"Wrote {RESULTS_DIR / 'tables.md'}")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

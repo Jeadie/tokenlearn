@@ -24,7 +24,15 @@ def library_versions() -> dict[str, str]:
     """Versions of the libraries that decide the model's numbers."""
     return {
         name: version(name)
-        for name in ("model2vec", "torch", "lightning", "sentence-transformers", "transformers", "tokenizers", "datasets")
+        for name in (
+            "model2vec",
+            "torch",
+            "lightning",
+            "sentence-transformers",
+            "transformers",
+            "tokenizers",
+            "datasets",
+        )
     }
 
 

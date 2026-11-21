@@ -7,6 +7,7 @@ local copies of the MTEB parquet files, so every run reads identical bytes.
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -21,6 +22,9 @@ DATASETS = ("scifact", "nfcorpus", "fiqa")
 SEEDS = (42, 43, 44, 45, 46)
 DISTILL = "bge-base-en-v1.5-distill-256"
 POTION = "potion-base-8M"
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -52,7 +56,10 @@ class Run:
     model: Model
 
 
-def static_model(family: str, label: str, path: Path, train_dataset: str | None = None, seed: int | None = None) -> Model:
+def static_model(
+    family: str, label: str, path: Path, train_dataset: str | None = None, seed: int | None = None
+) -> Model:
+    """A local static model, which spiced loads through `model2vec:` embeddings."""
     return Model(
         label=label,
         source=f"model2vec:{path}",
@@ -65,6 +72,7 @@ def static_model(family: str, label: str, path: Path, train_dataset: str | None 
 
 
 def models() -> list[Model]:
+    """Every model under test: families 1, 2 and 3, then 4 and 4b for each train dataset and seed."""
     result = [
         Model(
             label="hf[bge-base-en-v1.5]",
@@ -99,6 +107,7 @@ def models() -> list[Model]:
 
 
 def render(name: str, eval_dataset: str, model: Model) -> str:
+    """The spicepod YAML for one model on one eval dataset."""
     data = DATA_DIR / eval_dataset
     params = "".join(f"\n      {key}: {value}" for key, value in model.params)
     return f"""version: v1
@@ -149,6 +158,7 @@ embeddings:
 
 
 def main() -> None:
+    """Write every spicepod and the run manifest."""
     runs: list[Run] = []
     for eval_dataset in DATASETS:
         (SPICEPOD_DIR / eval_dataset).mkdir(parents=True, exist_ok=True)
@@ -158,8 +168,9 @@ def main() -> None:
             path.write_text(render(name, eval_dataset, model))
             runs.append(Run(name=name, eval_dataset=eval_dataset, spicepod_path=str(path), model=model))
     MANIFEST_PATH.write_text(json.dumps([asdict(run) for run in runs], indent=2) + "\n")
-    print(f"Wrote {len(runs)} spicepods and {MANIFEST_PATH}")
+    logger.info(f"Wrote {len(runs)} spicepods and {MANIFEST_PATH}")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

@@ -1,12 +1,14 @@
 """Record the Hugging Face revisions this experiment used, in provenance.json."""
 
 import json
+import logging
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 
+from common import DATASETS, EXPERIMENT_DIR, POTION, TEACHER, library_versions
 from huggingface_hub import HfApi
 
-from common import DATASETS, EXPERIMENT_DIR, POTION, TEACHER, library_versions
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -26,6 +28,7 @@ class Provenance:
 
 
 def main() -> None:
+    """Record the revisions of the models and datasets, and the library versions."""
     api = HfApi()
     datasets: dict[str, DatasetRevision] = {}
     for ds in DATASETS:
@@ -44,8 +47,9 @@ def main() -> None:
         libraries=library_versions(),
     )
     (EXPERIMENT_DIR / "provenance.json").write_text(json.dumps(asdict(provenance), indent=2) + "\n")
-    print(json.dumps(asdict(provenance), indent=2))
+    logger.info(json.dumps(asdict(provenance), indent=2))
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

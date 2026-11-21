@@ -4,6 +4,7 @@ Fine-tunes start as soon as their corpus is featurized, in priority order. Finis
 skipped, so the script can be re-run after a failure.
 """
 
+import logging
 import os
 import subprocess
 import sys
@@ -20,6 +21,9 @@ LOGS = EXPERIMENT_DIR / "logs"
 ENV = {**os.environ, "PYTHONPATH": str(EXPERIMENT_DIR.parent.parent)}
 
 
+logger = logging.getLogger(__name__)
+
+
 @dataclass(frozen=True)
 class FinetuneJob:
     base: str
@@ -28,10 +32,12 @@ class FinetuneJob:
 
     @property
     def name(self) -> str:
+        """The directory name of the fine-tuned model."""
         return f"{self.base}-ft-{self.dataset}-s{self.seed}"
 
 
 def featurized(dataset: str) -> bool:
+    """True when the corpus of `dataset` is featurized."""
     return (FEATURIZED_DIR / dataset / "featurize_info.json").exists()
 
 
@@ -42,6 +48,7 @@ def featurizing_elsewhere(dataset: str) -> bool:
 
 
 def featurize_all() -> None:
+    """Featurize every corpus, one at a time."""
     for dataset in DATASETS:
         while featurizing_elsewhere(dataset):
             time.sleep(10)
@@ -50,7 +57,10 @@ def featurize_all() -> None:
         with open(LOGS / f"featurize_{dataset}.log", "a") as log:
             subprocess.run(
                 [sys.executable, str(SCRIPTS / "featurize_corpus.py"), "--dataset", dataset],
-                stdout=log, stderr=subprocess.STDOUT, env=ENV, check=False,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=ENV,
+                check=False,
             )
 
 
@@ -65,6 +75,7 @@ def jobs_in_priority_order() -> list[FinetuneJob]:
 
 
 def main() -> None:
+    """Featurize every corpus and run every fine-tune."""
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--threads", type=int, default=2, help="torch CPU threads per fine-tune")
@@ -84,26 +95,39 @@ def main() -> None:
                 status = "ok" if proc.returncode == 0 and (MODELS_DIR / job.name).exists() else "FAILED"
                 if status == "FAILED":
                     failed.append(job)
-                print(f"{time.strftime('%H:%M:%S')} {status} {job.name}", flush=True)
+                logger.info(f"{time.strftime('%H:%M:%S')} {status} {job.name}")
         for job in [j for j in pending if featurized(j.dataset)]:
             if len(running) >= args.workers:
                 break
             pending.remove(job)
             log = open(LOGS / "train" / f"{job.name}.log", "w")
             running[job] = subprocess.Popen(
-                [sys.executable, str(SCRIPTS / "finetune.py"), "--base", job.base, "--dataset", job.dataset,
-                 "--seed", str(job.seed), "--threads", str(args.threads)],
-                stdout=log, stderr=subprocess.STDOUT, env=ENV,
+                [
+                    sys.executable,
+                    str(SCRIPTS / "finetune.py"),
+                    "--base",
+                    job.base,
+                    "--dataset",
+                    job.dataset,
+                    "--seed",
+                    str(job.seed),
+                    "--threads",
+                    str(args.threads),
+                ],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=ENV,
             )
-            print(f"{time.strftime('%H:%M:%S')} start {job.name}", flush=True)
+            logger.info(f"{time.strftime('%H:%M:%S')} start {job.name}")
         if not featurizer.is_alive() and pending and not running:
             # A corpus failed to featurize; its jobs can never start.
             failed.extend(pending)
-            print("featurize failed for: " + ", ".join(sorted({j.dataset for j in pending})), flush=True)
+            logger.info("featurize failed for: " + ", ".join(sorted({j.dataset for j in pending})))
             break
         time.sleep(5)
-    print("failed: " + (", ".join(j.name for j in failed) or "none"), flush=True)
+    logger.info("failed: " + (", ".join(j.name for j in failed) or "none"))
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

@@ -5,19 +5,23 @@ train on exactly the text spiced embeds (the `text` column; no title).
 """
 
 import json
+import logging
 from argparse import ArgumentParser
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-import requests
+import requests  # type: ignore[import-untyped]
+from common import FEATURIZED_DIR, TEACHER, library_versions
 from datasets import Dataset
 from sentence_transformers import SentenceTransformer
 
-from common import FEATURIZED_DIR, TEACHER, library_versions
 from tokenlearn.featurize import featurize
 
 PARQUET_URL = "https://huggingface.co/api/datasets/mteb/{ds}/parquet/corpus/corpus/0.parquet"
 SHARD_LIST_URL = "https://huggingface.co/api/datasets/mteb/{ds}/parquet"
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -46,6 +50,7 @@ def download_corpus(ds: str, dest: Path) -> tuple[str, str]:
 
 
 def main() -> None:
+    """Featurize one corpus with the teacher and record the source and settings."""
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--batch-size", type=int, default=1024)
@@ -54,7 +59,7 @@ def main() -> None:
 
     out = FEATURIZED_DIR / args.dataset
     if (out / "dataset_info.json").exists():
-        print(f"{out} exists; skipping")
+        logger.info(f"{out} exists; skipping")
         return
 
     raw_dir = FEATURIZED_DIR.parent / "corpus"
@@ -97,8 +102,9 @@ def main() -> None:
         libraries=library_versions(),
     )
     (out / "featurize_info.json").write_text(json.dumps(asdict(info), indent=2) + "\n")
-    print(json.dumps(asdict(info), indent=2))
+    logger.info(json.dumps(asdict(info), indent=2))
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

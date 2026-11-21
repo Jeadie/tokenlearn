@@ -13,12 +13,13 @@ from __future__ import annotations
 
 import csv
 import json
-
-import pyarrow as pa
-import pyarrow.parquet as pq
+import logging
 from collections import defaultdict
 from dataclasses import astuple, dataclass, fields
 from pathlib import Path
+
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 EXPERIMENT_DIR = Path(__file__).resolve().parent.parent
 OTLP_PATH = Path.home() / "Github/tokenlearn/data/static-finetune/otel/metrics.jsonl"
@@ -33,6 +34,9 @@ PER_QUERY_METRICS = {
     "search_query_precision": "precision",
 }
 AT_K_METRICS = {"score": "ndcg", "search_recall": "recall", "search_mrr": "mrr", "search_precision": "precision"}
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -83,6 +87,7 @@ class Export:
 
 
 def attr_value(value: dict) -> str:
+    """The value of one OTLP attribute, as a string."""
     for key in ("stringValue", "intValue", "doubleValue", "boolValue"):
         if key in value:
             return str(value[key])
@@ -90,14 +95,17 @@ def attr_value(value: dict) -> str:
 
 
 def attrs(items: list[dict] | None) -> dict[str, str]:
+    """OTLP attributes as a plain dict."""
     return {item["key"]: attr_value(item["value"]) for item in items or []}
 
 
 def point_value(point: dict) -> float:
+    """The numeric value of one OTLP gauge data point."""
     return float(point["asDouble"]) if "asDouble" in point else float(point.get("asInt", "nan"))
 
 
 def manifest_info() -> dict[RunKey, RunInfo]:
+    """The model family, train dataset and seed of every run in the manifest."""
     info = {}
     for run in json.loads(MANIFEST_PATH.read_text()):
         model = run["model"]
@@ -132,6 +140,7 @@ def parse_resource(resource_metrics: dict) -> tuple[RunKey, Export] | None:
 
 
 def read_exports() -> dict[RunKey, Export]:
+    """The newest export of each run in the collector's output."""
     newest: dict[RunKey, Export] = {}
     # One line per OTLP export request; stream it, since the file holds every per-query point.
     with OTLP_PATH.open() as lines:
@@ -150,6 +159,7 @@ def read_exports() -> dict[RunKey, Export]:
 
 
 def write_csv(path: Path, row_type: type, rows: list) -> None:
+    """Write dataclass rows to a CSV file, with a header row."""
     with path.open("w", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow([f.name for f in fields(row_type)])
@@ -157,6 +167,7 @@ def write_csv(path: Path, row_type: type, rows: list) -> None:
 
 
 def main() -> None:
+    """Write run_metrics.csv and per_query.parquet from the collector's output."""
     info = manifest_info()
     exports = read_exports()
     run_rows: list[RunMetricRow] = []
@@ -178,11 +189,12 @@ def main() -> None:
     queries_per_run: dict[RunKey, set[int]] = defaultdict(set)
     for row in query_rows:
         queries_per_run[RunKey(row.name, row.eval_dataset)].add(row.k)
-    print(f"{len(exports)} runs exported ({len(unknown)} not in manifest: {unknown})")
-    print(f"{len(run_rows)} run-level rows, {len(query_rows)} per-query rows")
+    logger.info(f"{len(exports)} runs exported ({len(unknown)} not in manifest: {unknown})")
+    logger.info(f"{len(run_rows)} run-level rows, {len(query_rows)} per-query rows")
     missing = [key for key in info if key not in exports]
-    print(f"{len(missing)} manifest runs without exported metrics")
+    logger.info(f"{len(missing)} manifest runs without exported metrics")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

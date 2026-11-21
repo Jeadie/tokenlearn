@@ -4,6 +4,7 @@ Same steps and hyperparameters as `tokenlearn.train --model2vec-model-name`; the
 addition is `random_seed`, which sets the train/validation split, head init and batch order.
 """
 
+import logging
 import time
 from argparse import ArgumentParser
 from dataclasses import asdict, dataclass
@@ -12,11 +13,11 @@ from typing import Any
 import lightning.pytorch as pl
 import model2vec.train.base as m2v_base
 import torch
+from common import DISTILLED, FEATURIZED_DIR, MODELS_DIR, POTION, library_versions, save_atomically
 from lightning.pytorch.callbacks import EarlyStopping
 from model2vec import StaticModel
 from model2vec.train import StaticModelForSimilarity
 
-from common import DISTILLED, FEATURIZED_DIR, MODELS_DIR, POTION, library_versions, save_atomically
 from tokenlearn.utils import collect_means_and_texts
 
 # tokenlearn/train.py defaults.
@@ -28,6 +29,9 @@ BASES: dict[str, str] = {
     "potion-base-8M": POTION,
     DISTILLED: str(MODELS_DIR / DISTILLED),
 }
+
+
+logger = logging.getLogger(__name__)
 
 
 class _RecordingTrainer(pl.Trainer):
@@ -63,6 +67,7 @@ class TrainInfo:
 
 
 def main() -> None:
+    """Fine-tune one start model on one featurized corpus, with one seed."""
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--base", required=True, choices=sorted(BASES))
     parser.add_argument("--dataset", required=True)
@@ -73,7 +78,7 @@ def main() -> None:
     name = f"{args.base}-ft-{args.dataset}-s{args.seed}"
     out = MODELS_DIR / name
     if out.exists():
-        print(f"{out} exists; skipping")
+        logger.info(f"{out} exists; skipping")
         return
     torch.set_num_threads(args.threads)
     m2v_base.pl.Trainer = _RecordingTrainer  # type: ignore[misc]
@@ -119,8 +124,9 @@ def main() -> None:
         libraries=library_versions(),
     )
     save_atomically(trainable.to_static_model(), out, {"finetune": asdict(info)})
-    print(asdict(info))
+    logger.info(asdict(info))
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()
