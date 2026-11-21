@@ -25,7 +25,7 @@ Test queries only, as in Part 1. "new" is the setting chosen on dev queries for 
 | Model | SciFact | NFCorpus | FiQA |
 |---|---|---|---|
 | 1: bge-base-en-v1.5 (CLS pooling) | 0.7451 | 0.3667 | 0.3916 |
-| 1m: bge-base-en-v1.5 (mean pooling) | 0.7601 | 0.3733 | not run (see caveats) |
+| 1m: bge-base-en-v1.5 (mean pooling) | 0.7601 | 0.3733 | 0.3984 |
 | 2: distilled (256d) | 0.4391 | 0.1954 | 0.1153 |
 | 3: potion-base-8M | 0.4879 | 0.2308 | 0.1662 |
 | 4: Part 1, potion + fine-tune | 0.4937 ± 0.0014 | 0.2348 ± 0.0005 | 0.1705 ± 0.0010 |
@@ -145,8 +145,8 @@ FiQA:
   other. So potion's C4 training gives no advantage after the corpus fine-tune.
 - **The CLS target does not help.** It ties the mean target on SciFact and NFCorpus, and is worse
   on FiQA (best 0.1949 vs 0.2054). On test, bge itself with mean pooling is as good as or better
-  than with CLS pooling (SciFact +0.015 [+0.003, +0.027]; NFCorpus +0.007 [−0.000, +0.014]). So the
-  mean target was not the limit.
+  than with CLS pooling (SciFact +0.015 [+0.003, +0.027]; NFCorpus +0.007 [−0.000, +0.014]; FiQA
+  +0.007 [−0.001, +0.014]). So the mean target was not the limit.
 
 **Step 5, extra text.** Best setting of each dataset, seeds 42 and 43 (mean):
 
@@ -269,11 +269,11 @@ on 300 SciFact documents.
 - SciFact's dev queries and its train-query training text are the two halves of the same `train`
   split. They do not overlap, but they come from the same source. Test queries are separate.
 - FiQA grid points use one seed. The confirmed settings use five.
-- 3 of 356 search runs needed a second attempt. One was a port collision between two plans that
+- 3 of 357 search runs needed a second attempt. One was a port collision between two plans that
   this harness caused: spiced exited at startup, and testoperator then waited for 40 minutes
   instead of failing. Every reported number comes from a passed run.
-- Mean-pooled bge on FiQA did not finish: it shared the GPU with featurization, ran for 2.8 hours,
-  and was stopped to free the GPU for steps 5-6.
+- The first run of mean-pooled bge on FiQA shared the GPU with featurization. It was stopped after
+  2.8 hours to free the GPU for steps 5-6, and run again alone after them (1.9 hours, passed).
 - C4 replay (step 7) was not in the plan. It was added after the forgetting check.
 - spiced's mean pooling includes the CLS and SEP outputs; tokenlearn's mean target leaves them out.
 - Part 1's caveats also apply: no query instruction for bge, `text` column only, ties broken in
