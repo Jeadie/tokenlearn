@@ -226,15 +226,15 @@ async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
     failures = 0
     while train_queue or search_queue or training or searching:
         while train_queue and len(training) < args.train_workers:
-            spec = train_queue.pop(0)
-            training[asyncio.create_task(train(spec, args.threads))] = spec
+            train_spec = train_queue.pop(0)
+            training[asyncio.create_task(train(train_spec, args.threads))] = train_spec
         search_queue = [s for s in search_queue if s.model not in failed_models]
-        for spec in [s for s in search_queue if ready(s)]:
+        for search_spec in [s for s in search_queue if ready(s)]:
             if not free_slots:
                 break
-            search_queue.remove(spec)
+            search_queue.remove(search_spec)
             slot = free_slots.pop(0)
-            searching[asyncio.create_task(search(spec, slot, args, sha, version))] = (spec, slot)
+            searching[asyncio.create_task(search(search_spec, slot, args, sha, version))] = (search_spec, slot)
         pending = list(training) + list(searching)
         if not pending:
             if search_queue:
@@ -244,10 +244,10 @@ async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
         done_tasks, _ = await asyncio.wait(pending, timeout=POLL_SECONDS, return_when=asyncio.FIRST_COMPLETED)
         for task in done_tasks:
             if task in training:
-                spec = training.pop(task)
+                finished = training.pop(task)
                 if not task.result():
                     failures += 1
-                    failed_models.add(spec.name)
+                    failed_models.add(finished.name)
             else:
                 _, slot = searching.pop(task)
                 free_slots.append(slot)
