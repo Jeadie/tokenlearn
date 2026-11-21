@@ -106,8 +106,8 @@ def models() -> list[Model]:
     return result
 
 
-def render(name: str, eval_dataset: str, model: Model) -> str:
-    """The spicepod YAML for one model on one eval dataset."""
+def render(name: str, eval_dataset: str, model: Model, qrels: str = "qrels_test.parquet") -> str:
+    """The spicepod YAML for one model on one eval dataset, scored with the `qrels` file."""
     data = DATA_DIR / eval_dataset
     params = "".join(f"\n      {key}: {value}" for key, value in model.params)
     return f"""version: v1
@@ -139,7 +139,7 @@ datasets:
       enabled: true
       engine: arrow
 
-  - from: file:{data / "qrels_test.parquet"}
+  - from: file:{data / qrels}
     name: relevance_data
     acceleration:
       enabled: true

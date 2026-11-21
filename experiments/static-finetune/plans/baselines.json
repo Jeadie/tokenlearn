@@ -1,0 +1,111 @@
+{
+  "name": "baselines",
+  "train": [],
+  "search": [
+    {
+      "model": "hf-mean[bge-base-en-v1.5]",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "hf-mean[bge-base-en-v1.5]",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-scifact-s42]]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-scifact-s43]]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]",
+      "eval_dataset": "scifact",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-nfcorpus-s42]]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-nfcorpus-s43]]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-fiqa-s42]]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[potion-base-8M[ft-fiqa-s43]]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "hf-mean[bge-base-en-v1.5]",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    }
+  ]
+}
