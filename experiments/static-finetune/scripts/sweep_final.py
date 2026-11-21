@@ -22,7 +22,7 @@ from analyze import BOOTSTRAP_RESAMPLES, bootstrap_ci, fmt, to_markdown
 from collect import AT_K_METRICS, OTLP_PATH, PER_QUERY_METRICS, attrs, point_value
 from common import EXPERIMENT_DIR
 from plans import FINAL_SEEDS, best_setting, full_epochs
-from sweep import TrainSpec
+from sweep import SCORES_PATH, TrainSpec
 from sweep_finetune import SWEEP_MODELS_DIR
 
 logger = logging.getLogger(__name__)
@@ -66,11 +66,20 @@ def sweep_entries(dataset: str) -> list[Entry]:
     ]
 
 
+def has_passed(run: str, dataset: str) -> bool:
+    """True when sweep.py recorded a passed search run."""
+    lines = SCORES_PATH.read_text().splitlines() if SCORES_PATH.exists() else []
+    return any(
+        r["run_name"] == run and r["eval_dataset"] == dataset and r["exit_code"] == 0 for r in map(json.loads, lines)
+    )
+
+
 def entries(dataset: str) -> list[Entry]:
     """Every model to report on one dataset, in table order."""
+    bge_mean = "hf-mean[bge-base-en-v1.5]-test"
     return [
         Entry("1", "1: bge-base-en-v1.5 (CLS)", ("hf[bge-base-en-v1.5]-arrow",)),
-        Entry("1m", "1m: bge-base-en-v1.5 (mean pooling)", ("hf-mean[bge-base-en-v1.5]-test",)),
+        *([Entry("1m", "1m: bge-base-en-v1.5 (mean pooling)", (bge_mean,))] if has_passed(bge_mean, dataset) else []),
         Entry("2", "2: distilled", ("model2vec[bge-base-en-v1.5-distill-256]-arrow",)),
         Entry("3", "3: potion-base-8M", ("model2vec[potion-base-8M]-arrow",)),
         Entry("4", "4: Part 1 potion", part1_runs("potion", dataset)),
