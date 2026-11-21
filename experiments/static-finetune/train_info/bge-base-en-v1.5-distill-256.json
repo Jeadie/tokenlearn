@@ -1,0 +1,17 @@
+{
+  "distill": {
+    "teacher": "BAAI/bge-base-en-v1.5",
+    "pca_dims": 256,
+    "vocabulary": "teacher tokenizer (default)",
+    "quantize_to": "float32",
+    "wall_time_s": 109.9,
+    "libraries": {
+      "model2vec": "0.8.2",
+      "torch": "2.7.1",
+      "sentence-transformers": "5.4.1",
+      "transformers": "5.3.0",
+      "tokenizers": "0.22.2",
+      "datasets": "4.8.4"
+    }
+  }
+}
