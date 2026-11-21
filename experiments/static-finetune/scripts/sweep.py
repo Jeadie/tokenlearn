@@ -160,12 +160,12 @@ def parse_metrics(log: Path) -> dict[str, dict[int, float]] | None:
     return rows if rows["ndcg"] else None
 
 
-def scored_runs() -> set[str]:
-    """Search runs that already have a score from a passed run."""
+def scored_runs() -> set[tuple[str, str]]:
+    """(run name, eval dataset) of search runs that already have a score from a passed run."""
     if not SCORES_PATH.exists():
         return set()
     lines = SCORES_PATH.read_text().splitlines()
-    return {r["run_name"] for r in map(json.loads, lines) if r["exit_code"] == 0}
+    return {(r["run_name"], r["eval_dataset"]) for r in map(json.loads, lines) if r["exit_code"] == 0}
 
 
 async def train(spec: TrainSpec, threads: int) -> bool:
@@ -216,7 +216,7 @@ async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
     version = subprocess.run([str(args.spiced), "--version"], capture_output=True, text=True, check=True).stdout.strip()
     done = scored_runs()
     train_queue = [t for t in plan.train if not (SWEEP_MODELS_DIR / t.name).exists()]
-    search_queue = [s for s in plan.search if s.run_name not in done]
+    search_queue = [s for s in plan.search if (s.run_name, s.eval_dataset) not in done]
     failed_models: set[str] = set()
     logger.info(f"plan {plan.name}: {len(train_queue)} to train, {len(search_queue)} to search")
 
