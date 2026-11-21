@@ -1,6 +1,6 @@
 """Run `testoperator run search` for every spicepod in the manifest, many at a time.
 
-Each concurrent run gets its own spiced HTTP/Flight/OTEL ports. A run starts once its local model
+Each concurrent run gets its own spiced HTTP and Flight ports. A run starts once its local model
 directory exists, so this can run while models are still training. A run whose `run.json` records
 exit code 0 is skipped, so the script can be restarted.
 """
@@ -52,7 +52,6 @@ class Job:
 class Ports:
     http: int
     flight: int
-    otel: int
 
 
 @dataclass
@@ -124,7 +123,7 @@ def load_jobs(eval_datasets: set[str] | None, families: set[str] | None, names: 
 
 
 def ports_for(slot: int, base: int) -> Ports:
-    return Ports(http=base + slot, flight=base + 100 + slot, otel=base + 200 + slot)
+    return Ports(http=base + slot, flight=base + 100 + slot)
 
 
 async def run_job(job: Job, slot: int, args: argparse.Namespace, testoperator_sha: str, spiced_version: str) -> bool:
@@ -147,8 +146,6 @@ async def run_job(job: Job, slot: int, args: argparse.Namespace, testoperator_sh
         str(ports.http),
         args.flight_port_flag,
         str(ports.flight),
-        args.otel_port_flag,
-        str(ports.otel),
     ]
     job.out_dir.mkdir(parents=True, exist_ok=True)
     record = RunRecord(
@@ -233,7 +230,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--per-query-flag", default="--per-query-all-k")
     parser.add_argument("--http-port-flag", default="--spiced-http-port")
     parser.add_argument("--flight-port-flag", default="--spiced-flight-port")
-    parser.add_argument("--otel-port-flag", default="--spiced-otel-port")
     return parser.parse_args()
 
 
