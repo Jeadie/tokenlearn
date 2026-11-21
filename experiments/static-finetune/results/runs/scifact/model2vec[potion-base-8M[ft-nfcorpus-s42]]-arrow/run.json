@@ -1,0 +1,33 @@
+{
+  "name": "model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow",
+  "eval_dataset": "scifact",
+  "family": "4",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods/scifact/model2vec[potion-base-8M[ft-nfcorpus-s42]]-arrow.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "7200",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "18700",
+    "--spiced-flight-port",
+    "18800"
+  ],
+  "ports": {
+    "http": 18700,
+    "flight": 18800
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795244334.4692109,
+  "finished_at": 1795244344.11169,
+  "exit_code": 0
+}
