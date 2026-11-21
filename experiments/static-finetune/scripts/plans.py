@@ -170,6 +170,19 @@ def cross(datasets: tuple[str, ...]) -> Plan:
     return Plan(name=f"cross-{'-'.join(datasets)}", train=[], search=search)
 
 
+def replay(datasets: tuple[str, ...]) -> Plan:
+    """Each dataset's final setting plus C4 replay (seeds 42-46): dev and test in-domain, test elsewhere."""
+    train = []
+    search = []
+    for dataset in datasets:
+        best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+        runs = [replace(best, seed=seed, extras=tuple(sorted((*best.extras, "c4")))) for seed in FINAL_SEEDS]
+        train += runs
+        search += [SearchSpec(model=t.name, eval_dataset=dataset, split="dev") for t in runs]
+        search += [SearchSpec(model=t.name, eval_dataset=other, split="test") for other in DATASETS for t in runs]
+    return Plan(name=f"replay-{'-'.join(datasets)}", train=train, search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -194,6 +207,7 @@ def main() -> None:
             "final",
             "cross",
             "grid-mean-fiqa-top",
+            "replay",
         ),
     )
     parser.add_argument("--datasets", nargs="+", default=list(DATASETS), help="for confirm")
@@ -208,6 +222,8 @@ def main() -> None:
             write(final(tuple(args.datasets)))
         elif name == "cross":
             write(cross(tuple(args.datasets)))
+        elif name == "replay":
+            write(replay(tuple(args.datasets)))
         elif name == "baselines":
             write(baselines())
         elif name == "grid-mean-hi":

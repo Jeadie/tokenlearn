@@ -10,6 +10,8 @@ Sources:
 - corpus: the pinned corpus `text` column (the documents that are searched).
 - trainq: the pinned train-query texts from fetch_dev_qrels.py (never a dev or test query).
 - sents: sentences of the corpus documents, a fixed random sample of at most 2 per document.
+- c4: the pinned sample of C4 texts that potion-base-8M was trained on (fetch_c4.py), for replay.
+  It does not depend on the dataset.
 
 Writes FEATURIZED_DIR/<dataset>-<source>-<target> as a datasets directory with `text` and
 `embedding` columns, the format that `tokenlearn.utils.collect_means_and_texts` reads.
@@ -63,6 +65,8 @@ def output_dir(dataset: str, source: str, target: str) -> Path:
     """Where the featurized texts go. The original mean-target corpus keeps its first location."""
     if source == "corpus" and target == "mean":
         return FEATURIZED_DIR / dataset
+    if source == "c4":
+        return FEATURIZED_DIR / f"c4-{target}"
     return FEATURIZED_DIR / f"{dataset}-{source}-{target}"
 
 
@@ -70,6 +74,8 @@ def load_texts(dataset: str, source: str) -> list[str]:
     """The non-empty texts of one source."""
     if source == "trainq":
         texts = pq.read_table(DATA_DIR / dataset / "trainq.parquet").column("text").to_pylist()
+    elif source == "c4":
+        texts = pq.read_table(DATA_DIR / "c4" / "texts.parquet").column("text").to_pylist()
     else:
         texts = pq.read_table(DATA_DIR / dataset / "corpus.parquet").column("text").to_pylist()
     texts = [t for t in texts if t and t.strip()]
@@ -117,7 +123,7 @@ def main() -> None:
     """Featurize one (dataset, source, target)."""
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", required=True)
-    parser.add_argument("--source", required=True, choices=("corpus", "trainq", "sents"))
+    parser.add_argument("--source", required=True, choices=("corpus", "trainq", "sents", "c4"))
     parser.add_argument("--target", required=True, choices=("mean", "cls"))
     parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--batch-size", type=int, default=32)

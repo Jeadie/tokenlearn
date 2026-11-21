@@ -6,7 +6,8 @@ Differences from finetune.py (whose defaults reproduce the first experiment):
   model do not change (each text vector is normalized), but Adam's fixed-size steps turn the
   vectors more.
 - `--target`: train toward bge's mean token vector (`mean`) or its CLS embedding (`cls`).
-- `--extra`: more featurized texts (for example `trainq`, `sents`), added to the training split only.
+- `--extra`: more featurized texts (`trainq`, `sents`, `c4`), added to the training split only.
+  `c4` (replay of general text) adds as many C4 rows as there are corpus training rows.
 - Early stopping with `--min-delta` (default 0) and `--patience` (default 10), and the learning
   rate scheduler with PyTorch's default threshold (1e-4 relative) instead of model2vec's 3%.
 - The checkpoint with the lowest validation loss is kept, not the last one.
@@ -178,7 +179,7 @@ def main() -> None:
     parser.add_argument("--scale", type=float, default=1.0)
     parser.add_argument("--target", default="mean", choices=("mean", "cls"))
     parser.add_argument("--dataset", required=True)
-    parser.add_argument("--extra", action="append", default=[], choices=("trainq", "sents"))
+    parser.add_argument("--extra", action="append", default=[], choices=("trainq", "sents", "c4"))
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--patience", type=int, default=10)
@@ -210,8 +211,12 @@ def main() -> None:
         rng = np.random.default_rng(args.seed)
         pick = rng.choice(len(texts), size=min(512, len(texts)), replace=False)
         x_val, y_val = [texts[i] for i in pick], vectors[pick]
+    n_corpus_train = len(x_train)
     for source in args.extra:
         extra_texts, extra_vectors = load(args.dataset, source, args.target)
+        if source == "c4":
+            pick = np.random.default_rng(args.seed).permutation(len(extra_texts))[:n_corpus_train]
+            extra_texts, extra_vectors = [extra_texts[i] for i in pick], extra_vectors[pick]
         x_train = list(x_train) + extra_texts
         y_train = np.concatenate([y_train, extra_vectors])
 
