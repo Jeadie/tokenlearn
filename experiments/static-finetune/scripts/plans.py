@@ -22,22 +22,24 @@ logger = logging.getLogger(__name__)
 PLANS_DIR = EXPERIMENT_DIR / "plans"
 STARTS = (("potion", 1.0), ("potion", 10.5), ("distill", 1.0))
 LRS = (1e-3, 1e-2, 3e-2)
+# The SciFact grid was best at its top learning rate (3e-2), so the grid is extended upward.
+HIGH_LRS = (1e-1, 3e-1)
 GRID_SEEDS = {"scifact": (42, 43), "fiqa": (42,), "nfcorpus": (42, 43)}
 # Long FiQA runs before the short NFCorpus runs, so the short ones fill the end.
 GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
 
 
-def grid(target: str) -> Plan:
+def grid(target: str, lrs: tuple[float, ...] = LRS, name: str = "") -> Plan:
     """Every starting model and learning rate on every dataset, scored on dev."""
     train = [
         TrainSpec(base=base, scale=scale, dataset=ds, lr=lr, seed=seed, target=target)
         for ds in GRID_ORDER
         for seed in GRID_SEEDS[ds]
         for base, scale in STARTS
-        for lr in LRS
+        for lr in lrs
     ]
     search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev") for t in train]
-    return Plan(name=f"grid-{target}", train=train, search=search)
+    return Plan(name=name or f"grid-{target}", train=train, search=search)
 
 
 def baselines() -> Plan:
@@ -65,10 +67,15 @@ def write(plan: Plan) -> None:
 def main() -> None:
     """Write the requested plans."""
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("plans", nargs="+", choices=("grid-mean", "grid-cls", "baselines"))
+    parser.add_argument("plans", nargs="+", choices=("grid-mean", "grid-cls", "grid-mean-hi", "baselines"))
     args = parser.parse_args()
     for name in args.plans:
-        write(baselines() if name == "baselines" else grid(name.removeprefix("grid-")))
+        if name == "baselines":
+            write(baselines())
+        elif name == "grid-mean-hi":
+            write(grid("mean", HIGH_LRS, name))
+        else:
+            write(grid(name.removeprefix("grid-")))
 
 
 if __name__ == "__main__":
