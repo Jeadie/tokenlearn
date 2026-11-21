@@ -1,0 +1,33 @@
+{
+  "name": "sw-potion-x10.5-mean-fiqa-lr0.1-s46-dev",
+  "eval_dataset": "fiqa",
+  "family": "sweep",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods_sweep/dev/fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s46-dev.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "7200",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "19800",
+    "--spiced-flight-port",
+    "19900"
+  ],
+  "ports": {
+    "http": 19800,
+    "flight": 19900
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795270591.350574,
+  "finished_at": 1795270633.582108,
+  "exit_code": 0
+}

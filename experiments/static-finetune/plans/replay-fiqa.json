@@ -1,0 +1,172 @@
+{
+  "name": "replay-fiqa",
+  "train": [
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "c4",
+        "trainq"
+      ],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "c4",
+        "trainq"
+      ],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 44,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "c4",
+        "trainq"
+      ],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 45,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "c4",
+        "trainq"
+      ],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 46,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "c4",
+        "trainq"
+      ],
+      "full_epochs": null
+    }
+  ],
+  "search": [
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s43",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s44",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s45",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s46",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s42",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s43",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s44",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s45",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s46",
+      "eval_dataset": "scifact",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s42",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s44",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s45",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s46",
+      "eval_dataset": "nfcorpus",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s42",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s43",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s44",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s45",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s46",
+      "eval_dataset": "fiqa",
+      "split": "test"
+    }
+  ]
+}

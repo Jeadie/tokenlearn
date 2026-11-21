@@ -1,0 +1,194 @@
+/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/plans/final-fiqa.json: 10 training runs, 15 search runs
+/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/plans/cross-fiqa.json: 0 training runs, 20 search runs
+/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/plans/replay-fiqa.json: 5 training runs, 20 search runs
+01:26:14 plan final-fiqa: 5 to train, 15 to search
+01:26:14 [train start] sw-distill-mean-fiqa+trainq-lr0.3-full18-s42
+01:26:15 [train start] sw-distill-mean-fiqa+trainq-lr0.3-full18-s43
+01:26:15 [train start] sw-distill-mean-fiqa+trainq-lr0.3-full18-s44
+01:26:15 [train start] sw-distill-mean-fiqa+trainq-lr0.3-full18-s45
+01:26:15 [train start] sw-distill-mean-fiqa+trainq-lr0.3-full18-s46
+01:26:15 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:26:15 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:27:04 [done ] slot=0 exit=0 50s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:27:04 [search done] exit=0 ndcg@10=0.2288 sw-distill-mean-fiqa+trainq-lr0.3-s42-test (fiqa)
+01:27:04 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:27:04 [done ] slot=1 exit=0 50s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:27:04 [search done] exit=0 ndcg@10=0.2295 sw-distill-mean-fiqa+trainq-lr0.3-s43-test (fiqa)
+01:27:04 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:28:06 [done ] slot=1 exit=0 62s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:28:06 [search done] exit=0 ndcg@10=0.2348 sw-distill-mean-fiqa+trainq-lr0.3-s45-test (fiqa)
+01:28:06 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:28:07 [done ] slot=0 exit=0 63s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:28:07 [search done] exit=0 ndcg@10=0.2213 sw-distill-mean-fiqa+trainq-lr0.3-s44-test (fiqa)
+01:28:50 [done ] slot=1 exit=0 44s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:28:50 [search done] exit=0 ndcg@10=0.225 sw-distill-mean-fiqa+trainq-lr0.3-s46-test (fiqa)
+01:35:54 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-full18-s42
+01:35:54 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:35:54 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:35:57 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-full18-s45
+01:35:57 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-full18-s44
+01:35:58 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-full18-s46
+01:36:01 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-full18-s43
+01:37:21 [done ] slot=1 exit=0 87s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:37:21 [search done] exit=0 ndcg@10=0.2298 sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test (fiqa)
+01:37:21 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:37:22 [done ] slot=0 exit=0 88s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:37:22 [search done] exit=0 ndcg@10=0.2339 sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test (fiqa)
+01:37:22 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:38:50 [done ] slot=1 exit=0 90s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:38:50 [search done] exit=0 ndcg@10=0.2307 sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test (fiqa)
+01:38:50 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:38:50 [done ] slot=0 exit=0 88s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:38:50 [search done] exit=0 ndcg@10=0.2343 sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test (fiqa)
+01:38:50 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-dev
+01:40:06 [done ] slot=0 exit=0 75s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-dev
+01:40:06 [search done] exit=0 ndcg@10=0.2208 sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-dev (fiqa)
+01:40:06 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-dev
+01:40:17 [done ] slot=1 exit=0 87s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:40:17 [search done] exit=0 ndcg@10=0.2253 sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test (fiqa)
+01:40:17 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-dev
+01:41:19 [done ] slot=0 exit=0 73s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-dev
+01:41:19 [search done] exit=0 ndcg@10=0.2203 sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-dev (fiqa)
+01:41:19 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-dev
+01:41:31 [done ] slot=1 exit=0 74s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-dev
+01:41:31 [search done] exit=0 ndcg@10=0.2232 sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-dev (fiqa)
+01:41:31 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-dev
+01:42:32 [done ] slot=0 exit=0 73s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-dev
+01:42:32 [search done] exit=0 ndcg@10=0.2252 sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-dev (fiqa)
+01:42:40 [done ] slot=1 exit=0 69s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-dev
+01:42:40 [search done] exit=0 ndcg@10=0.2196 sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-dev (fiqa)
+01:42:40 plan final-fiqa finished, 0 failures
+01:42:59 plan cross-fiqa: 0 to train, 20 to search
+01:42:59 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:42:59 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:43:13 [done ] slot=0 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:43:13 [search done] exit=0 ndcg@10=0.4263 sw-distill-mean-fiqa+trainq-lr0.3-s42-test (scifact)
+01:43:13 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:43:13 [done ] slot=1 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:43:13 [search done] exit=0 ndcg@10=0.4183 sw-distill-mean-fiqa+trainq-lr0.3-s43-test (scifact)
+01:43:13 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:43:28 [done ] slot=0 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:43:28 [search done] exit=0 ndcg@10=0.4334 sw-distill-mean-fiqa+trainq-lr0.3-s44-test (scifact)
+01:43:28 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:43:28 [done ] slot=1 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:43:28 [search done] exit=0 ndcg@10=0.4318 sw-distill-mean-fiqa+trainq-lr0.3-s45-test (scifact)
+01:43:28 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:43:43 [done ] slot=0 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:43:43 [search done] exit=0 ndcg@10=0.4399 sw-distill-mean-fiqa+trainq-lr0.3-s46-test (scifact)
+01:43:43 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:43:43 [done ] slot=1 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:43:43 [search done] exit=0 ndcg@10=0.446 sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test (scifact)
+01:43:43 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:43:57 [done ] slot=0 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:43:57 [search done] exit=0 ndcg@10=0.4476 sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test (scifact)
+01:43:57 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:43:57 [done ] slot=1 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:43:57 [search done] exit=0 ndcg@10=0.4425 sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test (scifact)
+01:43:57 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:44:12 [done ] slot=0 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:44:12 [search done] exit=0 ndcg@10=0.4407 sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test (scifact)
+01:44:12 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:44:12 [done ] slot=1 exit=0 15s scifact/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:44:12 [search done] exit=0 ndcg@10=0.4388 sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test (scifact)
+01:44:12 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:44:25 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s42-test
+01:44:25 [search done] exit=0 ndcg@10=0.2001 sw-distill-mean-fiqa+trainq-lr0.3-s42-test (nfcorpus)
+01:44:25 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:44:25 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s43-test
+01:44:25 [search done] exit=0 ndcg@10=0.201 sw-distill-mean-fiqa+trainq-lr0.3-s43-test (nfcorpus)
+01:44:25 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:44:38 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s44-test
+01:44:38 [search done] exit=0 ndcg@10=0.201 sw-distill-mean-fiqa+trainq-lr0.3-s44-test (nfcorpus)
+01:44:38 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:44:38 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s45-test
+01:44:38 [search done] exit=0 ndcg@10=0.2003 sw-distill-mean-fiqa+trainq-lr0.3-s45-test (nfcorpus)
+01:44:38 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:44:50 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-s46-test
+01:44:50 [search done] exit=0 ndcg@10=0.2044 sw-distill-mean-fiqa+trainq-lr0.3-s46-test (nfcorpus)
+01:44:50 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:44:50 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test
+01:44:50 [search done] exit=0 ndcg@10=0.2059 sw-distill-mean-fiqa+trainq-lr0.3-full18-s42-test (nfcorpus)
+01:44:50 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:45:03 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test
+01:45:03 [search done] exit=0 ndcg@10=0.2061 sw-distill-mean-fiqa+trainq-lr0.3-full18-s43-test (nfcorpus)
+01:45:03 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:45:03 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test
+01:45:03 [search done] exit=0 ndcg@10=0.2062 sw-distill-mean-fiqa+trainq-lr0.3-full18-s44-test (nfcorpus)
+01:45:03 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:45:16 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test
+01:45:16 [search done] exit=0 ndcg@10=0.2045 sw-distill-mean-fiqa+trainq-lr0.3-full18-s45-test (nfcorpus)
+01:45:16 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test
+01:45:16 [search done] exit=0 ndcg@10=0.204 sw-distill-mean-fiqa+trainq-lr0.3-full18-s46-test (nfcorpus)
+01:45:16 plan cross-fiqa finished, 0 failures
+01:45:34 plan replay-fiqa: 5 to train, 20 to search
+01:45:34 [train start] sw-distill-mean-fiqa+c4+trainq-lr0.3-s42
+01:45:34 [train start] sw-distill-mean-fiqa+c4+trainq-lr0.3-s43
+01:45:34 [train start] sw-distill-mean-fiqa+c4+trainq-lr0.3-s44
+01:45:34 [train start] sw-distill-mean-fiqa+c4+trainq-lr0.3-s45
+01:45:34 [train start] sw-distill-mean-fiqa+c4+trainq-lr0.3-s46
+02:07:00 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-dev
+02:07:00 [start] slot=1 scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:07:08 [train done ] sw-distill-mean-fiqa+c4+trainq-lr0.3-s45
+02:07:20 [train done ] sw-distill-mean-fiqa+c4+trainq-lr0.3-s42
+02:07:21 [train done ] sw-distill-mean-fiqa+c4+trainq-lr0.3-s43
+02:07:21 [done ] slot=1 exit=0 21s scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:07:21 [search done] exit=0 ndcg@10=0.4717 sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test (scifact)
+02:07:21 [start] slot=1 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-dev
+02:07:25 [train done ] sw-distill-mean-fiqa+c4+trainq-lr0.3-s46
+02:07:40 [train done ] sw-distill-mean-fiqa+c4+trainq-lr0.3-s44
+02:08:21 [done ] slot=0 exit=0 81s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-dev
+02:08:21 [search done] exit=0 ndcg@10=0.2144 sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-dev (fiqa)
+02:08:21 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-dev
+02:08:38 [done ] slot=1 exit=0 77s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-dev
+02:08:38 [search done] exit=0 ndcg@10=0.2097 sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-dev (fiqa)
+02:08:38 [start] slot=1 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-dev
+02:09:34 [done ] slot=0 exit=0 73s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-dev
+02:09:34 [search done] exit=0 ndcg@10=0.2095 sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-dev (fiqa)
+02:09:34 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-dev
+02:09:52 [done ] slot=1 exit=0 74s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-dev
+02:09:52 [search done] exit=0 ndcg@10=0.2138 sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-dev (fiqa)
+02:09:52 [start] slot=1 scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:10:08 [done ] slot=1 exit=0 16s scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:10:08 [search done] exit=0 ndcg@10=0.4788 sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test (scifact)
+02:10:08 [start] slot=1 scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:10:25 [done ] slot=1 exit=0 17s scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:10:25 [search done] exit=0 ndcg@10=0.4722 sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test (scifact)
+02:10:25 [start] slot=1 scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:10:37 [done ] slot=0 exit=0 63s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-dev
+02:10:37 [search done] exit=0 ndcg@10=0.214 sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-dev (fiqa)
+02:10:37 [start] slot=0 scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:10:41 [done ] slot=1 exit=0 16s scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:10:41 [search done] exit=0 ndcg@10=0.4741 sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test (scifact)
+02:10:41 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:10:51 [done ] slot=0 exit=0 14s scifact/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:10:51 [search done] exit=0 ndcg@10=0.4681 sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test (scifact)
+02:10:51 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:10:52 [done ] slot=1 exit=0 12s nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:10:52 [search done] exit=0 ndcg@10=0.2278 sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test (nfcorpus)
+02:10:52 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:11:03 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:11:03 [search done] exit=0 ndcg@10=0.2217 sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test (nfcorpus)
+02:11:03 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:11:05 [done ] slot=1 exit=0 13s nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:11:05 [search done] exit=0 ndcg@10=0.2236 sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test (nfcorpus)
+02:11:05 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:11:16 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:11:16 [search done] exit=0 ndcg@10=0.2266 sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test (nfcorpus)
+02:11:16 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:11:17 [done ] slot=1 exit=0 12s nfcorpus/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:11:17 [search done] exit=0 ndcg@10=0.2227 sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test (nfcorpus)
+02:11:17 [start] slot=1 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:12:42 [done ] slot=0 exit=0 86s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test
+02:12:42 [search done] exit=0 ndcg@10=0.2251 sw-distill-mean-fiqa+c4+trainq-lr0.3-s42-test (fiqa)
+02:12:42 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:12:44 [done ] slot=1 exit=0 86s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test
+02:12:44 [search done] exit=0 ndcg@10=0.2224 sw-distill-mean-fiqa+c4+trainq-lr0.3-s43-test (fiqa)
+02:12:44 [start] slot=1 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:14:06 [done ] slot=0 exit=0 85s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test
+02:14:06 [search done] exit=0 ndcg@10=0.2213 sw-distill-mean-fiqa+c4+trainq-lr0.3-s44-test (fiqa)
+02:14:06 [start] slot=0 fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:14:08 [done ] slot=1 exit=0 85s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test
+02:14:08 [search done] exit=0 ndcg@10=0.2252 sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test (fiqa)
+02:15:07 [done ] slot=0 exit=0 60s fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test
+02:15:07 [search done] exit=0 ndcg@10=0.224 sw-distill-mean-fiqa+c4+trainq-lr0.3-s46-test (fiqa)
+02:15:07 plan replay-fiqa finished, 0 failures

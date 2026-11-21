@@ -1,0 +1,33 @@
+{
+  "name": "sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test",
+  "eval_dataset": "fiqa",
+  "family": "sweep",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods_sweep/test/fiqa/sw-distill-mean-fiqa+c4+trainq-lr0.3-s45-test.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "7200",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "19701",
+    "--spiced-flight-port",
+    "19801"
+  ],
+  "ports": {
+    "http": 19701,
+    "flight": 19801
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795277564.02033,
+  "finished_at": 1795277648.743419,
+  "exit_code": 0
+}

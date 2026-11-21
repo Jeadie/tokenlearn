@@ -1,0 +1,53 @@
+21:38:42 plan baselines: 0 to train, 18 to search
+21:38:42 [start] slot=0 scifact/hf-mean[bge-base-en-v1.5]-test
+21:38:42 [start] slot=1 nfcorpus/hf-mean[bge-base-en-v1.5]-test
+22:16:27 [done ] slot=0 exit=0 2264s scifact/hf-mean[bge-base-en-v1.5]-test
+22:16:27 [search done] exit=0 ndcg@10=0.7601 hf-mean[bge-base-en-v1.5]-test (scifact)
+22:16:27 [start] slot=0 scifact/model2vec[potion-base-8M]-dev
+22:16:45 [done ] slot=0 exit=0 18s scifact/model2vec[potion-base-8M]-dev
+22:16:45 [search done] exit=0 ndcg@10=0.4824 model2vec[potion-base-8M]-dev (scifact)
+22:16:45 [start] slot=0 scifact/model2vec[potion-base-8M[ft-scifact-s42]]-dev
+22:17:01 [done ] slot=0 exit=0 17s scifact/model2vec[potion-base-8M[ft-scifact-s42]]-dev
+22:17:01 [search done] exit=0 ndcg@10=0.486 model2vec[potion-base-8M[ft-scifact-s42]]-dev (scifact)
+22:17:01 [start] slot=0 scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-dev
+22:17:23 [done ] slot=0 exit=0 22s scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-dev
+22:17:23 [search done] exit=0 ndcg@10=0.5099 model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s42]]-dev (scifact)
+22:17:23 [start] slot=0 scifact/model2vec[potion-base-8M[ft-scifact-s43]]-dev
+22:17:40 [done ] slot=0 exit=0 16s scifact/model2vec[potion-base-8M[ft-scifact-s43]]-dev
+22:17:40 [search done] exit=0 ndcg@10=0.4871 model2vec[potion-base-8M[ft-scifact-s43]]-dev (scifact)
+22:17:40 [start] slot=0 scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-dev
+22:18:06 [done ] slot=0 exit=0 26s scifact/model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-dev
+22:18:06 [search done] exit=0 ndcg@10=0.5116 model2vec[bge-base-en-v1.5-distill-256[ft-scifact-s43]]-dev (scifact)
+22:18:06 [start] slot=0 nfcorpus/model2vec[potion-base-8M]-dev
+22:18:18 [done ] slot=0 exit=0 13s nfcorpus/model2vec[potion-base-8M]-dev
+22:18:18 [search done] exit=0 ndcg@10=0.2341 model2vec[potion-base-8M]-dev (nfcorpus)
+22:18:18 [start] slot=0 nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s42]]-dev
+22:18:32 [done ] slot=0 exit=0 13s nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s42]]-dev
+22:18:32 [search done] exit=0 ndcg@10=0.236 model2vec[potion-base-8M[ft-nfcorpus-s42]]-dev (nfcorpus)
+22:18:32 [start] slot=0 nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-dev
+22:18:50 [done ] slot=0 exit=0 18s nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-dev
+22:18:50 [search done] exit=0 ndcg@10=0.234 model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-dev (nfcorpus)
+22:18:50 [start] slot=0 nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s43]]-dev
+22:19:03 [done ] slot=0 exit=0 13s nfcorpus/model2vec[potion-base-8M[ft-nfcorpus-s43]]-dev
+22:19:03 [search done] exit=0 ndcg@10=0.2365 model2vec[potion-base-8M[ft-nfcorpus-s43]]-dev (nfcorpus)
+22:19:03 [start] slot=0 nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-dev
+22:19:18 [done ] slot=0 exit=0 15s nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-dev
+22:19:18 [search done] exit=0 ndcg@10=0.2376 model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s43]]-dev (nfcorpus)
+22:19:18 [start] slot=0 fiqa/model2vec[potion-base-8M]-dev
+22:20:11 [done ] slot=0 exit=0 53s fiqa/model2vec[potion-base-8M]-dev
+22:20:11 [search done] exit=0 ndcg@10=0.1512 model2vec[potion-base-8M]-dev (fiqa)
+22:20:11 [start] slot=0 fiqa/model2vec[potion-base-8M[ft-fiqa-s42]]-dev
+22:20:58 [done ] slot=0 exit=0 47s fiqa/model2vec[potion-base-8M[ft-fiqa-s42]]-dev
+22:20:58 [search done] exit=0 ndcg@10=0.1599 model2vec[potion-base-8M[ft-fiqa-s42]]-dev (fiqa)
+22:20:58 [start] slot=0 fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-dev
+22:22:21 [done ] slot=0 exit=0 83s fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-dev
+22:22:21 [search done] exit=0 ndcg@10=0.1769 model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s42]]-dev (fiqa)
+22:22:21 [start] slot=0 fiqa/model2vec[potion-base-8M[ft-fiqa-s43]]-dev
+22:23:20 [done ] slot=0 exit=0 59s fiqa/model2vec[potion-base-8M[ft-fiqa-s43]]-dev
+22:23:20 [search done] exit=0 ndcg@10=0.1611 model2vec[potion-base-8M[ft-fiqa-s43]]-dev (fiqa)
+22:23:20 [start] slot=0 fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-dev
+22:25:13 [done ] slot=0 exit=0 113s fiqa/model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-dev
+22:25:13 [search done] exit=0 ndcg@10=0.1766 model2vec[bge-base-en-v1.5-distill-256[ft-fiqa-s43]]-dev (fiqa)
+22:25:13 [start] slot=0 fiqa/hf-mean[bge-base-en-v1.5]-test
+22:28:33 [done ] slot=1 exit=0 2991s nfcorpus/hf-mean[bge-base-en-v1.5]-test
+22:28:33 [search done] exit=0 ndcg@10=0.3733 hf-mean[bge-base-en-v1.5]-test (nfcorpus)

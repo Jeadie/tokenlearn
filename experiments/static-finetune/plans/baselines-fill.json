@@ -1,0 +1,16 @@
+{
+  "name": "baselines-fill",
+  "train": [],
+  "search": [
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256]",
+      "eval_dataset": "nfcorpus",
+      "split": "dev"
+    },
+    {
+      "model": "model2vec[bge-base-en-v1.5-distill-256]",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    }
+  ]
+}

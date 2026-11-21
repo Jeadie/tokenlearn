@@ -1,0 +1,29 @@
+[
+  {
+    "dataset": "scifact",
+    "dev_source": "train",
+    "dev_queries": 436,
+    "trainq_queries": 373,
+    "test_queries": 300,
+    "dev_test_overlap": 0,
+    "trainq_dev_or_test_overlap": 0
+  },
+  {
+    "dataset": "nfcorpus",
+    "dev_source": "dev",
+    "dev_queries": 324,
+    "trainq_queries": 2590,
+    "test_queries": 323,
+    "dev_test_overlap": 0,
+    "trainq_dev_or_test_overlap": 0
+  },
+  {
+    "dataset": "fiqa",
+    "dev_source": "dev",
+    "dev_queries": 500,
+    "trainq_queries": 5500,
+    "test_queries": 648,
+    "dev_test_overlap": 0,
+    "trainq_dev_or_test_overlap": 0
+  }
+]

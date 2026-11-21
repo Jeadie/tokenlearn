@@ -1,0 +1,37 @@
+{
+  "name": "grid-mean-fiqa-top",
+  "train": [
+    {
+      "base": "potion",
+      "dataset": "fiqa",
+      "lr": 1.0,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 1.0,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null
+    }
+  ],
+  "search": [
+    {
+      "model": "sw-potion-x10.5-mean-fiqa-lr1-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    },
+    {
+      "model": "sw-distill-mean-fiqa-lr1-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev"
+    }
+  ]
+}

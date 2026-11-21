@@ -1,0 +1,161 @@
+22:22:39 plan grid-cls: 40 to train, 40 to search
+22:22:39 [train start] sw-potion-x10.5-cls-scifact-lr0.001-s42
+22:22:39 [train start] sw-potion-x10.5-cls-scifact-lr0.01-s42
+22:26:20 [train done ] sw-potion-x10.5-cls-scifact-lr0.01-s42
+22:26:20 [train start] sw-potion-x10.5-cls-scifact-lr0.03-s42
+22:26:20 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.01-s42-dev
+22:26:45 [done ] slot=0 exit=0 26s scifact/sw-potion-x10.5-cls-scifact-lr0.01-s42-dev
+22:26:45 [search done] exit=0 ndcg@10=0.5927 sw-potion-x10.5-cls-scifact-lr0.01-s42-dev (scifact)
+22:29:08 [train done ] sw-potion-x10.5-cls-scifact-lr0.03-s42
+22:29:08 [train start] sw-potion-x10.5-cls-scifact-lr0.1-s42
+22:29:08 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.03-s42-dev
+22:29:22 [done ] slot=0 exit=0 14s scifact/sw-potion-x10.5-cls-scifact-lr0.03-s42-dev
+22:29:22 [search done] exit=0 ndcg@10=0.6127 sw-potion-x10.5-cls-scifact-lr0.03-s42-dev (scifact)
+22:30:02 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.001-s42-dev
+22:30:04 [train done ] sw-potion-x10.5-cls-scifact-lr0.001-s42
+22:30:04 [train start] sw-distill-cls-scifact-lr0.001-s42
+22:30:18 [done ] slot=0 exit=0 16s scifact/sw-potion-x10.5-cls-scifact-lr0.001-s42-dev
+22:30:18 [search done] exit=0 ndcg@10=0.5514 sw-potion-x10.5-cls-scifact-lr0.001-s42-dev (scifact)
+22:31:43 [train done ] sw-potion-x10.5-cls-scifact-lr0.1-s42
+22:31:43 [train start] sw-distill-cls-scifact-lr0.01-s42
+22:31:43 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.1-s42-dev
+22:31:58 [done ] slot=0 exit=0 15s scifact/sw-potion-x10.5-cls-scifact-lr0.1-s42-dev
+22:31:58 [search done] exit=0 ndcg@10=0.6283 sw-potion-x10.5-cls-scifact-lr0.1-s42-dev (scifact)
+22:33:47 [train done ] sw-distill-cls-scifact-lr0.01-s42
+22:33:47 [train start] sw-distill-cls-scifact-lr0.03-s42
+22:33:47 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.01-s42-dev
+22:34:12 [done ] slot=0 exit=0 25s scifact/sw-distill-cls-scifact-lr0.01-s42-dev
+22:34:12 [search done] exit=0 ndcg@10=0.5824 sw-distill-cls-scifact-lr0.01-s42-dev (scifact)
+22:35:26 [train done ] sw-distill-cls-scifact-lr0.001-s42
+22:35:26 [train start] sw-distill-cls-scifact-lr0.1-s42
+22:35:26 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.001-s42-dev
+22:35:54 [done ] slot=0 exit=0 27s scifact/sw-distill-cls-scifact-lr0.001-s42-dev
+22:35:54 [search done] exit=0 ndcg@10=0.5313 sw-distill-cls-scifact-lr0.001-s42-dev (scifact)
+22:36:24 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.03-s42-dev
+22:36:27 [train done ] sw-distill-cls-scifact-lr0.03-s42
+22:36:27 [train start] sw-potion-x10.5-cls-scifact-lr0.001-s43
+22:36:52 [done ] slot=0 exit=0 28s scifact/sw-distill-cls-scifact-lr0.03-s42-dev
+22:36:52 [search done] exit=0 ndcg@10=0.6166 sw-distill-cls-scifact-lr0.03-s42-dev (scifact)
+22:39:12 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.1-s42-dev
+22:39:12 [train done ] sw-distill-cls-scifact-lr0.1-s42
+22:39:12 [train start] sw-potion-x10.5-cls-scifact-lr0.01-s43
+22:39:35 [done ] slot=0 exit=0 23s scifact/sw-distill-cls-scifact-lr0.1-s42-dev
+22:39:35 [search done] exit=0 ndcg@10=0.6377 sw-distill-cls-scifact-lr0.1-s42-dev (scifact)
+22:41:35 [train done ] sw-potion-x10.5-cls-scifact-lr0.01-s43
+22:41:35 [train start] sw-potion-x10.5-cls-scifact-lr0.03-s43
+22:41:35 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.01-s43-dev
+22:41:50 [done ] slot=0 exit=0 15s scifact/sw-potion-x10.5-cls-scifact-lr0.01-s43-dev
+22:41:50 [search done] exit=0 ndcg@10=0.6049 sw-potion-x10.5-cls-scifact-lr0.01-s43-dev (scifact)
+22:42:30 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.001-s43-dev
+22:42:30 [train done ] sw-potion-x10.5-cls-scifact-lr0.001-s43
+22:42:30 [train start] sw-potion-x10.5-cls-scifact-lr0.1-s43
+22:42:45 [done ] slot=0 exit=0 15s scifact/sw-potion-x10.5-cls-scifact-lr0.001-s43-dev
+22:42:45 [search done] exit=0 ndcg@10=0.5565 sw-potion-x10.5-cls-scifact-lr0.001-s43-dev (scifact)
+22:43:35 [train done ] sw-potion-x10.5-cls-scifact-lr0.03-s43
+22:43:35 [train start] sw-distill-cls-scifact-lr0.001-s43
+22:43:35 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.03-s43-dev
+22:43:51 [done ] slot=0 exit=0 16s scifact/sw-potion-x10.5-cls-scifact-lr0.03-s43-dev
+22:43:51 [search done] exit=0 ndcg@10=0.6314 sw-potion-x10.5-cls-scifact-lr0.03-s43-dev (scifact)
+22:44:55 [train done ] sw-potion-x10.5-cls-scifact-lr0.1-s43
+22:44:55 [train start] sw-distill-cls-scifact-lr0.01-s43
+22:44:55 [start] slot=0 scifact/sw-potion-x10.5-cls-scifact-lr0.1-s43-dev
+22:45:13 [done ] slot=0 exit=0 17s scifact/sw-potion-x10.5-cls-scifact-lr0.1-s43-dev
+22:45:13 [search done] exit=0 ndcg@10=0.6251 sw-potion-x10.5-cls-scifact-lr0.1-s43-dev (scifact)
+22:46:52 [train done ] sw-distill-cls-scifact-lr0.01-s43
+22:46:52 [train start] sw-distill-cls-scifact-lr0.03-s43
+22:46:52 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.01-s43-dev
+22:47:13 [done ] slot=0 exit=0 21s scifact/sw-distill-cls-scifact-lr0.01-s43-dev
+22:47:13 [search done] exit=0 ndcg@10=0.5753 sw-distill-cls-scifact-lr0.01-s43-dev (scifact)
+22:48:58 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.03-s43-dev
+22:49:03 [train done ] sw-distill-cls-scifact-lr0.03-s43
+22:49:03 [train start] sw-distill-cls-scifact-lr0.1-s43
+22:49:09 [train done ] sw-distill-cls-scifact-lr0.001-s43
+22:49:09 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.001-s42
+22:49:24 [done ] slot=0 exit=0 26s scifact/sw-distill-cls-scifact-lr0.03-s43-dev
+22:49:24 [search done] exit=0 ndcg@10=0.6095 sw-distill-cls-scifact-lr0.03-s43-dev (scifact)
+22:49:24 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.001-s43-dev
+22:49:44 [done ] slot=0 exit=0 20s scifact/sw-distill-cls-scifact-lr0.001-s43-dev
+22:49:44 [search done] exit=0 ndcg@10=0.5308 sw-distill-cls-scifact-lr0.001-s43-dev (scifact)
+22:51:54 [train done ] sw-distill-cls-scifact-lr0.1-s43
+22:51:54 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.01-s42
+22:51:54 [start] slot=0 scifact/sw-distill-cls-scifact-lr0.1-s43-dev
+22:52:15 [done ] slot=0 exit=0 21s scifact/sw-distill-cls-scifact-lr0.1-s43-dev
+22:52:15 [search done] exit=0 ndcg@10=0.6331 sw-distill-cls-scifact-lr0.1-s43-dev (scifact)
+22:54:00 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.01-s42
+22:54:00 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.03-s42
+22:54:00 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.01-s42-dev
+22:54:09 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.001-s42
+22:54:09 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.1-s42
+22:54:12 [done ] slot=0 exit=0 12s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.01-s42-dev
+22:54:12 [search done] exit=0 ndcg@10=0.2996 sw-potion-x10.5-cls-nfcorpus-lr0.01-s42-dev (nfcorpus)
+22:54:12 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.001-s42-dev
+22:54:23 [done ] slot=0 exit=0 11s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.001-s42-dev
+22:54:23 [search done] exit=0 ndcg@10=0.2713 sw-potion-x10.5-cls-nfcorpus-lr0.001-s42-dev (nfcorpus)
+22:55:53 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.03-s42
+22:55:53 [train start] sw-distill-cls-nfcorpus-lr0.001-s42
+22:55:53 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.03-s42-dev
+22:56:05 [done ] slot=0 exit=0 13s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.03-s42-dev
+22:56:05 [search done] exit=0 ndcg@10=0.32 sw-potion-x10.5-cls-nfcorpus-lr0.03-s42-dev (nfcorpus)
+22:56:35 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.1-s42-dev
+22:56:37 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.1-s42
+22:56:37 [train start] sw-distill-cls-nfcorpus-lr0.01-s42
+22:56:46 [done ] slot=0 exit=0 11s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.1-s42-dev
+22:56:46 [search done] exit=0 ndcg@10=0.3137 sw-potion-x10.5-cls-nfcorpus-lr0.1-s42-dev (nfcorpus)
+22:57:46 [train done ] sw-distill-cls-nfcorpus-lr0.01-s42
+22:57:46 [train start] sw-distill-cls-nfcorpus-lr0.03-s42
+22:57:46 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.01-s42-dev
+22:58:00 [done ] slot=0 exit=0 14s nfcorpus/sw-distill-cls-nfcorpus-lr0.01-s42-dev
+22:58:00 [search done] exit=0 ndcg@10=0.2823 sw-distill-cls-nfcorpus-lr0.01-s42-dev (nfcorpus)
+22:58:57 [train done ] sw-distill-cls-nfcorpus-lr0.001-s42
+22:58:57 [train start] sw-distill-cls-nfcorpus-lr0.1-s42
+22:58:57 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.001-s42-dev
+22:59:05 [train done ] sw-distill-cls-nfcorpus-lr0.03-s42
+22:59:05 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.001-s43
+22:59:09 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-cls-nfcorpus-lr0.001-s42-dev
+22:59:09 [search done] exit=0 ndcg@10=0.2484 sw-distill-cls-nfcorpus-lr0.001-s42-dev (nfcorpus)
+22:59:10 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.03-s42-dev
+22:59:21 [done ] slot=0 exit=0 12s nfcorpus/sw-distill-cls-nfcorpus-lr0.03-s42-dev
+22:59:21 [search done] exit=0 ndcg@10=0.3151 sw-distill-cls-nfcorpus-lr0.03-s42-dev (nfcorpus)
+23:00:38 [train done ] sw-distill-cls-nfcorpus-lr0.1-s42
+23:00:38 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.01-s43
+23:00:38 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.1-s42-dev
+23:00:51 [done ] slot=0 exit=0 13s nfcorpus/sw-distill-cls-nfcorpus-lr0.1-s42-dev
+23:00:51 [search done] exit=0 ndcg@10=0.3085 sw-distill-cls-nfcorpus-lr0.1-s42-dev (nfcorpus)
+23:01:45 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.01-s43
+23:01:45 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.03-s43
+23:01:45 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.01-s43-dev
+23:01:48 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.001-s43
+23:01:48 [train start] sw-potion-x10.5-cls-nfcorpus-lr0.1-s43
+23:01:55 [done ] slot=0 exit=0 10s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.01-s43-dev
+23:01:55 [search done] exit=0 ndcg@10=0.3066 sw-potion-x10.5-cls-nfcorpus-lr0.01-s43-dev (nfcorpus)
+23:01:55 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.001-s43-dev
+23:02:05 [done ] slot=0 exit=0 10s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.001-s43-dev
+23:02:05 [search done] exit=0 ndcg@10=0.2734 sw-potion-x10.5-cls-nfcorpus-lr0.001-s43-dev (nfcorpus)
+23:03:22 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.03-s43
+23:03:22 [train start] sw-distill-cls-nfcorpus-lr0.001-s43
+23:03:22 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.03-s43-dev
+23:03:32 [done ] slot=0 exit=0 10s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.03-s43-dev
+23:03:32 [search done] exit=0 ndcg@10=0.3227 sw-potion-x10.5-cls-nfcorpus-lr0.03-s43-dev (nfcorpus)
+23:03:46 [train done ] sw-potion-x10.5-cls-nfcorpus-lr0.1-s43
+23:03:46 [train start] sw-distill-cls-nfcorpus-lr0.01-s43
+23:03:47 [start] slot=0 nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.1-s43-dev
+23:03:56 [done ] slot=0 exit=0 10s nfcorpus/sw-potion-x10.5-cls-nfcorpus-lr0.1-s43-dev
+23:03:56 [search done] exit=0 ndcg@10=0.3171 sw-potion-x10.5-cls-nfcorpus-lr0.1-s43-dev (nfcorpus)
+23:04:49 [train done ] sw-distill-cls-nfcorpus-lr0.01-s43
+23:04:49 [train start] sw-distill-cls-nfcorpus-lr0.03-s43
+23:04:49 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.01-s43-dev
+23:05:00 [done ] slot=0 exit=0 12s nfcorpus/sw-distill-cls-nfcorpus-lr0.01-s43-dev
+23:05:00 [search done] exit=0 ndcg@10=0.2856 sw-distill-cls-nfcorpus-lr0.01-s43-dev (nfcorpus)
+23:06:02 [train done ] sw-distill-cls-nfcorpus-lr0.03-s43
+23:06:02 [train start] sw-distill-cls-nfcorpus-lr0.1-s43
+23:06:02 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.03-s43-dev
+23:06:06 [train done ] sw-distill-cls-nfcorpus-lr0.001-s43
+23:06:13 [done ] slot=0 exit=0 12s nfcorpus/sw-distill-cls-nfcorpus-lr0.03-s43-dev
+23:06:13 [search done] exit=0 ndcg@10=0.3117 sw-distill-cls-nfcorpus-lr0.03-s43-dev (nfcorpus)
+23:06:13 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.001-s43-dev
+23:06:25 [done ] slot=0 exit=0 12s nfcorpus/sw-distill-cls-nfcorpus-lr0.001-s43-dev
+23:06:25 [search done] exit=0 ndcg@10=0.2475 sw-distill-cls-nfcorpus-lr0.001-s43-dev (nfcorpus)
+23:07:39 [train done ] sw-distill-cls-nfcorpus-lr0.1-s43
+23:07:39 [start] slot=0 nfcorpus/sw-distill-cls-nfcorpus-lr0.1-s43-dev
+23:07:50 [done ] slot=0 exit=0 11s nfcorpus/sw-distill-cls-nfcorpus-lr0.1-s43-dev
+23:07:50 [search done] exit=0 ndcg@10=0.3167 sw-distill-cls-nfcorpus-lr0.1-s43-dev (nfcorpus)

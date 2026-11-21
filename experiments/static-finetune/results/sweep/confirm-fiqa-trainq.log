@@ -1,0 +1,17 @@
+01:14:55 plan confirm-fiqa-trainq: 3 to train, 3 to search
+01:14:55 [train start] sw-distill-mean-fiqa+trainq-lr0.3-s44
+01:14:55 [train start] sw-distill-mean-fiqa+trainq-lr0.3-s45
+01:14:55 [train start] sw-distill-mean-fiqa+trainq-lr0.3-s46
+01:23:35 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-s44
+01:23:35 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-dev
+01:24:07 [done ] slot=0 exit=0 33s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-dev
+01:24:07 [search done] exit=0 ndcg@10=0.217 sw-distill-mean-fiqa+trainq-lr0.3-s44-dev (fiqa)
+01:24:47 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-s45
+01:24:47 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-dev
+01:25:01 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-s46
+01:25:10 [done ] slot=0 exit=0 23s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-dev
+01:25:10 [search done] exit=0 ndcg@10=0.2189 sw-distill-mean-fiqa+trainq-lr0.3-s45-dev (fiqa)
+01:25:10 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-dev
+01:25:32 [done ] slot=0 exit=0 21s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-dev
+01:25:32 [search done] exit=0 ndcg@10=0.2235 sw-distill-mean-fiqa+trainq-lr0.3-s46-dev (fiqa)
+01:25:32 plan confirm-fiqa-trainq finished, 0 failures
