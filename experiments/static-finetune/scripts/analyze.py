@@ -107,7 +107,9 @@ def seed_averaged(per_query: pd.DataFrame, eval_dataset: str, family: str, train
     return rows.groupby(["query_id", "metric", "k"])["value"].mean()
 
 
-def bootstrap_ci(deltas: np.ndarray, rng: np.random.Generator) -> tuple[float, float]:
+def bootstrap_ci(deltas: np.ndarray) -> tuple[float, float]:
+    # A fresh generator per comparison: the same comparison always gets the same interval.
+    rng = np.random.default_rng(BOOTSTRAP_SEED)
     samples = rng.integers(0, len(deltas), size=(BOOTSTRAP_RESAMPLES, len(deltas)))
     means = deltas[samples].mean(axis=1)
     return float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
@@ -120,13 +122,12 @@ def compare(
     b: tuple[str, str | None],
     metric: str,
     k: int,
-    rng: np.random.Generator,
 ) -> Comparison:
     a_scores = seed_averaged(per_query, eval_dataset, *a).xs((metric, k), level=("metric", "k"))
     b_scores = seed_averaged(per_query, eval_dataset, *b).xs((metric, k), level=("metric", "k"))
     paired = pd.concat([a_scores, b_scores], axis=1, join="inner").dropna()
     deltas = (paired.iloc[:, 0] - paired.iloc[:, 1]).to_numpy()
-    low, high = bootstrap_ci(deltas, rng)
+    low, high = bootstrap_ci(deltas)
 
     seed_deltas = ""
     family_a, train_a = a
@@ -184,7 +185,6 @@ def main() -> None:
     per_query["seed"] = per_query["seed"].astype(str)
     check_run_means(run_metrics, per_query)
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    rng = np.random.default_rng(BOOTSTRAP_SEED)
     sections: list[str] = []
 
     # 1. metric@k for every model on every eval dataset.
@@ -212,7 +212,7 @@ def main() -> None:
             for metric in METRICS:
                 for k in (1, 5, 10):
                     try:
-                        comparisons.append(compare(per_query, eval_dataset, a, b, metric, k, rng))
+                        comparisons.append(compare(per_query, eval_dataset, a, b, metric, k))
                     except KeyError:
                         continue
     table = comparison_table(comparisons)
@@ -226,7 +226,7 @@ def main() -> None:
             for eval_dataset in DATASETS:
                 try:
                     cross.append(
-                        compare(per_query, eval_dataset, (family, train_dataset), (BASELINE[family], None), "ndcg", 10, rng)
+                        compare(per_query, eval_dataset, (family, train_dataset), (BASELINE[family], None), "ndcg", 10)
                     )
                 except KeyError:
                     continue
