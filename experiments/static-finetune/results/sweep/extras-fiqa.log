@@ -1,0 +1,32 @@
+00:21:40 plan extras-fiqa: 6 to train, 6 to search
+00:21:40 [train start] sw-distill-mean-fiqa+trainq-lr0.3-s42
+00:21:40 [train start] sw-distill-mean-fiqa+trainq-lr0.3-s43
+00:32:34 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-s42
+00:32:34 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-dev
+00:33:30 [done ] slot=0 exit=0 56s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-dev
+00:33:30 [search done] exit=0 ndcg@10=0.2135 sw-distill-mean-fiqa+trainq-lr0.3-s42-dev (fiqa)
+00:34:32 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-s43
+00:34:33 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-dev
+00:35:30 [done ] slot=0 exit=0 57s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-dev
+00:35:30 [search done] exit=0 ndcg@10=0.2185 sw-distill-mean-fiqa+trainq-lr0.3-s43-dev (fiqa)
+01:30:30 [train start] sw-distill-mean-fiqa+sents-lr0.3-s42
+01:30:30 [train start] sw-distill-mean-fiqa+sents-lr0.3-s43
+01:30:30 [train start] sw-distill-mean-fiqa+sents+trainq-lr0.3-s42
+01:30:30 [train start] sw-distill-mean-fiqa+sents+trainq-lr0.3-s43
+02:18:11 [start] slot=0 fiqa/sw-distill-mean-fiqa+sents-lr0.3-s42-dev
+02:18:13 [train done ] sw-distill-mean-fiqa+sents-lr0.3-s42
+02:18:59 [done ] slot=0 exit=0 48s fiqa/sw-distill-mean-fiqa+sents-lr0.3-s42-dev
+02:18:59 [search done] exit=0 ndcg@10=0.1867 sw-distill-mean-fiqa+sents-lr0.3-s42-dev (fiqa)
+02:19:14 [start] slot=0 fiqa/sw-distill-mean-fiqa+sents+trainq-lr0.3-s43-dev
+02:19:16 [train done ] sw-distill-mean-fiqa+sents+trainq-lr0.3-s43
+02:19:55 [done ] slot=0 exit=0 41s fiqa/sw-distill-mean-fiqa+sents+trainq-lr0.3-s43-dev
+02:19:55 [search done] exit=0 ndcg@10=0.1879 sw-distill-mean-fiqa+sents+trainq-lr0.3-s43-dev (fiqa)
+02:20:15 [train done ] sw-distill-mean-fiqa+sents-lr0.3-s43
+02:20:15 [start] slot=0 fiqa/sw-distill-mean-fiqa+sents-lr0.3-s43-dev
+02:20:49 [done ] slot=0 exit=0 35s fiqa/sw-distill-mean-fiqa+sents-lr0.3-s43-dev
+02:20:49 [search done] exit=0 ndcg@10=0.1821 sw-distill-mean-fiqa+sents-lr0.3-s43-dev (fiqa)
+02:23:34 [train done ] sw-distill-mean-fiqa+sents+trainq-lr0.3-s42
+02:23:34 [start] slot=0 fiqa/sw-distill-mean-fiqa+sents+trainq-lr0.3-s42-dev
+02:24:02 [done ] slot=0 exit=0 27s fiqa/sw-distill-mean-fiqa+sents+trainq-lr0.3-s42-dev
+02:24:02 [search done] exit=0 ndcg@10=0.1861 sw-distill-mean-fiqa+sents+trainq-lr0.3-s42-dev (fiqa)
+02:24:02 plan extras-fiqa finished, 0 failures

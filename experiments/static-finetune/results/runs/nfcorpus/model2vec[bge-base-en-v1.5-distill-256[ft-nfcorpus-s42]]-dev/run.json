@@ -1,0 +1,33 @@
+{
+  "name": "model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-dev",
+  "eval_dataset": "nfcorpus",
+  "family": "4b",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods_sweep/dev/nfcorpus/model2vec[bge-base-en-v1.5-distill-256[ft-nfcorpus-s42]]-dev.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "18000",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "19300",
+    "--spiced-flight-port",
+    "19400"
+  ],
+  "ports": {
+    "http": 19300,
+    "flight": 19400
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795263512.044804,
+  "finished_at": 1795263530.402099,
+  "exit_code": 0
+}

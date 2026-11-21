@@ -1,0 +1,64 @@
+23:13:20 plan confirm-fiqa: 12 to train, 12 to search
+23:13:20 [train start] sw-distill-mean-fiqa-lr0.3-s43
+23:13:20 [train start] sw-distill-mean-fiqa-lr0.3-s44
+23:13:20 [train start] sw-distill-mean-fiqa-lr0.3-s45
+23:22:55 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr0.3-s43-dev
+23:22:56 [train done ] sw-distill-mean-fiqa-lr0.3-s43
+23:22:56 [train start] sw-distill-mean-fiqa-lr0.3-s46
+23:22:57 [train done ] sw-distill-mean-fiqa-lr0.3-s44
+23:22:57 [train start] sw-potion-x10.5-mean-fiqa-lr0.1-s43
+23:22:58 [train done ] sw-distill-mean-fiqa-lr0.3-s45
+23:22:58 [train start] sw-potion-x10.5-mean-fiqa-lr0.1-s44
+23:23:35 [done ] slot=0 exit=0 40s fiqa/sw-distill-mean-fiqa-lr0.3-s43-dev
+23:23:35 [search done] exit=0 ndcg@10=0.2002 sw-distill-mean-fiqa-lr0.3-s43-dev (fiqa)
+23:23:35 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr0.3-s44-dev
+23:24:26 [done ] slot=0 exit=0 51s fiqa/sw-distill-mean-fiqa-lr0.3-s44-dev
+23:24:26 [search done] exit=0 ndcg@10=0.2082 sw-distill-mean-fiqa-lr0.3-s44-dev (fiqa)
+23:24:26 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr0.3-s45-dev
+23:25:16 [done ] slot=0 exit=0 50s fiqa/sw-distill-mean-fiqa-lr0.3-s45-dev
+23:25:16 [search done] exit=0 ndcg@10=0.2025 sw-distill-mean-fiqa-lr0.3-s45-dev (fiqa)
+23:31:11 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s43-dev
+23:31:14 [train done ] sw-potion-x10.5-mean-fiqa-lr0.1-s43
+23:31:14 [train start] sw-potion-x10.5-mean-fiqa-lr0.1-s45
+23:31:19 [train done ] sw-potion-x10.5-mean-fiqa-lr0.1-s44
+23:31:19 [train start] sw-potion-x10.5-mean-fiqa-lr0.1-s46
+23:31:49 [done ] slot=0 exit=0 38s fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s43-dev
+23:31:49 [search done] exit=0 ndcg@10=0.1963 sw-potion-x10.5-mean-fiqa-lr0.1-s43-dev (fiqa)
+23:31:49 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s44-dev
+23:32:29 [done ] slot=0 exit=0 39s fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s44-dev
+23:32:29 [search done] exit=0 ndcg@10=0.2008 sw-potion-x10.5-mean-fiqa-lr0.1-s44-dev (fiqa)
+23:35:29 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr0.3-s46-dev
+23:35:29 [train done ] sw-distill-mean-fiqa-lr0.3-s46
+23:35:29 [train start] sw-potion-x10.5-mean-fiqa-lr0.3-s43
+23:41:57 [train done ] sw-potion-x10.5-mean-fiqa-lr0.1-s45
+23:41:57 [train start] sw-potion-x10.5-mean-fiqa-lr0.3-s44
+23:41:58 [train done ] sw-potion-x10.5-mean-fiqa-lr0.1-s46
+23:41:58 [train start] sw-potion-x10.5-mean-fiqa-lr0.3-s45
+23:51:02 [train done ] sw-potion-x10.5-mean-fiqa-lr0.3-s43
+23:51:02 [train start] sw-potion-x10.5-mean-fiqa-lr0.3-s46
+23:54:46 [train done ] sw-potion-x10.5-mean-fiqa-lr0.3-s45
+23:55:02 [train done ] sw-potion-x10.5-mean-fiqa-lr0.3-s44
+23:56:19 [train done ] sw-potion-x10.5-mean-fiqa-lr0.3-s46
+00:14:49 [done ] slot=0 exit=-15 2360s fiqa/sw-distill-mean-fiqa-lr0.3-s46-dev
+00:14:49 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr0.3-s46-dev
+00:15:47 [done ] slot=0 exit=0 58s fiqa/sw-distill-mean-fiqa-lr0.3-s46-dev
+00:15:47 [search done] exit=0 ndcg@10=0.2063 sw-distill-mean-fiqa-lr0.3-s46-dev (fiqa)
+00:15:47 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s45-dev
+00:16:31 [done ] slot=0 exit=0 44s fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s45-dev
+00:16:31 [search done] exit=0 ndcg@10=0.2017 sw-potion-x10.5-mean-fiqa-lr0.1-s45-dev (fiqa)
+00:16:31 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s46-dev
+00:17:13 [done ] slot=0 exit=0 42s fiqa/sw-potion-x10.5-mean-fiqa-lr0.1-s46-dev
+00:17:13 [search done] exit=0 ndcg@10=0.1996 sw-potion-x10.5-mean-fiqa-lr0.1-s46-dev (fiqa)
+00:17:13 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s43-dev
+00:17:58 [done ] slot=0 exit=0 44s fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s43-dev
+00:17:58 [search done] exit=0 ndcg@10=0.2049 sw-potion-x10.5-mean-fiqa-lr0.3-s43-dev (fiqa)
+00:17:58 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s44-dev
+00:18:41 [done ] slot=0 exit=0 43s fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s44-dev
+00:18:41 [search done] exit=0 ndcg@10=0.209 sw-potion-x10.5-mean-fiqa-lr0.3-s44-dev (fiqa)
+00:18:41 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s45-dev
+00:19:23 [done ] slot=0 exit=0 42s fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s45-dev
+00:19:23 [search done] exit=0 ndcg@10=0.2108 sw-potion-x10.5-mean-fiqa-lr0.3-s45-dev (fiqa)
+00:19:23 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s46-dev
+00:20:06 [done ] slot=0 exit=0 43s fiqa/sw-potion-x10.5-mean-fiqa-lr0.3-s46-dev
+00:20:06 [search done] exit=0 ndcg@10=0.2009 sw-potion-x10.5-mean-fiqa-lr0.3-s46-dev (fiqa)
+00:20:06 plan confirm-fiqa finished, 0 failures

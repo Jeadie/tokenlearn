@@ -1,0 +1,12 @@
+00:21:40 plan grid-mean-fiqa-top: 2 to train, 2 to search
+00:21:40 [train start] sw-potion-x10.5-mean-fiqa-lr1-s42
+00:21:40 [train start] sw-distill-mean-fiqa-lr1-s42
+00:34:16 [start] slot=0 fiqa/sw-potion-x10.5-mean-fiqa-lr1-s42-dev
+00:34:17 [train done ] sw-potion-x10.5-mean-fiqa-lr1-s42
+00:34:53 [done ] slot=0 exit=0 37s fiqa/sw-potion-x10.5-mean-fiqa-lr1-s42-dev
+00:34:53 [search done] exit=0 ndcg@10=0.2042 sw-potion-x10.5-mean-fiqa-lr1-s42-dev (fiqa)
+00:35:11 [train done ] sw-distill-mean-fiqa-lr1-s42
+00:35:11 [start] slot=0 fiqa/sw-distill-mean-fiqa-lr1-s42-dev
+00:35:50 [done ] slot=0 exit=0 40s fiqa/sw-distill-mean-fiqa-lr1-s42-dev
+00:35:50 [search done] exit=0 ndcg@10=0.2015 sw-distill-mean-fiqa-lr1-s42-dev (fiqa)
+00:35:50 plan grid-mean-fiqa-top finished, 0 failures

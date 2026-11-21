@@ -1,0 +1,45 @@
+version: v1
+kind: Spicepod
+name: sw-potion-x10.5-mean-nfcorpus-lr0.001-s42-dev
+
+metadata:
+  benchmark_dataset: nfcorpus_retrieval
+
+datasets:
+
+  # MTEB nfcorpus retrieval (https://huggingface.co/datasets/mteb/nfcorpus), pinned local copy.
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/nfcorpus/corpus.parquet
+    name: corpus
+    acceleration:
+      enabled: true
+      engine: arrow
+    columns:
+      - name: text
+        embeddings:
+          - from: embed
+            row_id:
+              - _id
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/nfcorpus/queries.parquet
+    name: queries
+    acceleration:
+      enabled: true
+      engine: arrow
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/nfcorpus/qrels_dev.parquet
+    name: relevance_data
+    acceleration:
+      enabled: true
+      engine: arrow
+
+views:
+  # Only judged queries: scoring ignores the rest, so sending them only costs time.
+  - name: test_queries
+    sql: SELECT _id, text FROM queries WHERE _id IN (SELECT DISTINCT "query-id" FROM relevance_data)
+
+embeddings:
+  - from: model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/sweep/sw-potion-x10.5-mean-nfcorpus-lr0.001-s42
+    name: embed
+    params:
+      embed_max_token_length: 512

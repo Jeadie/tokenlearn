@@ -1,0 +1,33 @@
+{
+  "name": "sw-distill-mean-nfcorpus-lr0.1-s44-dev",
+  "eval_dataset": "nfcorpus",
+  "family": "sweep",
+  "command": [
+    "/Users/jeadie_compute/.spice/bin/testoperator-search-ports",
+    "run",
+    "search",
+    "--spicepod-path",
+    "/private/tmp/tokenlearn-worktrees/static-finetune-experiment/experiments/static-finetune/spicepods_sweep/dev/nfcorpus/sw-distill-mean-nfcorpus-lr0.1-s44-dev.yaml",
+    "--spiced-path",
+    "/Users/jeadie_compute/.spice/bin/spiced",
+    "--ready-wait",
+    "7200",
+    "--disable-progress-bars",
+    "--otlp-endpoint",
+    "http://127.0.0.1:4317",
+    "--per-query-all-k",
+    "--spiced-http-port",
+    "19501",
+    "--spiced-flight-port",
+    "19601"
+  ],
+  "ports": {
+    "http": 19501,
+    "flight": 19601
+  },
+  "testoperator_sha256": "120f804fb7b1eb1c64ac2dfe24bbcd1ef167c3529ee9574606dda1d176f788c1",
+  "spiced_version": "v2.5.0-unstable+models.metal (60eaf209cd)",
+  "started_at": 1795267152.0287108,
+  "finished_at": 1795267164.73608,
+  "exit_code": 0
+}

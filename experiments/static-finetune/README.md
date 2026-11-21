@@ -6,6 +6,11 @@ tokenlearn fine-tune on the search corpus improves them.
 
 All runs use `testoperator run search`, which does an embedding-only vector search through `spiced`.
 
+> **Part 2:** [SWEEP.md](SWEEP.md) trains the fine-tune to convergence with a higher learning
+> rate, and gets +0.05 to +0.16 test NDCG@10 over this part's fine-tuned models. It also shows that
+> the stronger fine-tune loses quality on a distant domain, and that replaying general text fixes
+> most of that loss.
+
 ## Models
 
 | # | Model | How it is made | Dims |

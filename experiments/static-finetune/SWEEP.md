@@ -12,7 +12,164 @@ at a time:
 5. **More training text.** Train-split queries and sentences of the corpus documents.
 6. **Retrain on 100% of the corpus** for the number of epochs found with the 10% hold-out.
 
-RESULTS_PLACEHOLDER
+Step 7, added during the run: **C4 replay**. The new recipe forgot a distant domain (FiQA), so a
+variant mixes potion's general training text (C4) into the fine-tune.
+
+## Results
+
+### Test NDCG@10 (main result)
+
+Test queries only, as in Part 1. "new" is the setting chosen on dev queries for each dataset
+(below), 5 seeds (mean ± sample std).
+
+| Model | SciFact | NFCorpus | FiQA |
+|---|---|---|---|
+| 1: bge-base-en-v1.5 (CLS pooling) | 0.7451 | 0.3667 | 0.3916 |
+| 1m: bge-base-en-v1.5 (mean pooling) | 0.7601 | 0.3733 | not run (see caveats) |
+| 2: distilled (256d) | 0.4391 | 0.1954 | 0.1153 |
+| 3: potion-base-8M | 0.4879 | 0.2308 | 0.1662 |
+| 4: Part 1, potion + fine-tune | 0.4937 ± 0.0014 | 0.2348 ± 0.0005 | 0.1705 ± 0.0010 |
+| 4b: Part 1, distilled + fine-tune | 0.4967 ± 0.0041 | 0.2365 ± 0.0033 | 0.1809 ± 0.0012 |
+| **new** | **0.6534 ± 0.0055** | **0.3253 ± 0.0026** | **0.2279 ± 0.0051** |
+| new, retrained on 100% of the corpus | 0.6611 ± 0.0037 | 0.3251 ± 0.0043 | 0.2308 ± 0.0036 |
+| new + C4 replay | 0.6514 ± 0.0074 | 0.3092 ± 0.0057 | 0.2236 ± 0.0017 |
+
+At @10, the new models are also better on recall, MRR and precision:
+
+| Model | SciFact R / MRR / P | NFCorpus R / MRR / P | FiQA R / MRR / P |
+|---|---|---|---|
+| 1: bge (CLS) | 0.8686 / 0.7092 / 0.0980 | 0.1775 / 0.5737 / 0.2752 | 0.4590 / 0.4742 / 0.1106 |
+| 4b: Part 1 distilled | 0.6477 / 0.4552 / 0.0719 | 0.1111 / 0.4086 / 0.1800 | 0.2445 / 0.2166 / 0.0553 |
+| new | 0.7971 / 0.6146 / 0.0887 | 0.1592 / 0.5038 / 0.2487 | 0.3013 / 0.2714 / 0.0695 |
+| new, 100% corpus | 0.8054 / 0.6221 / 0.0895 | 0.1591 / 0.4999 / 0.2478 | 0.3061 / 0.2750 / 0.0705 |
+
+`results/final/tables.md` has all four metrics at k = 1..10 for every model, and every paired
+comparison at k = 1, 5 and 10.
+
+Paired bootstrap 95% CIs over test queries (NDCG@10; a multi-seed model's per-query score is its
+mean over seeds):
+
+| A − B | SciFact | NFCorpus | FiQA |
+|---|---|---|---|
+| new − 4 (Part 1, potion) | +0.160 [+0.124, +0.196] | +0.091 [+0.073, +0.109] | +0.057 [+0.041, +0.074] |
+| new − 4b (Part 1, distilled) | +0.157 [+0.124, +0.190] | +0.089 [+0.073, +0.106] | +0.047 [+0.034, +0.061] |
+| 100% corpus − new | +0.008 [+0.002, +0.014] | −0.000 [−0.004, +0.004] | +0.003 [−0.000, +0.006] |
+| C4 replay − new | −0.002 [−0.012, +0.008] | −0.016 [−0.027, −0.007] | −0.004 [−0.010, +0.001] |
+| 1 (bge) − new | +0.092 [+0.064, +0.120] | +0.041 [+0.025, +0.059] | +0.164 [+0.141, +0.186] |
+
+The gap to bge-base-en-v1.5 is now 0.09 (SciFact), 0.04 (NFCorpus) and 0.16 (FiQA) NDCG@10. In
+Part 1 it was 0.25, 0.13 and 0.21.
+
+### The final settings
+
+| Dataset | Start model | Target | Learning rate | Extra text | Dev NDCG@10 (5 seeds) | Best epoch (mean) | 100% retrain epochs |
+|---|---|---|---|---|---|---|---|
+| SciFact | distilled | CLS | 1e-1 | train queries + sentences | 0.6674 ± 0.0036 | 20.2 | 21 |
+| NFCorpus | potion ÷ 10.5 | mean | 3e-2 | none | 0.3208 ± 0.0044 | 23.0 | 24 |
+| FiQA | distilled | mean | 3e-1 | train queries | 0.2183 ± 0.0036 | 16.6 | 18 |
+
+Several settings tie within seed noise on each dataset (see step 2). The table shows the one with
+the highest mean dev score.
+
+### Forgetting: the final models on the other datasets
+
+Part 1's fine-tune lost nothing on the other datasets. The new recipe moves the vectors much more.
+It helps related domains (science, medicine) and hurts the distant one (finance). Test NDCG@10,
+change from the start model (95% CI):
+
+| Trained on → evaluated on | new | new + C4 replay | Part 1 fine-tune |
+|---|---|---|---|
+| SciFact → NFCorpus | +0.036 [+0.017, +0.055] | +0.053 [+0.035, +0.070] | +0.016 |
+| SciFact → FiQA | **−0.044** [−0.060, −0.028] | +0.002 [−0.014, +0.018] | +0.000 |
+| NFCorpus → SciFact | +0.023 [−0.001, +0.047] | +0.030 [+0.006, +0.054] | −0.000 |
+| NFCorpus → FiQA | **−0.047** [−0.061, −0.034] | −0.013 [−0.023, −0.004] | −0.000 |
+| FiQA → SciFact | −0.009 [−0.046, +0.029] | +0.034 [−0.001, +0.070] | +0.023 |
+| FiQA → NFCorpus | +0.006 [−0.010, +0.021] | +0.029 [+0.013, +0.045] | +0.009 |
+
+C4 replay removes most of the forgetting. It is above the start model on 5 of 6 pairs (the CI
+excludes 0 on 3 of them); on NFCorpus → FiQA it is still 0.013 below. In domain, it costs 0.016 on
+NFCorpus and nothing measurable on SciFact and FiQA.
+
+### What each step did (dev NDCG@10)
+
+**Step 1, train to convergence.** Same start model and learning rate (1e-3) as Part 1; only early
+stopping, the scheduler threshold and the kept checkpoint change:
+
+| Dataset | potion: Part 1 → converged | distilled: Part 1 → converged |
+|---|---|---|
+| SciFact | 0.4865 → 0.5106 (236 epochs) | 0.5108 → 0.5294 |
+| NFCorpus | 0.2362 → 0.2466 | 0.2358 → 0.2511 |
+| FiQA | 0.1605 → 0.1839 | 0.1768 → 0.1830 |
+
+**Steps 2-4, learning rate, start-model scale and target.** Mean dev NDCG@10 (2 seeds; FiQA 1
+seed; 5 seeds for the settings that were confirmed):
+
+SciFact:
+
+| Start, target | 1e-3 | 1e-2 | 3e-2 | 1e-1 | 3e-1 |
+|---|---|---|---|---|---|
+| potion, mean | 0.5106 | 0.5467 | 0.5671 | 0.5887 | 0.6180 |
+| potion ÷ 10.5, mean | 0.5537 | 0.6000 | 0.6190 | 0.6312 | 0.6121 |
+| distilled, mean | 0.5294 | 0.5790 | 0.6177 | 0.6267 | 0.6144 |
+| potion ÷ 10.5, CLS | 0.5539 | 0.5988 | 0.6220 | 0.6267 | – |
+| distilled, CLS | 0.5311 | 0.5789 | 0.6131 | 0.6321 | – |
+
+NFCorpus:
+
+| Start, target | 1e-3 | 1e-2 | 3e-2 | 1e-1 | 3e-1 |
+|---|---|---|---|---|---|
+| potion, mean | 0.2466 | 0.2676 | 0.2758 | 0.3001 | 0.3096 |
+| potion ÷ 10.5, mean | 0.2740 | 0.3026 | 0.3208 | 0.3159 | 0.3111 |
+| distilled, mean | 0.2511 | 0.2873 | 0.3173 | 0.3200 | 0.3107 |
+| potion ÷ 10.5, CLS | 0.2723 | 0.3031 | 0.3199 | 0.3154 | – |
+| distilled, CLS | 0.2480 | 0.2840 | 0.3134 | 0.3126 | – |
+
+FiQA:
+
+| Start, target | 1e-3 | 1e-2 | 3e-2 | 1e-1 | 3e-1 | 1 |
+|---|---|---|---|---|---|---|
+| potion, mean | 0.1839 | 0.1909 | 0.1915 | 0.1916 | 0.1915 | – |
+| potion ÷ 10.5, mean | 0.1918 | 0.1902 | 0.1962 | 0.2001 | 0.2053 | 0.2042 |
+| distilled, mean | 0.1830 | 0.1893 | 0.2009 | 0.1969 | 0.2054 | 0.2015 |
+| potion ÷ 10.5, CLS | 0.1852 | 0.1837 | 0.1797 | 0.1920 | – | – |
+| distilled, CLS | 0.1788 | 0.1899 | 0.1909 | 0.1949 | – | – |
+
+- The learning rate is the largest effect. From 1e-3 to the best value, dev NDCG@10 goes up by
+  +0.07 to +0.11 on SciFact, +0.05 to +0.07 on NFCorpus and +0.01 to +0.02 on FiQA, for every
+  start model and target.
+- **Scale and learning rate are the same knob.** Unscaled potion at a learning rate 10× higher
+  scores like potion ÷ 10.5 (SciFact: 0.6180 at 3e-1 vs 0.6190 at 3e-2; 0.5887 at 1e-1 vs 0.6000
+  at 1e-2). This supports the explanation in the method section: what matters is the step size
+  relative to the vector length.
+- With a good learning rate, potion ÷ 10.5 and the plain distilled model end within noise of each
+  other. So potion's C4 training gives no advantage after the corpus fine-tune.
+- **The CLS target does not help.** It ties the mean target on SciFact and NFCorpus, and is worse
+  on FiQA (best 0.1949 vs 0.2054). On test, bge itself with mean pooling is as good as or better
+  than with CLS pooling (SciFact +0.015 [+0.003, +0.027]; NFCorpus +0.007 [−0.000, +0.014]). So the
+  mean target was not the limit.
+
+**Step 5, extra text.** Best setting of each dataset, seeds 42 and 43 (mean):
+
+| Extra text | SciFact | NFCorpus | FiQA |
+|---|---|---|---|
+| none | 0.6354 | 0.3206 | 0.2049 |
+| train queries | 0.6473 | 0.3206 | **0.2160** |
+| sentences | 0.6455 | 0.3109 | 0.1844 |
+| both | **0.6705** | 0.3215 | 0.1870 |
+
+A variant was kept only if it beat its base by more than the base's 5-seed std: SciFact (both,
++0.035) and FiQA (train queries, +0.011). The kept variants were then trained with seeds 44-46 and
+became the final settings.
+
+**Step 6, 100% of the corpus.** See the test table: +0.008 on SciFact (CI excludes 0), no
+measurable change on NFCorpus and FiQA.
+
+### Validation loss does not rank settings
+
+The lowest validation loss is often not the best search setting. NFCorpus: potion at 1e-2 has a
+validation loss of 0.0772 and dev NDCG@10 0.2676; potion ÷ 10.5 at 3e-2 has 0.0811 and 0.3208.
+Validation loss measures the 256→768 head together with the vectors, and the head is discarded.
+
 
 ## Method
 
@@ -104,6 +261,24 @@ embedded in chunks of 4,096, each in a new process. Running them all in one proc
 memory grow past its limit. The chunked output is the same as the unchunked output: cosine 1.0
 on 300 SciFact documents.
 
+## Caveats
+
+- **Settings were chosen on dev queries; test queries were used only for the final tables.** The
+  final settings' seeds 42 and 43 were also used to choose them, on dev queries; this does not
+  touch the test numbers.
+- SciFact's dev queries and its train-query training text are the two halves of the same `train`
+  split. They do not overlap, but they come from the same source. Test queries are separate.
+- FiQA grid points use one seed. The confirmed settings use five.
+- 3 of 356 search runs needed a second attempt. One was a port collision between two plans that
+  this harness caused: spiced exited at startup, and testoperator then waited for 40 minutes
+  instead of failing. Every reported number comes from a passed run.
+- Mean-pooled bge on FiQA did not finish: it shared the GPU with featurization, ran for 2.8 hours,
+  and was stopped to free the GPU for steps 5-6.
+- C4 replay (step 7) was not in the plan. It was added after the forgetting check.
+- spiced's mean pooling includes the CLS and SEP outputs; tokenlearn's mean target leaves them out.
+- Part 1's caveats also apply: no query instruction for bge, `text` column only, ties broken in
+  hash-map order.
+
 ## Reproduce
 
 ```bash
@@ -112,21 +287,24 @@ export PYTHONPATH=$(git rev-parse --show-toplevel)
 PY=~/Github/tokenlearn/.venv/bin/python
 
 $PY fetch_dev_qrels.py
+$PY fetch_c4.py
 for ds in scifact nfcorpus fiqa; do
   $PY featurize_texts.py --dataset $ds --source corpus --target cls
   for src in trainq sents; do for tgt in mean cls; do
     $PY featurize_texts.py --dataset $ds --source $src --target $tgt
   done; done
 done
+for tgt in mean cls; do $PY featurize_texts.py --dataset c4 --source c4 --target $tgt; done
 
-$PY plans.py grid-mean grid-mean-hi grid-cls baselines
-for plan in grid-mean grid-mean-hi grid-cls baselines; do $PY sweep.py ../plans/$plan.json; done
-$PY plans.py confirm --top 3                     # needs the grid's dev scores
-$PY sweep.py ../plans/confirm-scifact-nfcorpus-fiqa.json
-$PY plans.py extras && $PY sweep.py ../plans/extras-scifact-nfcorpus-fiqa.json
-$PY plans.py final && $PY sweep.py ../plans/final-scifact-nfcorpus-fiqa.json
-$PY sweep_report.py                              # dev tables
-$PY sweep_final.py                               # test tables
+# The plans in ../plans/, in the order they ran. Plans after the grid read earlier dev scores;
+# the committed plan files are the ones that ran. Use distinct --port-base values when plans run
+# at the same time (each plan uses base..base+workers and base+100..).
+for plan in grid-mean grid-mean-hi grid-cls grid-mean-fiqa-top baselines baselines-fill \
+            confirm-scifact-nfcorpus confirm-fiqa extras-scifact-nfcorpus confirm-scifact \
+            final-scifact-nfcorpus cross-scifact-nfcorpus replay-scifact-nfcorpus \
+            extras-fiqa confirm-fiqa-trainq final-fiqa cross-fiqa replay-fiqa; do
+  $PY sweep.py ../plans/$plan.json
+done
+$PY sweep_report.py    # dev tables: results/sweep/dev_report.md
+$PY sweep_final.py     # test tables: results/final/tables.md
 ```
-
-The plan files in `plans/` are the ones that ran. Some plans ran per dataset; see their names.

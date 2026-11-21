@@ -1,0 +1,42 @@
+23:13:20 plan grid-cls: 8 to train, 8 to search
+23:26:20 [train start] sw-potion-x10.5-cls-fiqa-lr0.001-s42
+23:26:20 [train start] sw-potion-x10.5-cls-fiqa-lr0.01-s42
+23:26:20 [train start] sw-potion-x10.5-cls-fiqa-lr0.03-s42
+23:26:20 [train start] sw-potion-x10.5-cls-fiqa-lr0.1-s42
+23:34:25 [start] slot=0 fiqa/sw-potion-x10.5-cls-fiqa-lr0.01-s42-dev
+23:34:27 [train done ] sw-potion-x10.5-cls-fiqa-lr0.01-s42
+23:34:27 [train start] sw-distill-cls-fiqa-lr0.001-s42
+23:34:34 [train done ] sw-potion-x10.5-cls-fiqa-lr0.03-s42
+23:34:34 [train start] sw-distill-cls-fiqa-lr0.01-s42
+23:35:05 [done ] slot=0 exit=0 40s fiqa/sw-potion-x10.5-cls-fiqa-lr0.01-s42-dev
+23:35:05 [search done] exit=0 ndcg@10=0.1837 sw-potion-x10.5-cls-fiqa-lr0.01-s42-dev (fiqa)
+23:35:05 [start] slot=0 fiqa/sw-potion-x10.5-cls-fiqa-lr0.03-s42-dev
+23:35:42 [done ] slot=0 exit=0 37s fiqa/sw-potion-x10.5-cls-fiqa-lr0.03-s42-dev
+23:35:42 [search done] exit=0 ndcg@10=0.1797 sw-potion-x10.5-cls-fiqa-lr0.03-s42-dev (fiqa)
+23:36:37 [start] slot=0 fiqa/sw-potion-x10.5-cls-fiqa-lr0.1-s42-dev
+23:36:39 [train done ] sw-potion-x10.5-cls-fiqa-lr0.1-s42
+23:36:39 [train start] sw-distill-cls-fiqa-lr0.03-s42
+23:37:21 [done ] slot=0 exit=0 44s fiqa/sw-potion-x10.5-cls-fiqa-lr0.1-s42-dev
+23:37:21 [search done] exit=0 ndcg@10=0.192 sw-potion-x10.5-cls-fiqa-lr0.1-s42-dev (fiqa)
+23:41:31 [train done ] sw-potion-x10.5-cls-fiqa-lr0.001-s42
+23:41:31 [train start] sw-distill-cls-fiqa-lr0.1-s42
+23:41:31 [start] slot=0 fiqa/sw-potion-x10.5-cls-fiqa-lr0.001-s42-dev
+23:42:26 [done ] slot=0 exit=0 56s fiqa/sw-potion-x10.5-cls-fiqa-lr0.001-s42-dev
+23:42:26 [search done] exit=0 ndcg@10=0.1852 sw-potion-x10.5-cls-fiqa-lr0.001-s42-dev (fiqa)
+23:43:51 [start] slot=0 fiqa/sw-distill-cls-fiqa-lr0.01-s42-dev
+23:43:57 [train done ] sw-distill-cls-fiqa-lr0.01-s42
+23:45:36 [done ] slot=0 exit=0 105s fiqa/sw-distill-cls-fiqa-lr0.01-s42-dev
+23:45:36 [search done] exit=0 ndcg@10=0.1899 sw-distill-cls-fiqa-lr0.01-s42-dev (fiqa)
+23:47:01 [start] slot=0 fiqa/sw-distill-cls-fiqa-lr0.03-s42-dev
+23:47:03 [train done ] sw-distill-cls-fiqa-lr0.03-s42
+23:48:22 [done ] slot=0 exit=0 81s fiqa/sw-distill-cls-fiqa-lr0.03-s42-dev
+23:48:22 [search done] exit=0 ndcg@10=0.1909 sw-distill-cls-fiqa-lr0.03-s42-dev (fiqa)
+23:51:17 [start] slot=0 fiqa/sw-distill-cls-fiqa-lr0.001-s42-dev
+23:51:19 [train done ] sw-distill-cls-fiqa-lr0.001-s42
+23:52:09 [done ] slot=0 exit=0 51s fiqa/sw-distill-cls-fiqa-lr0.001-s42-dev
+23:52:09 [search done] exit=0 ndcg@10=0.1788 sw-distill-cls-fiqa-lr0.001-s42-dev (fiqa)
+23:52:34 [start] slot=0 fiqa/sw-distill-cls-fiqa-lr0.1-s42-dev
+23:52:35 [train done ] sw-distill-cls-fiqa-lr0.1-s42
+23:53:23 [done ] slot=0 exit=0 49s fiqa/sw-distill-cls-fiqa-lr0.1-s42-dev
+23:53:23 [search done] exit=0 ndcg@10=0.1949 sw-distill-cls-fiqa-lr0.1-s42-dev (fiqa)
+23:53:23 plan grid-cls finished, 0 failures
