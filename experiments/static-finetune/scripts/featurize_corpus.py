@@ -41,7 +41,8 @@ def download_corpus(ds: str, dest: Path) -> tuple[str, str]:
     response = requests.get(url, timeout=600)
     response.raise_for_status()
     dest.write_bytes(response.content)
-    return url, response.url
+    # Drop the signed CDN query string; the path alone identifies the file.
+    return url, response.url.split("?", 1)[0]
 
 
 def main() -> None:

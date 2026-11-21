@@ -35,8 +35,16 @@ def featurized(dataset: str) -> bool:
     return (FEATURIZED_DIR / dataset / "featurize_info.json").exists()
 
 
+def featurizing_elsewhere(dataset: str) -> bool:
+    """True while another process (e.g. one started by hand) featurizes this corpus."""
+    pattern = f"featurize_corpus.py --dataset {dataset}"
+    return subprocess.run(["pgrep", "-f", pattern], capture_output=True, check=False).returncode == 0
+
+
 def featurize_all() -> None:
     for dataset in DATASETS:
+        while featurizing_elsewhere(dataset):
+            time.sleep(10)
         if featurized(dataset):
             continue
         with open(LOGS / f"featurize_{dataset}.log", "a") as log:
