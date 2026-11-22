@@ -275,7 +275,10 @@ on 300 SciFact documents.
 - The first run of mean-pooled bge on FiQA shared the GPU with featurization. It was stopped after
   2.8 hours to free the GPU for steps 5-6, and run again alone after them (1.9 hours, passed).
 - C4 replay (step 7) was not in the plan. It was added after the forgetting check.
-- spiced's mean pooling includes the CLS and SEP outputs; tokenlearn's mean target leaves them out.
+- The bge "mean pooling" row and the mean training target are not the same average. spiced's mean
+  pooling averages all token outputs, CLS and SEP included, the same as sentence-transformers
+  (cosine ≥ 0.99999 on 5 texts). tokenlearn's mean target leaves CLS and SEP out, because a static
+  model has no such tokens.
 - Part 1's caveats also apply: no query instruction for bge, `text` column only, ties broken in
   hash-map order.
 
