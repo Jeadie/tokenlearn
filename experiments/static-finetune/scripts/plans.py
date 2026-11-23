@@ -7,6 +7,10 @@ experiment was 0.001 NDCG@10.
 baselines: the first experiment's models 2, 3, 4 and 4b (seeds 42 and 43) on dev queries, so
 the sweep has a dev reference; and bge with mean pooling on test queries, which shows how good
 the mean-pooled target can be.
+
+ngram-*: the n-gram experiment (NGRAMS.md). Each dataset's final sweep setting with additive
+token n-grams. Its search runs use a spiced build with n-gram support, so they carry the tag
+`NGRAM_TAG`, and their scores go to results/ngrams/scores.jsonl.
 """
 
 import json
@@ -18,7 +22,7 @@ from dataclasses import asdict, replace
 from common import DATASETS, EXPERIMENT_DIR
 from sweep import Plan, SearchSpec, TrainSpec
 from sweep_finetune import SWEEP_INFO_DIR
-from sweep_report import load_scores, rows_for
+from sweep_report import load_scores, rows_for, setting_of
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +45,12 @@ EXTRAS_SEEDS = (42, 43)
 GRID_SEEDS = {"scifact": (42, 43), "fiqa": (42,), "nfcorpus": (42, 43)}
 # Long FiQA runs before the short NFCorpus runs, so the short ones fill the end.
 GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
+# The n-gram grid: (orders, K) on each dataset's final setting.
+NGRAM_SETTINGS = (((2,), 16_000), ((2,), 64_000), ((2, 3), 16_000), ((2, 3), 64_000))
+NGRAM_SEEDS = (42, 43)
+NGRAM_ORDER = ("fiqa", "scifact", "nfcorpus")
+NGRAM_TAG = "ng"
+NGRAM_SCORES = EXPERIMENT_DIR / "results" / "ngrams" / "scores.jsonl"
 
 
 def grid(
@@ -184,6 +194,83 @@ def replay(datasets: tuple[str, ...]) -> Plan:
     return Plan(name=f"replay-{'-'.join(datasets)}", train=train, search=search)
 
 
+def ngram_baselines() -> Plan:
+    """Each dataset's final setting without n-grams (seeds 42-46), on dev and test, with the n-gram build."""
+    search = []
+    for dataset in DATASETS:
+        best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+        search += [
+            SearchSpec(model=replace(best, seed=seed).name, eval_dataset=dataset, split=split, tag=NGRAM_TAG)
+            for split in ("dev", "test")
+            for seed in FINAL_SEEDS
+        ]
+    return Plan(name="ngram-baselines", train=[], search=search)
+
+
+def ngram_grid() -> Plan:
+    """Each dataset's final setting with each n-gram setting, seeds 42 and 43, scored on dev."""
+    train = [
+        replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=seed, ngram_orders=orders, ngram_k=k)
+        for dataset in NGRAM_ORDER
+        for seed in NGRAM_SEEDS
+        for orders, k in NGRAM_SETTINGS
+    ]
+    search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev", tag=NGRAM_TAG) for t in train]
+    return Plan(name="ngram-grid", train=train, search=search)
+
+
+def ngram_gates() -> Plan:
+    """The zero-row n-gram models (make_ngram_zero.py) on dev: they must score as their base models."""
+    search = [
+        SearchSpec(model=zero_name(dataset), eval_dataset=dataset, split="dev", tag=NGRAM_TAG) for dataset in DATASETS
+    ]
+    return Plan(name="ngram-gates", train=[], search=search)
+
+
+def zero_name(dataset: str) -> str:
+    """The zero-row n-gram copy of a dataset's final model, seed 42."""
+    return replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42).name + "-ngzero"
+
+
+def best_ngram_setting(dataset: str) -> TrainSpec:
+    """The n-gram setting of a dataset with the best mean dev NDCG@10 over seeds 42 and 43."""
+    scores: dict[str, list[float]] = {}
+    for record in map(json.loads, NGRAM_SCORES.read_text().splitlines()):
+        if record["eval_dataset"] == dataset and record["split"] == "dev" and "-ng" in record["model"]:
+            if record["metrics"] and not record["model"].endswith("-ngzero"):
+                scores.setdefault(setting_of(record["model"]), []).append(record["metrics"]["ndcg"]["10"])
+    setting = max(
+        (s for s, v in scores.items() if len(v) == len(NGRAM_SEEDS)), key=lambda s: sum(scores[s]) / len(scores[s])
+    )
+    spec = next(t for t in ngram_grid().train if setting_of(t.name) == setting)
+    return replace(spec, seed=42)
+
+
+def ngram_confirm(datasets: tuple[str, ...]) -> Plan:
+    """The best n-gram setting of each dataset with seeds 44-46 too, scored on dev."""
+    train = [replace(best_ngram_setting(d), seed=seed) for d in datasets for seed in FINAL_SEEDS]
+    search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev", tag=NGRAM_TAG) for t in train]
+    return Plan(name=f"ngram-confirm-{'-'.join(datasets)}", train=train, search=search)
+
+
+def ngram_final(datasets: tuple[str, ...]) -> Plan:
+    """The best n-gram setting of each dataset (seeds 42-46) on the test queries of every dataset."""
+    train = [replace(best_ngram_setting(d), seed=seed) for d in datasets for seed in FINAL_SEEDS]
+    search = [
+        SearchSpec(model=t.name, eval_dataset=other, split="test", tag=NGRAM_TAG) for t in train for other in DATASETS
+    ]
+    # The baselines on the other datasets' test queries, for the forgetting comparison.
+    for dataset in datasets:
+        best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+        search += [
+            SearchSpec(model=replace(best, seed=seed).name, eval_dataset=other, split="test", tag=NGRAM_TAG)
+            for seed in FINAL_SEEDS
+            for other in DATASETS
+            if other != dataset
+        ]
+    return Plan(name=f"ngram-final-{'-'.join(datasets)}", train=train, search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -205,6 +292,11 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "final": lambda: final(datasets),
         "cross": lambda: cross(datasets),
         "replay": lambda: replay(datasets),
+        "ngram-baselines": ngram_baselines,
+        "ngram-grid": ngram_grid,
+        "ngram-gates": ngram_gates,
+        "ngram-confirm": lambda: ngram_confirm(datasets),
+        "ngram-final": lambda: ngram_final(datasets),
     }
 
 

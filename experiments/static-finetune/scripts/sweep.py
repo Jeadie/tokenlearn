@@ -22,7 +22,7 @@ from common import EXPERIMENT_DIR
 from featurize_texts import output_dir
 from make_spicepods import Model, models, render
 from run_benchmarks import Job, run_job, sha256
-from sweep_finetune import SWEEP_MODELS_DIR
+from sweep_finetune import SWEEP_MODELS_DIR, ngram_suffix
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +47,8 @@ class TrainSpec:
     target: str = "mean"
     extras: tuple[str, ...] = ()
     full_epochs: int | None = None
+    ngram_orders: tuple[int, ...] = ()
+    ngram_k: int = 0
 
     @property
     def name(self) -> str:
@@ -54,7 +56,8 @@ class TrainSpec:
         scale = f"-x{self.scale:g}" if self.scale != 1 else ""
         extras = "".join(f"+{e}" for e in sorted(self.extras))
         full = f"-full{self.full_epochs}" if self.full_epochs else ""
-        return f"sw-{self.base}{scale}-{self.target}-{self.dataset}{extras}-lr{self.lr:g}{full}-s{self.seed}"
+        ngram = ngram_suffix(self.ngram_orders, self.ngram_k)
+        return f"sw-{self.base}{scale}-{self.target}-{self.dataset}{extras}-lr{self.lr:g}{full}{ngram}-s{self.seed}"
 
     def data_ready(self) -> bool:
         """True when every featurized dataset this run reads exists."""
@@ -74,6 +77,8 @@ class TrainSpec:
             cmd += ["--extra", extra]
         if self.full_epochs:
             cmd += ["--full-epochs", str(self.full_epochs)]
+        if self.ngram_k:
+            cmd += ["--ngram-orders", ",".join(map(str, self.ngram_orders)), "--ngram-k", str(self.ngram_k)]
         return cmd
 
 
@@ -84,11 +89,13 @@ class SearchSpec:
     model: str
     eval_dataset: str
     split: str  # "dev" or "test"
+    # Names the spiced build when it is not the one of the first sweep, so its runs get their own names.
+    tag: str = ""
 
     @property
     def run_name(self) -> str:
         """The spicepod name, and the run directory name."""
-        return f"{self.model}-{self.split}"
+        return f"{self.model}-{self.split}" + (f"-{self.tag}" if self.tag else "")
 
 
 @dataclass
@@ -101,7 +108,10 @@ class Plan:
 def load_plan(path: Path) -> Plan:
     """Read a plan file."""
     raw = json.loads(path.read_text())
-    train = [TrainSpec(**{**t, "extras": tuple(t.get("extras", ()))}) for t in raw["train"]]
+    train = [
+        TrainSpec(**{**t, "extras": tuple(t.get("extras", ())), "ngram_orders": tuple(t.get("ngram_orders", ()))})
+        for t in raw["train"]
+    ]
     return Plan(name=raw["name"], train=train, search=[SearchSpec(**s) for s in raw["search"]])
 
 
@@ -170,11 +180,11 @@ def parse_metrics(log: Path) -> dict[str, dict[int, float]] | None:
     return rows if rows["ndcg"] else None
 
 
-def scored_runs() -> set[tuple[str, str]]:
+def scored_runs(scores: Path) -> set[tuple[str, str]]:
     """(run name, eval dataset) of search runs that already have a score from a passed run."""
-    if not SCORES_PATH.exists():
+    if not scores.exists():
         return set()
-    lines = SCORES_PATH.read_text().splitlines()
+    lines = scores.read_text().splitlines()
     return {(r["run_name"], r["eval_dataset"]) for r in map(json.loads, lines) if r["exit_code"] == 0}
 
 
@@ -207,8 +217,8 @@ async def search(spec: SearchSpec, slot: int, args: argparse.Namespace, sha: str
             break
     metrics = parse_metrics(job.out_dir / "stdout.log")
     record = {**asdict(spec), "run_name": spec.run_name, "exit_code": code, "attempts": attempt, "metrics": metrics}
-    SCORES_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with SCORES_PATH.open("a") as out:
+    args.scores.parent.mkdir(parents=True, exist_ok=True)
+    with args.scores.open("a") as out:
         out.write(json.dumps(record) + "\n")
     ndcg10 = metrics["ndcg"].get(10) if metrics else None
     logger.info(f"[search done] exit={code} ndcg@10={ndcg10} {spec.run_name} ({spec.eval_dataset})")
@@ -266,15 +276,16 @@ class Runner:
 
 async def run_plan(plan: Plan, args: argparse.Namespace) -> int:
     """Train and search with bounded concurrency; return the number of failures."""
-    done = scored_runs()
+    done = scored_runs(args.scores)
+    version = subprocess.run([str(args.spiced), "--version"], capture_output=True, text=True, check=True).stdout.strip()
+    if args.expect_version and args.expect_version not in version and not args.train_only:
+        raise SystemExit(f"{args.spiced} is {version!r}, not the expected build {args.expect_version!r}")
     runner = Runner(
         args=args,
         sha=sha256(args.testoperator),
-        version=subprocess.run(
-            [str(args.spiced), "--version"], capture_output=True, text=True, check=True
-        ).stdout.strip(),
+        version=version,
         train_queue=[t for t in plan.train if not (SWEEP_MODELS_DIR / t.name).exists()],
-        search_queue=[s for s in plan.search if (s.run_name, s.eval_dataset) not in done],
+        search_queue=[] if args.train_only else [s for s in plan.search if (s.run_name, s.eval_dataset) not in done],
         free_slots=list(range(args.search_workers)),
     )
     logger.info(f"plan {plan.name}: {len(runner.train_queue)} to train, {len(runner.search_queue)} to search")
@@ -306,6 +317,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--port-base", type=int, default=19100)
     parser.add_argument("--testoperator", type=Path, default=Path.home() / ".spice/bin/testoperator-search-ports")
     parser.add_argument("--spiced", type=Path, default=Path.home() / ".spice/bin/spiced")
+    parser.add_argument("--scores", type=Path, default=SCORES_PATH, help="where search scores are appended")
+    parser.add_argument("--expect-version", default="", help="refuse to search unless `spiced --version` has this")
+    parser.add_argument("--train-only", action="store_true", help="train the plan's models; run no searches")
     parser.add_argument("--ready-wait", type=int, default=7200)
     parser.add_argument("--timeout", type=int, default=4 * 3600)
     parser.add_argument("--per-query-flag", default="--per-query-all-k")

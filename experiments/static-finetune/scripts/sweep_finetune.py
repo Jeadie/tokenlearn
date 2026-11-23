@@ -15,6 +15,8 @@ Differences from finetune.py (whose defaults reproduce the first experiment):
 - The validation split is `train_test_split(test_size=0.1, random_state=seed)` over corpus
   documents, so every setting with the same seed holds out the same documents.
 - Validation loss and learning rate are recorded for every epoch.
+- `--ngram-orders 2,3 --ngram-k K`: add rows for the K most frequent token n-grams of the training
+  texts (see ngrams.py). The rows start at zero and train with the token rows.
 """
 
 import json
@@ -22,6 +24,7 @@ import logging
 import shutil
 import time
 from argparse import ArgumentParser
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -29,6 +32,7 @@ from typing import Any
 import lightning.pytorch as pl
 import model2vec.train.base as m2v_base
 import model2vec.train.lightning_modules as m2v_modules
+import ngrams
 import numpy as np
 import torch
 from common import DISTILLED, EXPERIMENT_DIR, FEATURIZED_DIR, MODELS_DIR, POTION, library_versions
@@ -82,6 +86,13 @@ class SweepTrainInfo:
     torch_threads: int
     libraries: dict[str, str]
     curve: list[EpochRecord] = field(default_factory=list)
+    ngram_orders: list[int] = field(default_factory=list)
+    ngram_k: int = 0
+    ngram_min_count: int = 0
+    # The number of n-grams kept (at most ngram_k), and how many of them a training text has.
+    n_ngrams: int = 0
+    ngrams_per_train_text: float | None = None
+    train_texts_with_ngram: float | None = None
 
 
 def model_name(args: Any) -> str:
@@ -89,7 +100,18 @@ def model_name(args: Any) -> str:
     scale = f"-x{args.scale:g}" if args.scale != 1 else ""
     extras = "".join(f"+{e}" for e in sorted(args.extra))
     full = f"-full{args.full_epochs}" if args.full_epochs else ""
-    return f"sw-{args.base}{scale}-{args.target}-{args.dataset}{extras}-lr{args.lr:g}{full}-s{args.seed}"
+    ngram = ngram_suffix(parse_orders(args.ngram_orders), args.ngram_k)
+    return f"sw-{args.base}{scale}-{args.target}-{args.dataset}{extras}-lr{args.lr:g}{full}{ngram}-s{args.seed}"
+
+
+def parse_orders(text: str) -> tuple[int, ...]:
+    """`2,3` -> (2, 3)."""
+    return tuple(sorted(int(order) for order in text.split(",") if order))
+
+
+def ngram_suffix(orders: tuple[int, ...], k: int) -> str:
+    """`-ng23k64` for 2- and 3-grams, K = 64,000; empty without n-grams."""
+    return f"-ng{''.join(map(str, orders))}k{k / 1000:g}" if k else ""
 
 
 class _CurveRecorder(Callback):
@@ -158,13 +180,13 @@ def load(dataset: str, source: str, target: str) -> tuple[list[str], np.ndarray]
     return collect_means_and_texts(output_dir(dataset, source, target))
 
 
-def save(model: StaticModel, info: SweepTrainInfo) -> None:
+def save(write_model: Callable[[Path], None], info: SweepTrainInfo) -> None:
     """Save atomically (`<name>.tmp`, then rename) and keep a copy of the train info in git."""
     out = SWEEP_MODELS_DIR / info.name
     tmp = out.with_name(out.name + ".tmp")
     if tmp.exists():
         shutil.rmtree(tmp)
-    model.save_pretrained(str(tmp))
+    write_model(tmp)
     text = json.dumps(asdict(info), indent=2) + "\n"
     (tmp / "train_info.json").write_text(text)
     tmp.rename(out)
@@ -188,7 +210,13 @@ def main() -> None:
     parser.add_argument("--max-epochs", type=int, default=300)
     parser.add_argument("--full-epochs", type=int, default=None)
     parser.add_argument("--threads", type=int, default=2)
+    parser.add_argument("--ngram-orders", default="", help="n-gram lengths, e.g. 2,3")
+    parser.add_argument("--ngram-k", type=int, default=0, help="keep at most this many n-grams")
+    parser.add_argument("--ngram-min-count", type=int, default=2)
     args = parser.parse_args()
+    orders = parse_orders(args.ngram_orders)
+    if bool(orders) != bool(args.ngram_k):
+        parser.error("--ngram-orders and --ngram-k go together")
 
     name = model_name(args)
     if (SWEEP_MODELS_DIR / name).exists():
@@ -223,9 +251,17 @@ def main() -> None:
     model = StaticModel.from_pretrained(path=BASES[args.base], quantize_to="float32")
     if args.scale != 1:
         model.embedding = model.embedding / args.scale
-    trainable = StaticModelForSimilarity.from_static_model(
-        model=model, out_dim=vectors.shape[1], n_layers=0, freeze_weights=True
-    )
+    table = None
+    if args.ngram_k:
+        drop = ngrams.unk_id(model.tokenizer)
+        train_ids = [ngrams.without(ids, drop) for ids in ngrams.fit_token_ids(model.tokenizer, list(x_train))]
+        table = ngrams.mine(train_ids, orders, args.ngram_k, args.ngram_min_count)
+        found = [len(table.find(ids)) for ids in train_ids]
+        trainable: StaticModelForSimilarity = ngrams.trainable(model, table, out_dim=vectors.shape[1])
+    else:
+        trainable = StaticModelForSimilarity.from_static_model(
+            model=model, out_dim=vectors.shape[1], n_layers=0, freeze_weights=True
+        )
     trainable.fit(
         X=list(x_train),
         y=torch.from_numpy(np.asarray(y_train, dtype=np.float32)),
@@ -272,7 +308,17 @@ def main() -> None:
         libraries=library_versions(),
         curve=curve,
     )
-    save(trainable.to_static_model(), info)
+    if table is not None:
+        info.ngram_orders = list(orders)
+        info.ngram_k = args.ngram_k
+        info.ngram_min_count = args.ngram_min_count
+        info.n_ngrams = len(table.ngrams)
+        info.ngrams_per_train_text = round(float(np.mean(found)), 2)
+        info.train_texts_with_ngram = round(float(np.mean([f > 0 for f in found])), 4)
+        assert isinstance(trainable, ngrams.NgramModelForSimilarity)
+        save(lambda path: ngrams.save_pretrained(trainable, path), info)
+    else:
+        save(lambda path: trainable.to_static_model().save_pretrained(str(path)), info)
     logger.info(json.dumps({k: v for k, v in asdict(info).items() if k != "curve"}))
 
 
