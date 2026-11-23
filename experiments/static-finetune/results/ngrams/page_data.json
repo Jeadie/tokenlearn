@@ -1,0 +1,1574 @@
+{
+ "meta": [
+  {
+   "label": "ngram_page_data.py",
+   "value": "\"\"\"Collect the n-gram results into one JSON file for the report page: results/ngrams/page_data.json.\n\nReads only committed records: results/ngrams/{scores.jsonl, paired_comparisons.csv, gates.csv,\nspiced_check.json, latency.json}, Part 2's results/final/<dataset>_ndcg.csv (the bge rows), and\nthe model files (sizes). Run ngram_report.py first. The file holds one table per page section and\nthis script's own text, so readers can check each number.\n\"\"\"\n\nimport json\nimport logging\nimport re\nimport statistics\nfrom dataclasses import asdict, dataclass, replace\nfrom pathlib import Path\nfrom typing import Any\n\nimport pandas as pd\nfrom common import DATASETS, EXPERIMENT_DIR\nfrom plans import (\n    FINAL_SEEDS,\n    NGRAM_SCORES,\n    NGRAM_TAG,\n    best_ngram_setting,\n    best_setting,\n    ngram_forgetting_variants,\n    without_ngrams,\n)\nfrom sweep import TrainSpec\nfrom sweep_finetune import SWEEP_MODELS_DIR\n\nlogger = logging.getLogger(__name__)\n\nOUT_DIR = EXPERIMENT_DIR / \"results\" / \"ngrams\"\nOUT_PATH = OUT_DIR / \"page_data.json\"\nBGE_ROWS = {\n    \"1: bge-base-en-v1.5 (CLS)\": \"bge-base-en-v1.5, CLS pooling\",\n    \"1m: bge-base-en-v1.5 (mean pooling)\": \"bge-base-en-v1.5, mean pooling\",\n}\nNAMES = {\"scifact\": \"SciFact\", \"nfcorpus\": \"NFCorpus\", \"fiqa\": \"FiQA\"}\n\n\n@dataclass\nclass Score:\n    \"\"\"Mean test NDCG@10 of one model over its seeds.\"\"\"\n\n    eval: str\n    model: str\n    ndcg10: float\n    sd: float | None\n    seeds: int\n\n\n@dataclass\nclass Delta:\n    \"\"\"One paired comparison (A − B) of NDCG@10 or another metric, with its bootstrap 95% CI.\"\"\"\n\n    group: str\n    trained_on: str\n    eval: str\n    label: str\n    metric: str\n    queries: int\n    delta: float\n    lo: float\n    hi: float\n    excludes0: bool\n\n\n@dataclass\nclass Latency:\n    \"\"\"Encode latency percentiles of one model, in one model order.\"\"\"\n\n    texts: str\n    order: str\n    model: str\n    samples: int\n    p50_us: float\n    p99_us: float\n    p99_9_us: float\n\n\n@dataclass\nclass Size:\n    \"\"\"model.safetensors size without and with the chosen n-gram rows (seed 42).\"\"\"\n\n    eval: str\n    ngrams_kept: int\n    without_mb: float\n    with_mb: float\n\n\n@dataclass\nclass Gate:\n    \"\"\"One gate check.\"\"\"\n\n    gate: str\n    what: str\n    compared: int\n    different: int\n    worst: float\n\n\ndef ndcg10(model: str, dataset: str, split: str = \"test\") -> list[float]:\n    \"\"\"Run-level NDCG@10 of a model's passed n-gram-build runs on a dataset.\"\"\"\n    out = []\n    for record in map(json.loads, NGRAM_SCORES.read_text().splitlines()):\n        if (record[\"model\"], record[\"eval_dataset\"], record[\"split\"]) != (model, dataset, split):\n            continue\n        if record.get(\"tag\", \"\") == NGRAM_TAG and record[\"exit_code\"] == 0 and record[\"metrics\"]:\n            out.append(record[\"metrics\"][\"ndcg\"][\"10\"])\n    return out\n\n\ndef score(dataset: str, label: str, spec: TrainSpec) -> Score:\n    \"\"\"Mean and sample std over FINAL_SEEDS.\"\"\"\n    values = [v for seed in FINAL_SEEDS for v in ndcg10(replace(spec, seed=seed).name, dataset)]\n    if len(values) != len(FINAL_SEEDS):\n        raise ValueError(f\"{spec.name} on {dataset}: {len(values)} runs, expected {len(FINAL_SEEDS)}\")\n    # Run-level scores are recorded to 4 decimals, so a mean can differ from the per-query mean in\n    # report.md by up to 0.0001.\n    return Score(NAMES[dataset], label, statistics.mean(values), statistics.stdev(values), len(values))\n\n\ndef test_scores() -> list[Score]:\n    \"\"\"Bge (Part 2), no n-grams, with n-grams, and FiQA's n-gram model with C4 replay; in domain, test.\"\"\"\n    rows = []\n    for dataset in DATASETS:\n        table = pd.read_csv(EXPERIMENT_DIR / \"results\" / \"final\" / f\"{dataset}_ndcg.csv\", index_col=0)\n        for key, label in BGE_ROWS.items():\n            rows.append(Score(NAMES[dataset], label, float(table.loc[key, \"@10\"]), None, 1))\n        rows.append(score(dataset, \"No n-grams (Part 2 final)\", best_setting(dataset, min_seeds=len(FINAL_SEEDS))))\n        rows.append(score(dataset, \"With n-grams\", best_ngram_setting(dataset)))\n    c4 = next(v for v in ngram_forgetting_variants() if \"c4\" in v.extras)\n    rows.append(score(\"fiqa\", \"With n-grams + C4 replay\", c4))\n    return rows\n\n\ndef cross_scores() -> list[Score]:\n    \"\"\"Every model the forgetting sections compare, on every dataset's test queries.\"\"\"\n    fiqa = [(\"No n-grams + C4 replay\", without_ngrams(v)) for v in ngram_forgetting_variants() if \"c4\" in v.extras]\n    fiqa += [(\"K=256k, n-gram lr ×0.3\", v) for v in ngram_forgetting_variants() if \"c4\" not in v.extras]\n    fiqa += [(\"With n-grams + C4 replay\", v) for v in ngram_forgetting_variants() if \"c4\" in v.extras]\n    rows = []\n    for trained in DATASETS:\n        models = [\n            (\"No n-grams\", best_setting(trained, min_seeds=len(FINAL_SEEDS))),\n            (\"With n-grams\", best_ngram_setting(trained)),\n        ]\n        models += fiqa if trained == \"fiqa\" else []\n        for label, spec in models:\n            for dataset in DATASETS:\n                row = score(dataset, label, spec)\n                rows.append(replace(row, model=f\"{NAMES[trained]}: {label}\"))\n    return rows\n\n\ndef number(value: str | float) -> float:\n    \"\"\"'+0.0489', '−0.01' or a parsed number as a float.\"\"\"\n    return float(str(value).replace(\"−\", \"-\"))\n\n\ndef deltas() -> list[Delta]:\n    \"\"\"The comparisons the page shows, from paired_comparisons.csv.\"\"\"\n    table = pd.read_csv(OUT_DIR / \"paired_comparisons.csv\")\n    table.columns = [\"eval\", \"context\", \"a_b\", \"metric\", \"queries\", \"delta\", \"ci\", \"excludes0\"]\n    rows = []\n    for r in table.itertuples(index=False):\n        if r.context == \"test\":\n            group, trained, label = \"test\", r.eval, \"with n-grams − no n-grams\"\n        elif r.metric != \"ndcg@10\":\n            continue\n        elif r.context == \"dev grid\":\n            group, trained, label = \"dev grid\", r.eval, r.a_b.removesuffix(\" − none\")\n        elif m := re.fullmatch(r\"trained on (\\w+)\", r.context):\n            group, trained, label = \"forgetting\", m[1], \"with n-grams − no n-grams\"\n        elif m := re.fullmatch(r\"trained on (\\w+): (n-gram|token) rows\", r.context):\n            group, trained, label = \"parts\", m[1], f\"{m[2]} rows\"\n        elif r.context.startswith(\"FiQA candidate: \"):\n            group, trained = \"variants\", \"fiqa\"\n            label = r.context.removeprefix(\"FiQA candidate: \") + (\n                \" − no n-grams\" if r.a_b == \"candidate − none\" else \"\"\n            )\n        else:\n            continue\n        low, high = (number(x) for x in r.ci.strip(\"[]\").split(\",\"))\n        rows.append(\n            Delta(\n                group=group,\n                trained_on=NAMES[trained],\n                eval=NAMES[r.eval],\n                label=label,\n                metric=r.metric,\n                queries=int(r.queries),\n                delta=number(r.delta),\n                lo=low,\n                hi=high,\n                excludes0=r.excludes0 == \"yes\",\n            )\n        )\n    return rows\n\n\ndef latency() -> list[Latency]:\n    \"\"\"The encode latency benchmark's percentiles (ngram_latency.py).\"\"\"\n    rows = json.loads((OUT_DIR / \"latency.json\").read_text())\n    return [\n        Latency(\n            texts=\"FiQA test queries\" if r[\"texts\"] == \"queries\" else \"FiQA corpus texts\",\n            order=r[\"order\"],\n            model=\"With n-grams\"\n            if r[\"model\"].startswith(\"ngrams\")\n            else {\"no-ngrams\": \"No n-grams\", \"no-ngrams-again\": \"No n-grams, again (A/A)\"}[r[\"model\"]],\n            samples=r[\"samples\"],\n            p50_us=r[\"p50_us\"],\n            p99_us=r[\"p99_us\"],\n            p99_9_us=r[\"p99_9_us\"],\n        )\n        for r in rows\n    ]\n\n\ndef sizes() -> list[Size]:\n    \"\"\"Model file sizes, as ngram_report.py reports them.\"\"\"\n    rows = []\n    for dataset in DATASETS:\n        spec = best_ngram_setting(dataset)\n        base = SWEEP_MODELS_DIR / replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42).name\n        ngram = SWEEP_MODELS_DIR / spec.name\n        kept = json.loads((ngram / \"config.json\").read_text())[\"ngram_count\"]\n        mb = [round((path / \"model.safetensors\").stat().st_size / 1e6, 1) for path in (base, ngram)]\n        rows.append(Size(NAMES[dataset], kept, mb[0], mb[1]))\n    return rows\n\n\ndef gates() -> list[Gate]:\n    \"\"\"G1 and G2 on text vectors (check_ngram_spiced.py), G1 and G3 on search (ngram_report.py).\"\"\"\n    rows = []\n    for check in json.loads((OUT_DIR / \"spiced_check.json\").read_text()):\n        what = {\n            \"G2\": \"spiced vectors vs the Python reference (min cosine)\",\n            \"G2 rows matter\": \"spiced vectors vs the same model without n-gram rows (min cosine)\",\n            \"G1\": \"new build vs Part 2 build, text vectors (min cosine)\",\n        }[check[\"name\"]]\n        rows.append(Gate(check[\"name\"], what, check[\"texts\"], 0, check[\"min_cosine\"]))\n    for r in pd.read_csv(OUT_DIR / \"gates.csv\").itertuples(index=False):\n        what = f\"{NAMES[r.eval]} {r.split}: {r.runs}, every metric@k of every query\"\n        rows.append(Gate(r.gate, what, int(r.values), int(r.different), float(r.max_abs_diff)))\n    return rows\n\n\ndef main() -> None:\n    \"\"\"Write page_data.json.\"\"\"\n    tables: dict[str, list[Any]] = {\n        \"test_scores\": test_scores(),\n        \"cross_scores\": cross_scores(),\n        \"deltas\": deltas(),\n        \"latency\": latency(),\n        \"sizes\": sizes(),\n        \"gates\": gates(),\n    }\n    meta = [\n        {\"label\": Path(__file__).name, \"value\": Path(__file__).read_text(), \"type\": \"code\", \"lang\": \"python\"},\n        {\n            \"label\": \"Input\",\n            \"value\": \"results/ngrams/{scores.jsonl, paired_comparisons.csv, gates.csv, spiced_check.json, latency.json}, \"\n            \"results/final/<dataset>_ndcg.csv, model files\",\n        },\n    ]\n    out = {\"meta\": meta, \"tables\": {name: [asdict(row) for row in rows] for name, rows in tables.items()}}\n    OUT_PATH.write_text(json.dumps(out, indent=1, ensure_ascii=False) + \"\\n\")\n    logger.info(f\"Wrote {OUT_PATH}: \" + \", \".join(f\"{name} {len(rows)}\" for name, rows in tables.items()))\n\n\nif __name__ == \"__main__\":\n    logging.basicConfig(level=logging.INFO, format=\"%(message)s\")\n    main()\n",
+   "type": "code",
+   "lang": "python"
+  },
+  {
+   "label": "Input",
+   "value": "results/ngrams/{scores.jsonl, paired_comparisons.csv, gates.csv, spiced_check.json, latency.json}, results/final/<dataset>_ndcg.csv, model files"
+  }
+ ],
+ "tables": {
+  "test_scores": [
+   {
+    "eval": "SciFact",
+    "model": "bge-base-en-v1.5, CLS pooling",
+    "ndcg10": 0.7451,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "SciFact",
+    "model": "bge-base-en-v1.5, mean pooling",
+    "ndcg10": 0.7601,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "SciFact",
+    "model": "No n-grams (Part 2 final)",
+    "ndcg10": 0.65338,
+    "sd": 0.0054742122720990655,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "With n-grams",
+    "ndcg10": 0.70226,
+    "sd": 0.008740308919025682,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "bge-base-en-v1.5, CLS pooling",
+    "ndcg10": 0.3667,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "bge-base-en-v1.5, mean pooling",
+    "ndcg10": 0.3733,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "No n-grams (Part 2 final)",
+    "ndcg10": 0.32538,
+    "sd": 0.002648018126826193,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "With n-grams",
+    "ndcg10": 0.34198,
+    "sd": 0.0009038805230781253,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "bge-base-en-v1.5, CLS pooling",
+    "ndcg10": 0.3916,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "FiQA",
+    "model": "bge-base-en-v1.5, mean pooling",
+    "ndcg10": 0.3984,
+    "sd": null,
+    "seeds": 1
+   },
+   {
+    "eval": "FiQA",
+    "model": "No n-grams (Part 2 final)",
+    "ndcg10": 0.22788,
+    "sd": 0.005073164692773145,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "With n-grams",
+    "ndcg10": 0.28124,
+    "sd": 0.007804357757048315,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "With n-grams + C4 replay",
+    "ndcg10": 0.28158,
+    "sd": 0.006515519933205637,
+    "seeds": 5
+   }
+  ],
+  "cross_scores": [
+   {
+    "eval": "SciFact",
+    "model": "SciFact: No n-grams",
+    "ndcg10": 0.65338,
+    "sd": 0.0054742122720990655,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "SciFact: No n-grams",
+    "ndcg10": 0.23102,
+    "sd": 0.0021568495543268676,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "SciFact: No n-grams",
+    "ndcg10": 0.07164,
+    "sd": 0.003589986072396385,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "SciFact: With n-grams",
+    "ndcg10": 0.70226,
+    "sd": 0.008740308919025682,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "SciFact: With n-grams",
+    "ndcg10": 0.23488,
+    "sd": 0.0009338094023942954,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "SciFact: With n-grams",
+    "ndcg10": 0.07516,
+    "sd": 0.004212837523570073,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "NFCorpus: No n-grams",
+    "ndcg10": 0.51064,
+    "sd": 0.003503284173457817,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "NFCorpus: No n-grams",
+    "ndcg10": 0.32538,
+    "sd": 0.002648018126826193,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "NFCorpus: No n-grams",
+    "ndcg10": 0.11894,
+    "sd": 0.004265325309985163,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "NFCorpus: With n-grams",
+    "ndcg10": 0.5124,
+    "sd": 0.004546977017755872,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "NFCorpus: With n-grams",
+    "ndcg10": 0.34198,
+    "sd": 0.0009038805230781253,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "NFCorpus: With n-grams",
+    "ndcg10": 0.12424,
+    "sd": 0.0038772412873072566,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "FiQA: No n-grams",
+    "ndcg10": 0.42994,
+    "sd": 0.008114369969381483,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "FiQA: No n-grams",
+    "ndcg10": 0.20122,
+    "sd": 0.002014199592890434,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "FiQA: No n-grams",
+    "ndcg10": 0.22788,
+    "sd": 0.005073164692773145,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "FiQA: With n-grams",
+    "ndcg10": 0.36332,
+    "sd": 0.007119831458679357,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "FiQA: With n-grams",
+    "ndcg10": 0.16088,
+    "sd": 0.0031011288267339017,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "FiQA: With n-grams",
+    "ndcg10": 0.28124,
+    "sd": 0.007804357757048315,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "FiQA: No n-grams + C4 replay",
+    "ndcg10": 0.47298,
+    "sd": 0.003911137941827157,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "FiQA: No n-grams + C4 replay",
+    "ndcg10": 0.22448,
+    "sd": 0.00252329150119442,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "FiQA: No n-grams + C4 replay",
+    "ndcg10": 0.2236,
+    "sd": 0.0017102631376487122,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "FiQA: K=256k, n-gram lr ×0.3",
+    "ndcg10": 0.42882,
+    "sd": 0.00897925386655261,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "FiQA: K=256k, n-gram lr ×0.3",
+    "ndcg10": 0.18825999999999998,
+    "sd": 0.005443620119001688,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "FiQA: K=256k, n-gram lr ×0.3",
+    "ndcg10": 0.26636,
+    "sd": 0.0064933042436035645,
+    "seeds": 5
+   },
+   {
+    "eval": "SciFact",
+    "model": "FiQA: With n-grams + C4 replay",
+    "ndcg10": 0.41454,
+    "sd": 0.012263890084308492,
+    "seeds": 5
+   },
+   {
+    "eval": "NFCorpus",
+    "model": "FiQA: With n-grams + C4 replay",
+    "ndcg10": 0.20274,
+    "sd": 0.004673649537566975,
+    "seeds": 5
+   },
+   {
+    "eval": "FiQA",
+    "model": "FiQA: With n-grams + C4 replay",
+    "ndcg10": 0.28158,
+    "sd": 0.006515519933205637,
+    "seeds": 5
+   }
+  ],
+  "deltas": [
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2+3-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": -0.0074,
+    "lo": -0.0236,
+    "hi": 0.0089,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2+3-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": -0.0013,
+    "lo": -0.0228,
+    "hi": 0.0196,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2+3-grams, K=64k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0247,
+    "lo": 0.0089,
+    "hi": 0.0403,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": -0.0036,
+    "lo": -0.019,
+    "hi": 0.012,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=256k",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0081,
+    "lo": -0.0128,
+    "hi": 0.0287,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=256k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0261,
+    "lo": 0.0101,
+    "hi": 0.0424,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0087,
+    "lo": -0.0104,
+    "hi": 0.0279,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=64k, n-gram lr ×0.1",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0233,
+    "lo": 0.0129,
+    "hi": 0.0337,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "2-grams, K=64k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 436,
+    "delta": 0.0276,
+    "lo": 0.0126,
+    "hi": 0.0425,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2+3-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0036,
+    "lo": -0.0046,
+    "hi": 0.012,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2+3-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0028,
+    "lo": -0.0065,
+    "hi": 0.0123,
+    "excludes0": false
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2+3-grams, K=64k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0102,
+    "lo": 0.0034,
+    "hi": 0.017,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.009,
+    "lo": 0.0011,
+    "hi": 0.0172,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=256k",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0112,
+    "lo": 0.002,
+    "hi": 0.0207,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=256k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0133,
+    "lo": 0.0068,
+    "hi": 0.0199,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0094,
+    "lo": 0.0007,
+    "hi": 0.0181,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=64k, n-gram lr ×0.1",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0058,
+    "lo": 0.0023,
+    "hi": 0.0094,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=64k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 324,
+    "delta": 0.0123,
+    "lo": 0.0057,
+    "hi": 0.0191,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2+3-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0199,
+    "lo": 0.0064,
+    "hi": 0.0337,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2+3-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0294,
+    "lo": 0.0126,
+    "hi": 0.0466,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=1000k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0615,
+    "lo": 0.0422,
+    "hi": 0.081,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=16k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0233,
+    "lo": 0.0092,
+    "hi": 0.0377,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=256k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0538,
+    "lo": 0.0357,
+    "hi": 0.0721,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=256k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0498,
+    "lo": 0.0369,
+    "hi": 0.063,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=64k",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0407,
+    "lo": 0.024,
+    "hi": 0.058,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=64k, n-gram lr ×0.1",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0135,
+    "lo": 0.0063,
+    "hi": 0.0206,
+    "excludes0": true
+   },
+   {
+    "group": "dev grid",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=64k, n-gram lr ×0.3",
+    "metric": "ndcg@10",
+    "queries": 500,
+    "delta": 0.0374,
+    "lo": 0.0259,
+    "hi": 0.0495,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@1",
+    "queries": 300,
+    "delta": 0.058,
+    "lo": 0.0267,
+    "hi": 0.0907,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@5",
+    "queries": 300,
+    "delta": 0.0505,
+    "lo": 0.0311,
+    "hi": 0.0707,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": 0.0489,
+    "lo": 0.0317,
+    "hi": 0.0669,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@1",
+    "queries": 300,
+    "delta": 0.0563,
+    "lo": 0.0262,
+    "hi": 0.0877,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@5",
+    "queries": 300,
+    "delta": 0.0461,
+    "lo": 0.0217,
+    "hi": 0.0715,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@10",
+    "queries": 300,
+    "delta": 0.0425,
+    "lo": 0.0215,
+    "hi": 0.0646,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@1",
+    "queries": 300,
+    "delta": 0.058,
+    "lo": 0.0267,
+    "hi": 0.0907,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@5",
+    "queries": 300,
+    "delta": 0.0516,
+    "lo": 0.0307,
+    "hi": 0.0738,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@10",
+    "queries": 300,
+    "delta": 0.0502,
+    "lo": 0.0299,
+    "hi": 0.0716,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@1",
+    "queries": 300,
+    "delta": 0.058,
+    "lo": 0.0267,
+    "hi": 0.0907,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@5",
+    "queries": 300,
+    "delta": 0.0105,
+    "lo": 0.0047,
+    "hi": 0.0165,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@10",
+    "queries": 300,
+    "delta": 0.0052,
+    "lo": 0.0024,
+    "hi": 0.0082,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@1",
+    "queries": 323,
+    "delta": 0.0229,
+    "lo": 0.005,
+    "hi": 0.0418,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@5",
+    "queries": 323,
+    "delta": 0.0224,
+    "lo": 0.0142,
+    "hi": 0.0308,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": 0.0166,
+    "lo": 0.0106,
+    "hi": 0.0228,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@1",
+    "queries": 323,
+    "delta": 0.0033,
+    "lo": -0.0009,
+    "hi": 0.0075,
+    "excludes0": false
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@5",
+    "queries": 323,
+    "delta": 0.0104,
+    "lo": 0.0063,
+    "hi": 0.0151,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@10",
+    "queries": 323,
+    "delta": 0.0076,
+    "lo": 0.0039,
+    "hi": 0.0115,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@1",
+    "queries": 323,
+    "delta": 0.0235,
+    "lo": 0.0056,
+    "hi": 0.0427,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@5",
+    "queries": 323,
+    "delta": 0.0208,
+    "lo": 0.0076,
+    "hi": 0.0339,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@10",
+    "queries": 323,
+    "delta": 0.018,
+    "lo": 0.0056,
+    "hi": 0.0305,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@1",
+    "queries": 323,
+    "delta": 0.0235,
+    "lo": 0.0056,
+    "hi": 0.0427,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@5",
+    "queries": 323,
+    "delta": 0.0209,
+    "lo": 0.0131,
+    "hi": 0.0291,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@10",
+    "queries": 323,
+    "delta": 0.0121,
+    "lo": 0.0069,
+    "hi": 0.0175,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@1",
+    "queries": 648,
+    "delta": 0.063,
+    "lo": 0.0392,
+    "hi": 0.0864,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@5",
+    "queries": 648,
+    "delta": 0.0541,
+    "lo": 0.0366,
+    "hi": 0.0709,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.0534,
+    "lo": 0.0372,
+    "hi": 0.0691,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@1",
+    "queries": 648,
+    "delta": 0.0363,
+    "lo": 0.0204,
+    "hi": 0.0521,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@5",
+    "queries": 648,
+    "delta": 0.0519,
+    "lo": 0.0326,
+    "hi": 0.0709,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "recall@10",
+    "queries": 648,
+    "delta": 0.0506,
+    "lo": 0.031,
+    "hi": 0.0704,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@1",
+    "queries": 648,
+    "delta": 0.063,
+    "lo": 0.0392,
+    "hi": 0.0864,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@5",
+    "queries": 648,
+    "delta": 0.0662,
+    "lo": 0.0443,
+    "hi": 0.0872,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "mrr@10",
+    "queries": 648,
+    "delta": 0.065,
+    "lo": 0.0442,
+    "hi": 0.0852,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@1",
+    "queries": 648,
+    "delta": 0.063,
+    "lo": 0.0392,
+    "hi": 0.0864,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@5",
+    "queries": 648,
+    "delta": 0.0224,
+    "lo": 0.0146,
+    "hi": 0.0301,
+    "excludes0": true
+   },
+   {
+    "group": "test",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "precision@10",
+    "queries": 648,
+    "delta": 0.0124,
+    "lo": 0.008,
+    "hi": 0.0168,
+    "excludes0": true
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "SciFact",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": 0.0038,
+    "lo": -0.0052,
+    "hi": 0.0128,
+    "excludes0": false
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "SciFact",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.0035,
+    "lo": -0.0036,
+    "hi": 0.0108,
+    "excludes0": false
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "NFCorpus",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": 0.0018,
+    "lo": -0.0095,
+    "hi": 0.0132,
+    "excludes0": false
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "NFCorpus",
+    "eval": "FiQA",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.0053,
+    "lo": 0.0009,
+    "hi": 0.0099,
+    "excludes0": true
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0666,
+    "lo": -0.0942,
+    "hi": -0.0396,
+    "excludes0": true
+   },
+   {
+    "group": "forgetting",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "with n-grams − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.0403,
+    "lo": -0.0533,
+    "hi": -0.028,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "2-grams, K=256k, n-gram lr ×0.3 − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0011,
+    "lo": -0.0165,
+    "hi": 0.0143,
+    "excludes0": false
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=256k, n-gram lr ×0.3 − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.013,
+    "lo": -0.0193,
+    "hi": -0.0069,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=256k, n-gram lr ×0.3 − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.0385,
+    "lo": 0.0288,
+    "hi": 0.0482,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "2-grams, K=1000k + C4 replay − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0154,
+    "lo": -0.0432,
+    "hi": 0.0121,
+    "excludes0": false
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "2-grams, K=1000k + C4 replay, vs + C4 replay without n-grams",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0584,
+    "lo": -0.0883,
+    "hi": -0.029,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=1000k + C4 replay − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": 0.0015,
+    "lo": -0.011,
+    "hi": 0.0139,
+    "excludes0": false
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "2-grams, K=1000k + C4 replay, vs + C4 replay without n-grams",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.0217,
+    "lo": -0.0337,
+    "hi": -0.0103,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=1000k + C4 replay − no n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.0537,
+    "lo": 0.0384,
+    "hi": 0.0688,
+    "excludes0": true
+   },
+   {
+    "group": "variants",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "2-grams, K=1000k + C4 replay, vs + C4 replay without n-grams",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.058,
+    "lo": 0.042,
+    "hi": 0.0739,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "n-gram rows",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": 0.0606,
+    "lo": 0.0433,
+    "hi": 0.0786,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "SciFact",
+    "eval": "SciFact",
+    "label": "token rows",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0117,
+    "lo": -0.0277,
+    "hi": 0.0039,
+    "excludes0": false
+   },
+   {
+    "group": "parts",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "n-gram rows",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": 0.0233,
+    "lo": 0.0162,
+    "hi": 0.0307,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "NFCorpus",
+    "eval": "NFCorpus",
+    "label": "token rows",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.0067,
+    "lo": -0.0112,
+    "hi": -0.0023,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "n-gram rows",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0481,
+    "lo": -0.067,
+    "hi": -0.0299,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "SciFact",
+    "label": "token rows",
+    "metric": "ndcg@10",
+    "queries": 300,
+    "delta": -0.0185,
+    "lo": -0.0424,
+    "hi": 0.0051,
+    "excludes0": false
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "n-gram rows",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.0034,
+    "lo": -0.011,
+    "hi": 0.0042,
+    "excludes0": false
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "NFCorpus",
+    "label": "token rows",
+    "metric": "ndcg@10",
+    "queries": 323,
+    "delta": -0.0369,
+    "lo": -0.0497,
+    "hi": -0.0247,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "n-gram rows",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": 0.086,
+    "lo": 0.0702,
+    "hi": 0.1021,
+    "excludes0": true
+   },
+   {
+    "group": "parts",
+    "trained_on": "FiQA",
+    "eval": "FiQA",
+    "label": "token rows",
+    "metric": "ndcg@10",
+    "queries": 648,
+    "delta": -0.0326,
+    "lo": -0.0428,
+    "hi": -0.0228,
+    "excludes0": true
+   }
+  ],
+  "latency": [
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "No n-grams",
+    "samples": 25920,
+    "p50_us": 22.125,
+    "p99_us": 39.416,
+    "p99_9_us": 44.958
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "No n-grams, again (A/A)",
+    "samples": 25920,
+    "p50_us": 22.166,
+    "p99_us": 39.5,
+    "p99_9_us": 45.0
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "With n-grams",
+    "samples": 25920,
+    "p50_us": 24.625,
+    "p99_us": 44.667,
+    "p99_9_us": 51.5
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "With n-grams",
+    "samples": 25920,
+    "p50_us": 24.583,
+    "p99_us": 45.084,
+    "p99_9_us": 52.625
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "No n-grams, again (A/A)",
+    "samples": 25920,
+    "p50_us": 22.083,
+    "p99_us": 39.666,
+    "p99_9_us": 45.542
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "No n-grams",
+    "samples": 25920,
+    "p50_us": 22.125,
+    "p99_us": 39.791,
+    "p99_9_us": 45.25
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "No n-grams",
+    "samples": 20000,
+    "p50_us": 142.167,
+    "p99_us": 762.167,
+    "p99_9_us": 797.292
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "No n-grams, again (A/A)",
+    "samples": 20000,
+    "p50_us": 142.459,
+    "p99_us": 762.667,
+    "p99_9_us": 794.834
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "forward",
+    "model": "With n-grams",
+    "samples": 20000,
+    "p50_us": 175.125,
+    "p99_us": 902.459,
+    "p99_9_us": 928.75
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "With n-grams",
+    "samples": 20000,
+    "p50_us": 176.792,
+    "p99_us": 903.625,
+    "p99_9_us": 942.0
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "No n-grams, again (A/A)",
+    "samples": 20000,
+    "p50_us": 142.75,
+    "p99_us": 760.791,
+    "p99_9_us": 794.209
+   },
+   {
+    "texts": "FiQA corpus texts",
+    "order": "reverse",
+    "model": "No n-grams",
+    "samples": 20000,
+    "p50_us": 142.666,
+    "p99_us": 762.708,
+    "p99_9_us": 796.917
+   }
+  ],
+  "sizes": [
+   {
+    "eval": "SciFact",
+    "ngrams_kept": 64000,
+    "without_mb": 30.2,
+    "with_mb": 96.5
+   },
+   {
+    "eval": "NFCorpus",
+    "ngrams_kept": 93636,
+    "without_mb": 30.2,
+    "with_mb": 127.2
+   },
+   {
+    "eval": "FiQA",
+    "ngrams_kept": 466211,
+    "without_mb": 30.2,
+    "with_mb": 513.2
+   }
+  ],
+  "gates": [
+   {
+    "gate": "G2",
+    "what": "spiced vectors vs the Python reference (min cosine)",
+    "compared": 405,
+    "different": 0,
+    "worst": 0.9999999999833904
+   },
+   {
+    "gate": "G2 rows matter",
+    "what": "spiced vectors vs the same model without n-gram rows (min cosine)",
+    "compared": 405,
+    "different": 0,
+    "worst": 0.22214322152148377
+   },
+   {
+    "gate": "G1",
+    "what": "new build vs Part 2 build, text vectors (min cosine)",
+    "compared": 405,
+    "different": 0,
+    "worst": 0.9999999999999998
+   },
+   {
+    "gate": "G1",
+    "what": "SciFact dev: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 87200,
+    "different": 0,
+    "worst": 0.0
+   },
+   {
+    "gate": "G1",
+    "what": "SciFact test: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 60000,
+    "different": 0,
+    "worst": 0.0
+   },
+   {
+    "gate": "G3",
+    "what": "SciFact dev: zero n-gram rows vs none, seed 42, every metric@k of every query",
+    "compared": 17440,
+    "different": 0,
+    "worst": 0.0
+   },
+   {
+    "gate": "G1",
+    "what": "NFCorpus dev: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 64800,
+    "different": 419,
+    "worst": 1.0
+   },
+   {
+    "gate": "G1",
+    "what": "NFCorpus test: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 64600,
+    "different": 212,
+    "worst": 1.0
+   },
+   {
+    "gate": "G3",
+    "what": "NFCorpus dev: zero n-gram rows vs none, seed 42, every metric@k of every query",
+    "compared": 12960,
+    "different": 57,
+    "worst": 1.0
+   },
+   {
+    "gate": "G1",
+    "what": "FiQA dev: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 100000,
+    "different": 0,
+    "worst": 0.0
+   },
+   {
+    "gate": "G1",
+    "what": "FiQA test: old build vs new build, 5 seeds, every metric@k of every query",
+    "compared": 129600,
+    "different": 0,
+    "worst": 0.0
+   },
+   {
+    "gate": "G3",
+    "what": "FiQA dev: zero n-gram rows vs none, seed 42, every metric@k of every query",
+    "compared": 20000,
+    "different": 0,
+    "worst": 0.0
+   }
+  ]
+ }
+}

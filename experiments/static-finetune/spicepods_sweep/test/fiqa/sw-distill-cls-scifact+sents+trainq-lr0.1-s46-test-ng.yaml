@@ -1,0 +1,45 @@
+version: v1
+kind: Spicepod
+name: sw-distill-cls-scifact+sents+trainq-lr0.1-s46-test-ng
+
+metadata:
+  benchmark_dataset: fiqa_retrieval
+
+datasets:
+
+  # MTEB fiqa retrieval (https://huggingface.co/datasets/mteb/fiqa), pinned local copy.
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/fiqa/corpus.parquet
+    name: corpus
+    acceleration:
+      enabled: true
+      engine: arrow
+    columns:
+      - name: text
+        embeddings:
+          - from: embed
+            row_id:
+              - _id
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/fiqa/queries.parquet
+    name: queries
+    acceleration:
+      enabled: true
+      engine: arrow
+
+  - from: file:/Users/jeadie_compute/Github/tokenlearn/data/static-finetune/mteb/fiqa/qrels_test.parquet
+    name: relevance_data
+    acceleration:
+      enabled: true
+      engine: arrow
+
+views:
+  # Only judged queries: scoring ignores the rest, so sending them only costs time.
+  - name: test_queries
+    sql: SELECT _id, text FROM queries WHERE _id IN (SELECT DISTINCT "query-id" FROM relevance_data)
+
+embeddings:
+  - from: model2vec:/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/sweep/sw-distill-cls-scifact+sents+trainq-lr0.1-s46
+    name: embed
+    params:
+      embed_max_token_length: 512

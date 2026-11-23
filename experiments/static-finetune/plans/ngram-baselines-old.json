@@ -1,0 +1,186 @@
+{
+  "name": "ngram-baselines-old",
+  "train": [],
+  "search": [
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s42",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s43",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s44",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s45",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s46",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s42",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s43",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s44",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s45",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s46",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s42",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s44",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s45",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s46",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s42",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s44",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s45",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s46",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s43",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s44",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s45",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s46",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s42",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s43",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s44",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s45",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "old"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s46",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "old"
+    }
+  ]
+}

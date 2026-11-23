@@ -9,6 +9,8 @@ receivers:
 exporters:
   file:
     path: /out/metrics.jsonl
+    # Without this, the exporter empties the file each time the collector starts.
+    append: true
 service:
   pipelines:
     metrics:

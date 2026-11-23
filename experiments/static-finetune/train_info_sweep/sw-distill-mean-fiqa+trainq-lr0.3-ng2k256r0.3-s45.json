@@ -1,0 +1,160 @@
+{
+  "name": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k256r0.3-s45",
+  "base": "distill",
+  "base_source": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+  "scale": 1.0,
+  "target": "mean",
+  "dataset": "fiqa",
+  "extras": [
+    "trainq"
+  ],
+  "lr": 0.3,
+  "seed": 45,
+  "full_epochs": null,
+  "patience": 10,
+  "min_delta": 0.0,
+  "lr_threshold": 0.0001,
+  "max_epochs": 300,
+  "n_corpus": 57600,
+  "n_train": 57340,
+  "n_val": 5760,
+  "epochs_run": 19,
+  "best_epoch": 8,
+  "best_val_loss": 0.09912613034248352,
+  "wall_time_s": 1092.9,
+  "torch_threads": 2,
+  "libraries": {
+    "model2vec": "0.8.2",
+    "torch": "2.7.1",
+    "lightning": "2.6.1",
+    "sentence-transformers": "5.4.1",
+    "transformers": "5.3.0",
+    "tokenizers": "0.22.2",
+    "datasets": "4.8.4"
+  },
+  "curve": [
+    {
+      "epoch": 0,
+      "val_loss": 0.17722705006599426,
+      "train_loss": 0.1777171939611435,
+      "lr": 0.3
+    },
+    {
+      "epoch": 1,
+      "val_loss": 0.14716163277626038,
+      "train_loss": 0.14782926440238953,
+      "lr": 0.3
+    },
+    {
+      "epoch": 2,
+      "val_loss": 0.12804804742336273,
+      "train_loss": 0.12022953480482101,
+      "lr": 0.3
+    },
+    {
+      "epoch": 3,
+      "val_loss": 0.11586010456085205,
+      "train_loss": 0.10332222282886505,
+      "lr": 0.3
+    },
+    {
+      "epoch": 4,
+      "val_loss": 0.10822127759456635,
+      "train_loss": 0.08813174068927765,
+      "lr": 0.3
+    },
+    {
+      "epoch": 5,
+      "val_loss": 0.10344904661178589,
+      "train_loss": 0.07835984975099564,
+      "lr": 0.3
+    },
+    {
+      "epoch": 6,
+      "val_loss": 0.10088778287172318,
+      "train_loss": 0.06994406133890152,
+      "lr": 0.3
+    },
+    {
+      "epoch": 7,
+      "val_loss": 0.09933740645647049,
+      "train_loss": 0.06201140210032463,
+      "lr": 0.3
+    },
+    {
+      "epoch": 8,
+      "val_loss": 0.09912613034248352,
+      "train_loss": 0.05641083046793938,
+      "lr": 0.3
+    },
+    {
+      "epoch": 9,
+      "val_loss": 0.09987801313400269,
+      "train_loss": 0.051874443888664246,
+      "lr": 0.3
+    },
+    {
+      "epoch": 10,
+      "val_loss": 0.10030882060527802,
+      "train_loss": 0.04813431203365326,
+      "lr": 0.3
+    },
+    {
+      "epoch": 11,
+      "val_loss": 0.10057947039604187,
+      "train_loss": 0.04358576238155365,
+      "lr": 0.3
+    },
+    {
+      "epoch": 12,
+      "val_loss": 0.1018281802535057,
+      "train_loss": 0.04144703224301338,
+      "lr": 0.3
+    },
+    {
+      "epoch": 13,
+      "val_loss": 0.10153378546237946,
+      "train_loss": 0.03543969616293907,
+      "lr": 0.15
+    },
+    {
+      "epoch": 14,
+      "val_loss": 0.10208797454833984,
+      "train_loss": 0.034399691969156265,
+      "lr": 0.15
+    },
+    {
+      "epoch": 15,
+      "val_loss": 0.10282503813505173,
+      "train_loss": 0.033709414303302765,
+      "lr": 0.15
+    },
+    {
+      "epoch": 16,
+      "val_loss": 0.1039215624332428,
+      "train_loss": 0.033340901136398315,
+      "lr": 0.15
+    },
+    {
+      "epoch": 17,
+      "val_loss": 0.10400985926389694,
+      "train_loss": 0.03196166083216667,
+      "lr": 0.075
+    },
+    {
+      "epoch": 18,
+      "val_loss": 0.10433172434568405,
+      "train_loss": 0.03205833211541176,
+      "lr": 0.075
+    }
+  ],
+  "ngram_orders": [
+    2
+  ],
+  "ngram_k": 256000,
+  "ngram_min_count": 2,
+  "ngram_lr_scale": 0.3,
+  "n_ngrams": 256000,
+  "ngrams_per_train_text": 129.67,
+  "train_texts_with_ngram": 0.9997
+}

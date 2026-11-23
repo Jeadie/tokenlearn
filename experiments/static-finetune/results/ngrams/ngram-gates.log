@@ -1,0 +1,11 @@
+23:18:31 plan ngram-gates: 0 to train, 3 to search
+23:18:31 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-ngzero-dev-ng
+23:18:31 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-ngzero-dev-ng
+23:18:37 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-ngzero-dev-ng
+23:18:37 [search done] exit=0 ndcg@10=0.3202 sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-ngzero-dev-ng (nfcorpus)
+23:18:37 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-ngzero-dev-ng
+23:18:39 [done ] slot=0 exit=0 8s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-ngzero-dev-ng
+23:18:39 [search done] exit=0 ndcg@10=0.6685 sw-distill-cls-scifact+sents+trainq-lr0.1-s42-ngzero-dev-ng (scifact)
+23:18:59 [done ] slot=1 exit=0 22s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-ngzero-dev-ng
+23:18:59 [search done] exit=0 ndcg@10=0.2135 sw-distill-mean-fiqa+trainq-lr0.3-s42-ngzero-dev-ng (fiqa)
+23:18:59 plan ngram-gates finished, 0 failures

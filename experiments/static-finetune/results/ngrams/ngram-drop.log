@@ -1,0 +1,77 @@
+02:46:22 plan ngram-drop: 0 to train, 25 to search
+02:46:22 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s42-ngdrop-test-ng
+02:46:22 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s43-ngdrop-test-ng
+02:46:28 [done ] slot=0 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s42-ngdrop-test-ng
+02:46:28 [search done] exit=0 ndcg@10=0.6471 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s42-ngdrop-test-ng (scifact)
+02:46:28 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-ngdrop-test-ng
+02:46:29 [done ] slot=1 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s43-ngdrop-test-ng
+02:46:29 [search done] exit=0 ndcg@10=0.6314 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s43-ngdrop-test-ng (scifact)
+02:46:29 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-ngdrop-test-ng
+02:46:35 [done ] slot=1 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-ngdrop-test-ng
+02:46:35 [search done] exit=0 ndcg@10=0.6401 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-ngdrop-test-ng (scifact)
+02:46:35 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-ngdrop-test-ng
+02:46:35 [done ] slot=0 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-ngdrop-test-ng
+02:46:35 [search done] exit=0 ndcg@10=0.6533 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-ngdrop-test-ng (scifact)
+02:46:35 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s42-ngdrop-test-ng
+02:46:40 [done ] slot=1 exit=0 5s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-ngdrop-test-ng
+02:46:40 [search done] exit=0 ndcg@10=0.6366 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-ngdrop-test-ng (scifact)
+02:46:40 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s43-ngdrop-test-ng
+02:46:40 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s42-ngdrop-test-ng
+02:46:40 [search done] exit=0 ndcg@10=0.3184 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s42-ngdrop-test-ng (nfcorpus)
+02:46:40 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-ngdrop-test-ng
+02:46:45 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s43-ngdrop-test-ng
+02:46:45 [search done] exit=0 ndcg@10=0.3205 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s43-ngdrop-test-ng (nfcorpus)
+02:46:45 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-ngdrop-test-ng
+02:46:45 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-ngdrop-test-ng
+02:46:45 [search done] exit=0 ndcg@10=0.317 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-ngdrop-test-ng (nfcorpus)
+02:46:45 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-ngdrop-test-ng
+02:46:51 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-ngdrop-test-ng
+02:46:51 [search done] exit=0 ndcg@10=0.3168 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-ngdrop-test-ng (nfcorpus)
+02:46:51 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:46:51 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-ngdrop-test-ng
+02:46:51 [search done] exit=0 ndcg@10=0.3207 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-ngdrop-test-ng (nfcorpus)
+02:46:51 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:46:56 [done ] slot=1 exit=0 5s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:46:56 [search done] exit=0 ndcg@10=0.1596 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng (nfcorpus)
+02:46:56 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:46:57 [done ] slot=0 exit=0 6s scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:46:57 [search done] exit=0 ndcg@10=0.4149 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng (scifact)
+02:46:57 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:04 [done ] slot=0 exit=0 7s scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:04 [search done] exit=0 ndcg@10=0.4159 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng (scifact)
+02:47:04 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:11 [done ] slot=0 exit=0 6s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:11 [search done] exit=0 ndcg@10=0.165 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng (nfcorpus)
+02:47:11 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:24 [done ] slot=1 exit=0 28s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng
+02:47:24 [search done] exit=0 ndcg@10=0.199 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop-test-ng (fiqa)
+02:47:24 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:47:30 [done ] slot=1 exit=0 6s scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:47:30 [search done] exit=0 ndcg@10=0.3971 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng (scifact)
+02:47:30 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:47:36 [done ] slot=1 exit=0 6s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:47:36 [search done] exit=0 ndcg@10=0.1632 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng (nfcorpus)
+02:47:36 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:47:40 [done ] slot=0 exit=0 30s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng
+02:47:40 [search done] exit=0 ndcg@10=0.1931 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop-test-ng (fiqa)
+02:47:40 [start] slot=0 scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:47:47 [done ] slot=0 exit=0 6s scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:47:47 [search done] exit=0 ndcg@10=0.4097 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng (scifact)
+02:47:47 [start] slot=0 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:47:53 [done ] slot=0 exit=0 6s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:47:53 [search done] exit=0 ndcg@10=0.1649 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng (nfcorpus)
+02:47:53 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:48:06 [done ] slot=1 exit=0 30s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng
+02:48:06 [search done] exit=0 ndcg@10=0.1932 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop-test-ng (fiqa)
+02:48:06 [start] slot=1 scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:12 [done ] slot=1 exit=0 6s scifact/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:12 [search done] exit=0 ndcg@10=0.4195 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng (scifact)
+02:48:12 [start] slot=1 nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:19 [done ] slot=1 exit=0 6s nfcorpus/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:19 [search done] exit=0 ndcg@10=0.1689 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng (nfcorpus)
+02:48:19 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:24 [done ] slot=0 exit=0 31s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng
+02:48:24 [search done] exit=0 ndcg@10=0.202 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop-test-ng (fiqa)
+02:48:44 [done ] slot=1 exit=0 26s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng
+02:48:44 [search done] exit=0 ndcg@10=0.1891 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop-test-ng (fiqa)
+02:48:44 plan ngram-drop finished, 0 failures

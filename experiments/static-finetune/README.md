@@ -10,6 +10,9 @@ All runs use `testoperator run search`, which does an embedding-only vector sear
 > rate, and gets +0.05 to +0.16 test NDCG@10 over this part's fine-tuned models. It also shows that
 > the stronger fine-tune loses quality on a distant domain, and that replaying general text fixes
 > most of that loss.
+>
+> **Part 3:** [NGRAMS.md](NGRAMS.md) adds a trained vector for each frequent token 2-gram to Part
+> 2's models (+0.017 to +0.053 test NDCG@10). spiced reads them with a model2vec-rs change.
 
 ## Models
 

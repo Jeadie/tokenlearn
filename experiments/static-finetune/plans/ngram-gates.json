@@ -1,0 +1,24 @@
+{
+  "name": "ngram-gates",
+  "train": [],
+  "search": [
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-s42-ngzero",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-ngzero",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-s42-ngzero",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    }
+  ]
+}
