@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 from analyze import to_markdown
 from common import DATASETS, EXPERIMENT_DIR
+from make_spicepods import DATA_DIR
+from ngrams import NgramEncoder
 from plans import (
     FINAL_SEEDS,
     NGRAM_OLD_TAG,
@@ -25,12 +27,10 @@ from plans import (
     NGRAM_TAG,
     best_ngram_setting,
     best_setting,
-    ngram_grid,
+    ngram_settings,
     zero_name,
 )
 from sweep import SCORES_PATH, TrainSpec
-from make_spicepods import DATA_DIR
-from ngrams import NgramEncoder
 from sweep_final import Entry, check, compare, metric_table, read_runs
 from sweep_finetune import SWEEP_INFO_DIR, SWEEP_MODELS_DIR
 
@@ -71,7 +71,8 @@ def label(spec: TrainSpec) -> str:
     if not spec.ngram_k:
         return "no n-grams"
     orders = "+".join(map(str, spec.ngram_orders))
-    return f"{orders}-grams, K={spec.ngram_k // 1000}k"
+    scale = f", n-gram lr ×{spec.ngram_lr_scale:g}" if spec.ngram_lr_scale != 1 else ""
+    return f"{orders}-grams, K={spec.ngram_k // 1000}k{scale}"
 
 
 def info(spec: TrainSpec) -> dict:
@@ -154,7 +155,7 @@ def grid_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons:
                 "train min": round(np.mean([info(s)["wall_time_s"] for s in seeds(best, NGRAM_SEEDS)]) / 60, 1),
             }
         ]
-        for spec in [t for t in ngram_grid().train if t.dataset == dataset and t.seed == NGRAM_SEEDS[0]]:
+        for spec, _ in sorted(ngram_settings(dataset).values(), key=lambda item: label(item[0])):
             e = entry(label(spec), label(spec), seeds(spec, NGRAM_SEEDS), "dev")
             if not available(e, dataset, have):
                 continue
@@ -180,7 +181,8 @@ def grid_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons:
 def coverage_lines() -> list[str]:
     """How many listed n-grams dev queries and corpus texts contain (seed-42 model of each grid setting)."""
     rows = []
-    for spec in [t for t in ngram_grid().train if t.seed == NGRAM_SEEDS[0]]:
+    specs = [spec for dataset in DATASETS for spec, _ in ngram_settings(dataset).values() if spec.ngram_lr_scale == 1]
+    for spec in sorted(specs, key=lambda s: (s.dataset, label(s))):
         path = SWEEP_MODELS_DIR / spec.name
         if not path.exists():
             continue
@@ -262,7 +264,8 @@ def main() -> None:
     wanted = set()
     for dataset in DATASETS:
         best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
-        specs = seeds(best, FINAL_SEEDS) + [t for t in ngram_grid().train if t.dataset == dataset]
+        specs = seeds(best, FINAL_SEEDS)
+        specs += [s for spec, _ in ngram_settings(dataset).values() for s in seeds(spec, NGRAM_SEEDS)]
         if (spec := chosen(dataset)) is not None:
             specs += seeds(spec, FINAL_SEEDS)
         names = {s.name for s in specs} | {zero_name(dataset)}

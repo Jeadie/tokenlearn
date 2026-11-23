@@ -48,6 +48,8 @@ GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
 # The n-gram grid: (orders, K) on each dataset's final setting.
 NGRAM_SETTINGS = (((2,), 16_000), ((2,), 64_000), ((2, 3), 16_000), ((2, 3), 64_000))
 NGRAM_SEEDS = (42, 43)
+# Round 2: the n-gram rows' learning rate as a fraction of the token rows' (on each dataset's best round-1 setting).
+NGRAM_LR_SCALES = (0.1, 0.3)
 NGRAM_ORDER = ("fiqa", "scifact", "nfcorpus")
 NGRAM_TAG = "ng"
 # The same baselines searched again with the build of Parts 1 and 2, for gate G1 (the collector lost
@@ -235,18 +237,66 @@ def zero_name(dataset: str) -> str:
     return replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42).name + "-ngzero"
 
 
-def best_ngram_setting(dataset: str) -> TrainSpec:
-    """The n-gram setting of a dataset with the best mean dev NDCG@10 over seeds 42 and 43."""
-    scores: dict[str, list[float]] = {}
-    for record in map(json.loads, NGRAM_SCORES.read_text().splitlines()):
-        if record["eval_dataset"] == dataset and record["split"] == "dev" and "-ng" in record["model"]:
-            if record["metrics"] and not record["model"].endswith("-ngzero"):
-                scores.setdefault(setting_of(record["model"]), []).append(record["metrics"]["ndcg"]["10"])
-    setting = max(
-        (s for s, v in scores.items() if len(v) == len(NGRAM_SEEDS)), key=lambda s: sum(scores[s]) / len(scores[s])
+def spec_from_info(name: str) -> TrainSpec:
+    """The TrainSpec of a trained sweep model, from its training record."""
+    info = json.loads((SWEEP_INFO_DIR / f"{name}.json").read_text())
+    return TrainSpec(
+        base=info["base"],
+        scale=info["scale"],
+        dataset=info["dataset"],
+        lr=info["lr"],
+        seed=info["seed"],
+        target=info["target"],
+        extras=tuple(info["extras"]),
+        full_epochs=info["full_epochs"],
+        ngram_orders=tuple(info.get("ngram_orders", ())),
+        ngram_k=info.get("ngram_k", 0),
+        ngram_lr_scale=info.get("ngram_lr_scale", 1.0),
     )
-    spec = next(t for t in ngram_grid().train if setting_of(t.name) == setting)
-    return replace(spec, seed=42)
+
+
+def ngram_settings(dataset: str) -> dict[str, tuple[TrainSpec, list[float]]]:
+    """Each n-gram setting of a dataset with dev scores for seeds 42 and 43: its seed-42 spec and NDCG@10s."""
+    found: dict[str, dict[str, float]] = {}
+    for record in map(json.loads, NGRAM_SCORES.read_text().splitlines()):
+        model = record["model"]
+        if record["eval_dataset"] != dataset or record["split"] != "dev" or not record["metrics"]:
+            continue
+        if "-ng" not in model or model.endswith("-ngzero") or record["exit_code"] != 0:
+            continue
+        found.setdefault(setting_of(model), {})[model] = record["metrics"]["ndcg"]["10"]
+    out = {}
+    for setting, by_model in found.items():
+        spec = spec_from_info(next(iter(by_model)))
+        names = [replace(spec, seed=seed).name for seed in NGRAM_SEEDS]
+        if all(name in by_model for name in names):
+            out[setting] = (replace(spec, seed=42), [by_model[name] for name in names])
+    return out
+
+
+def best_ngram_setting(dataset: str, lr_scale: float | None = None) -> TrainSpec:
+    """The n-gram setting of a dataset with the best mean dev NDCG@10 over seeds 42 and 43.
+
+    With `lr_scale`, only the settings with that n-gram learning-rate scale.
+    """
+    settings = [
+        (spec, scores)
+        for spec, scores in ngram_settings(dataset).values()
+        if lr_scale is None or spec.ngram_lr_scale == lr_scale
+    ]
+    return max(settings, key=lambda item: sum(item[1]) / len(item[1]))[0]
+
+
+def ngram_grid2() -> Plan:
+    """Round 2: each dataset's best round-1 setting with a lower learning rate for the n-gram rows."""
+    train = [
+        replace(best_ngram_setting(dataset, lr_scale=1.0), seed=seed, ngram_lr_scale=scale)
+        for dataset in NGRAM_ORDER
+        for seed in NGRAM_SEEDS
+        for scale in NGRAM_LR_SCALES
+    ]
+    search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev", tag=NGRAM_TAG) for t in train]
+    return Plan(name="ngram-grid2", train=train, search=search)
 
 
 def ngram_confirm(datasets: tuple[str, ...]) -> Plan:
@@ -298,6 +348,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "ngram-baselines": ngram_baselines,
         "ngram-baselines-old": lambda: ngram_baselines(NGRAM_OLD_TAG),
         "ngram-grid": ngram_grid,
+        "ngram-grid2": ngram_grid2,
         "ngram-gates": ngram_gates,
         "ngram-confirm": lambda: ngram_confirm(datasets),
         "ngram-final": lambda: ngram_final(datasets),
