@@ -1,0 +1,347 @@
+{
+  "name": "ngram-confirm-scifact-nfcorpus-fiqa",
+  "train": [
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [
+        "sents",
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 64000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [
+        "sents",
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 64000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 44,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [
+        "sents",
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 64000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 45,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [
+        "sents",
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 64000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "distill",
+      "dataset": "scifact",
+      "lr": 0.1,
+      "seed": 46,
+      "scale": 1.0,
+      "target": "cls",
+      "extras": [
+        "sents",
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 64000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 42,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 256000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 43,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 256000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 44,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 256000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 45,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 256000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "potion",
+      "dataset": "nfcorpus",
+      "lr": 0.03,
+      "seed": 46,
+      "scale": 10.5,
+      "target": "mean",
+      "extras": [],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 256000,
+      "ngram_lr_scale": 0.3
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 42,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 1000000,
+      "ngram_lr_scale": 1.0
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 43,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 1000000,
+      "ngram_lr_scale": 1.0
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 44,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 1000000,
+      "ngram_lr_scale": 1.0
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 45,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 1000000,
+      "ngram_lr_scale": 1.0
+    },
+    {
+      "base": "distill",
+      "dataset": "fiqa",
+      "lr": 0.3,
+      "seed": 46,
+      "scale": 1.0,
+      "target": "mean",
+      "extras": [
+        "trainq"
+      ],
+      "full_epochs": null,
+      "ngram_orders": [
+        2
+      ],
+      "ngram_k": 1000000,
+      "ngram_lr_scale": 1.0
+    }
+  ],
+  "search": [
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s42",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s43",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46",
+      "eval_dataset": "scifact",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s42",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s43",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46",
+      "eval_dataset": "nfcorpus",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46",
+      "eval_dataset": "fiqa",
+      "split": "dev",
+      "tag": "ng"
+    }
+  ]
+}
