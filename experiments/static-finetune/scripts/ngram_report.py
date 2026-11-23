@@ -29,6 +29,7 @@ from plans import (
     best_setting,
     ngram_forgetting_variants,
     ngram_settings,
+    without_ngrams,
     zero_name,
 )
 from sweep import SCORES_PATH, TrainSpec
@@ -305,24 +306,34 @@ def candidate_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], compari
     picked = entry("chosen", "chosen", seeds(chosen_spec, FINAL_SEEDS), "test")
     rows = []
     for variant in ngram_forgetting_variants():
-        name = label(variant) + (" + C4 replay" if "c4" in variant.extras else "")
+        c4 = " + C4 replay" if "c4" in variant.extras else ""
+        name = label(variant) + c4
         candidate = entry("candidate", name, seeds(variant, FINAL_SEEDS), "test")
+        # The candidate's own setting without n-grams: Part 2's FiQA setting, plus C4 for the C4 candidate.
+        same = entry("same", f"no n-grams{c4}", seeds(without_ngrams(variant), FINAL_SEEDS), "test")
         for dataset in DATASETS:
-            if not all(available(e, dataset, have) for e in (base, picked, candidate)):
+            if not all(available(e, dataset, have) for e in (base, picked, candidate, same)):
                 continue
             result = compare(per_query, dataset, candidate, base, f"FiQA candidate: {name}")
             comparisons += result
             delta = next(r for r in result if r["metric"] == "ndcg@10")
-            rows.append(
-                {
-                    "variant": name,
-                    "eval": dataset,
-                    "no n-grams": f"{ndcg10(per_query, base, dataset).mean(axis=1).mean():.4f}",
-                    f"chosen ({label(chosen_spec)})": f"{ndcg10(per_query, picked, dataset).mean(axis=1).mean():.4f}",
-                    "candidate": f"{ndcg10(per_query, candidate, dataset).mean(axis=1).mean():.4f}",
-                    "candidate − no n-grams [95% CI]": f"{delta['mean Δ']} {delta['95% CI']}",
-                }
-            )
+            row = {
+                "variant": name,
+                "eval": dataset,
+                "no n-grams": f"{ndcg10(per_query, base, dataset).mean(axis=1).mean():.4f}",
+                f"chosen ({label(chosen_spec)})": f"{ndcg10(per_query, picked, dataset).mean(axis=1).mean():.4f}",
+                "candidate": f"{ndcg10(per_query, candidate, dataset).mean(axis=1).mean():.4f}",
+                "candidate − no n-grams [95% CI]": f"{delta['mean Δ']} {delta['95% CI']}",
+                "same setting, no n-grams": "",
+                "candidate − same setting [95% CI]": "",
+            }
+            if same.runs != base.runs:
+                result = compare(per_query, dataset, candidate, same, f"FiQA candidate: {name}, vs{c4} without n-grams")
+                comparisons += result
+                delta = next(r for r in result if r["metric"] == "ndcg@10")
+                row["same setting, no n-grams"] = f"{ndcg10(per_query, same, dataset).mean(axis=1).mean():.4f}"
+                row["candidate − same setting [95% CI]"] = f"{delta['mean Δ']} {delta['95% CI']}"
+            rows.append(row)
     if not rows:
         return []
     return [

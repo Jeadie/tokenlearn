@@ -279,7 +279,11 @@ def spec_from_info(name: str) -> TrainSpec:
 
 
 def ngram_settings(dataset: str) -> dict[str, tuple[TrainSpec, list[float]]]:
-    """Each n-gram setting of a dataset with dev scores for seeds 42 and 43: its seed-42 spec and NDCG@10s."""
+    """Each n-gram setting of a dataset with dev scores for seeds 42 and 43: its seed-42 spec and NDCG@10s.
+
+    Only the n-gram settings of the dataset's final setting (the dev grid), not the forgetting candidates.
+    """
+    base = replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42)
     found: dict[str, dict[str, float]] = {}
     for record in map(json.loads, NGRAM_SCORES.read_text().splitlines()):
         model = record["model"]
@@ -291,6 +295,8 @@ def ngram_settings(dataset: str) -> dict[str, tuple[TrainSpec, list[float]]]:
     out = {}
     for setting, by_model in found.items():
         spec = spec_from_info(next(iter(by_model)))
+        if replace(spec, seed=42, ngram_orders=(), ngram_k=0, ngram_lr_scale=1.0) != base:
+            continue
         names = [replace(spec, seed=seed).name for seed in NGRAM_SEEDS]
         if all(name in by_model for name in names):
             out[setting] = (replace(spec, seed=42), [by_model[name] for name in names])
@@ -370,6 +376,23 @@ def ngram_forgetting() -> Plan:
     return Plan(name="ngram-forgetting", train=train, search=search)
 
 
+def without_ngrams(spec: TrainSpec) -> TrainSpec:
+    """The same setting without n-grams."""
+    return replace(spec, ngram_orders=(), ngram_k=0, ngram_lr_scale=1.0)
+
+
+def ngram_forgetting_reference() -> Plan:
+    """Each forgetting candidate's setting without n-grams (Part 2 trained them), searched as the candidates are."""
+    base = best_setting("fiqa", min_seeds=len(FINAL_SEEDS))
+    settings = {without_ngrams(v) for v in ngram_forgetting_variants()} - {replace(base, seed=42)}
+    train = [replace(s, seed=seed) for s in sorted(settings, key=lambda s: s.name) for seed in FINAL_SEEDS]
+    search = [SearchSpec(model=t.name, eval_dataset="fiqa", split="dev", tag=NGRAM_TAG) for t in train]
+    search += [
+        SearchSpec(model=t.name, eval_dataset=other, split="test", tag=NGRAM_TAG) for t in train for other in DATASETS
+    ]
+    return Plan(name="ngram-forgetting-reference", train=train, search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -400,6 +423,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "ngram-confirm": lambda: ngram_confirm(datasets),
         "ngram-final": lambda: ngram_final(datasets),
         "ngram-forgetting": ngram_forgetting,
+        "ngram-forgetting-reference": ngram_forgetting_reference,
     }
 
 
