@@ -107,12 +107,49 @@ def without(ids: Sequence[int], drop: int | None) -> list[int]:
     return [i for i in ids if i != drop]
 
 
+class ScaledRows(torch.nn.Module):
+    """An embedding table whose rows from `start` on are multiplied by `scale`.
+
+    Adam moves each stored value by about the learning rate per step, so a row multiplied by
+    `scale` moves `scale` times as fast as the other rows: a learning rate of its own.
+    """
+
+    def __init__(self, inner: torch.nn.Embedding, start: int, scale: float) -> None:
+        """Wrap `inner`."""
+        super().__init__()
+        self.inner = inner
+        factor = torch.ones((inner.num_embeddings, 1))
+        factor[start:] = scale
+        self.register_buffer("factor", factor)
+
+    @property
+    def weight(self) -> torch.Tensor:
+        """The rows as stored (model2vec reads the device from this)."""
+        return self.inner.weight
+
+    def effective(self) -> torch.Tensor:
+        """The rows as the model uses them."""
+        return self.inner.weight * self.factor
+
+    def forward(self, ids: torch.Tensor) -> torch.Tensor:
+        """Look up rows, scaled."""
+        return self.inner(ids) * self.factor[ids]
+
+
 class NgramModelForSimilarity(StaticModelForSimilarity):
     """model2vec's trainable model, with n-gram ids appended to each text's token ids."""
 
     table: NgramTable
     n_tokens: int
     drop_id: int | None
+    # The n-gram rows' learning rate, as a fraction of the token rows' learning rate.
+    lr_scale: float = 1.0
+
+    def _initialize(self) -> None:
+        """model2vec's initialization; then scale the n-gram rows when they have a learning rate of their own."""
+        super()._initialize()
+        if self.lr_scale != 1.0:
+            self.embeddings = ScaledRows(self.embeddings, self.n_tokens, self.lr_scale)
 
     def _prepare_dataset(self, X: list[str], y: torch.Tensor, max_length: int = MAX_TOKENS) -> TextDataset:
         dataset = super()._prepare_dataset(X, y, max_length)
@@ -123,11 +160,12 @@ class NgramModelForSimilarity(StaticModelForSimilarity):
         return dataset
 
 
-def trainable(model: StaticModel, table: NgramTable, out_dim: int) -> NgramModelForSimilarity:
+def trainable(model: StaticModel, table: NgramTable, out_dim: int, lr_scale: float = 1.0) -> NgramModelForSimilarity:
     """A trainable model whose table holds the token rows, then one zero row per listed n-gram."""
     out = NgramModelForSimilarity.from_static_model(model=model, out_dim=out_dim, n_layers=0, freeze_weights=True)
     if model.weights is not None or model.token_mapping is not None:
         raise ValueError("n-grams need a model without token weights or a token mapping")
+    out.lr_scale = lr_scale
     out.table = table
     out.n_tokens = model.embedding.shape[0]
     out.drop_id = unk_id(model.tokenizer)
@@ -141,7 +179,8 @@ def trainable(model: StaticModel, table: NgramTable, out_dim: int) -> NgramModel
 def save_pretrained(model: NgramModelForSimilarity, path: Path) -> None:
     """Save like model2vec's to_static_model().save_pretrained(), with the n-gram tensors added."""
     with torch.no_grad():
-        vectors = model.embeddings.weight.cpu().numpy() * torch.sigmoid(model.w).cpu().numpy()[:, None]
+        rows = model.embeddings.effective() if isinstance(model.embeddings, ScaledRows) else model.embeddings.weight
+        vectors = rows.cpu().numpy() * torch.sigmoid(model.w).cpu().numpy()[:, None]
     static = StaticModel(vectors=vectors[: model.n_tokens], tokenizer=model.tokenizer, normalize=model.normalize)
     static.save_pretrained(str(path))
     weights = path / "model.safetensors"

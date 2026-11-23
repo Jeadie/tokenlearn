@@ -89,6 +89,7 @@ class SweepTrainInfo:
     ngram_orders: list[int] = field(default_factory=list)
     ngram_k: int = 0
     ngram_min_count: int = 0
+    ngram_lr_scale: float = 1.0
     # The number of n-grams kept (at most ngram_k), and how many of them a training text has.
     n_ngrams: int = 0
     ngrams_per_train_text: float | None = None
@@ -100,7 +101,7 @@ def model_name(args: Any) -> str:
     scale = f"-x{args.scale:g}" if args.scale != 1 else ""
     extras = "".join(f"+{e}" for e in sorted(args.extra))
     full = f"-full{args.full_epochs}" if args.full_epochs else ""
-    ngram = ngram_suffix(parse_orders(args.ngram_orders), args.ngram_k)
+    ngram = ngram_suffix(parse_orders(args.ngram_orders), args.ngram_k, args.ngram_lr_scale)
     return f"sw-{args.base}{scale}-{args.target}-{args.dataset}{extras}-lr{args.lr:g}{full}{ngram}-s{args.seed}"
 
 
@@ -109,9 +110,11 @@ def parse_orders(text: str) -> tuple[int, ...]:
     return tuple(sorted(int(order) for order in text.split(",") if order))
 
 
-def ngram_suffix(orders: tuple[int, ...], k: int) -> str:
-    """`-ng23k64` for 2- and 3-grams, K = 64,000; empty without n-grams."""
-    return f"-ng{''.join(map(str, orders))}k{k / 1000:g}" if k else ""
+def ngram_suffix(orders: tuple[int, ...], k: int, lr_scale: float = 1.0) -> str:
+    """`-ng23k64` for 2- and 3-grams, K = 64,000 (`-ng23k64r0.1` with an n-gram lr scale of 0.1); empty without."""
+    if not k:
+        return ""
+    return f"-ng{''.join(map(str, orders))}k{k / 1000:g}" + (f"r{lr_scale:g}" if lr_scale != 1 else "")
 
 
 class _CurveRecorder(Callback):
@@ -213,6 +216,7 @@ def main() -> None:
     parser.add_argument("--ngram-orders", default="", help="n-gram lengths, e.g. 2,3")
     parser.add_argument("--ngram-k", type=int, default=0, help="keep at most this many n-grams")
     parser.add_argument("--ngram-min-count", type=int, default=2)
+    parser.add_argument("--ngram-lr-scale", type=float, default=1.0, help="n-gram rows' lr / token rows' lr")
     args = parser.parse_args()
     orders = parse_orders(args.ngram_orders)
     if bool(orders) != bool(args.ngram_k):
@@ -257,7 +261,9 @@ def main() -> None:
         train_ids = [ngrams.without(ids, drop) for ids in ngrams.fit_token_ids(model.tokenizer, list(x_train))]
         table = ngrams.mine(train_ids, orders, args.ngram_k, args.ngram_min_count)
         found = [len(table.find(ids)) for ids in train_ids]
-        trainable: StaticModelForSimilarity = ngrams.trainable(model, table, out_dim=vectors.shape[1])
+        trainable: StaticModelForSimilarity = ngrams.trainable(
+            model, table, out_dim=vectors.shape[1], lr_scale=args.ngram_lr_scale
+        )
     else:
         trainable = StaticModelForSimilarity.from_static_model(
             model=model, out_dim=vectors.shape[1], n_layers=0, freeze_weights=True
@@ -312,6 +318,7 @@ def main() -> None:
         info.ngram_orders = list(orders)
         info.ngram_k = args.ngram_k
         info.ngram_min_count = args.ngram_min_count
+        info.ngram_lr_scale = args.ngram_lr_scale
         info.n_ngrams = len(table.ngrams)
         info.ngrams_per_train_text = round(float(np.mean(found)), 2)
         info.train_texts_with_ngram = round(float(np.mean([f > 0 for f in found])), 4)

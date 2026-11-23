@@ -49,6 +49,7 @@ class TrainSpec:
     full_epochs: int | None = None
     ngram_orders: tuple[int, ...] = ()
     ngram_k: int = 0
+    ngram_lr_scale: float = 1.0
 
     @property
     def name(self) -> str:
@@ -56,7 +57,7 @@ class TrainSpec:
         scale = f"-x{self.scale:g}" if self.scale != 1 else ""
         extras = "".join(f"+{e}" for e in sorted(self.extras))
         full = f"-full{self.full_epochs}" if self.full_epochs else ""
-        ngram = ngram_suffix(self.ngram_orders, self.ngram_k)
+        ngram = ngram_suffix(self.ngram_orders, self.ngram_k, self.ngram_lr_scale)
         return f"sw-{self.base}{scale}-{self.target}-{self.dataset}{extras}-lr{self.lr:g}{full}{ngram}-s{self.seed}"
 
     def data_ready(self) -> bool:
@@ -79,6 +80,7 @@ class TrainSpec:
             cmd += ["--full-epochs", str(self.full_epochs)]
         if self.ngram_k:
             cmd += ["--ngram-orders", ",".join(map(str, self.ngram_orders)), "--ngram-k", str(self.ngram_k)]
+            cmd += ["--ngram-lr-scale", str(self.ngram_lr_scale)]
         return cmd
 
 
