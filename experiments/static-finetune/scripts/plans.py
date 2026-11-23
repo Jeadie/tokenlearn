@@ -50,6 +50,9 @@ NGRAM_SETTINGS = (((2,), 16_000), ((2,), 64_000), ((2, 3), 16_000), ((2, 3), 64_
 NGRAM_SEEDS = (42, 43)
 NGRAM_ORDER = ("fiqa", "scifact", "nfcorpus")
 NGRAM_TAG = "ng"
+# The same baselines searched again with the build of Parts 1 and 2, for gate G1 (the collector lost
+# the per-query metrics of the first searches).
+NGRAM_OLD_TAG = "old"
 NGRAM_SCORES = EXPERIMENT_DIR / "results" / "ngrams" / "scores.jsonl"
 
 
@@ -194,17 +197,17 @@ def replay(datasets: tuple[str, ...]) -> Plan:
     return Plan(name=f"replay-{'-'.join(datasets)}", train=train, search=search)
 
 
-def ngram_baselines() -> Plan:
-    """Each dataset's final setting without n-grams (seeds 42-46), on dev and test, with the n-gram build."""
+def ngram_baselines(tag: str = NGRAM_TAG) -> Plan:
+    """Each dataset's final setting without n-grams (seeds 42-46), on dev and test, with the build `tag` names."""
     search = []
     for dataset in DATASETS:
         best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
         search += [
-            SearchSpec(model=replace(best, seed=seed).name, eval_dataset=dataset, split=split, tag=NGRAM_TAG)
+            SearchSpec(model=replace(best, seed=seed).name, eval_dataset=dataset, split=split, tag=tag)
             for split in ("dev", "test")
             for seed in FINAL_SEEDS
         ]
-    return Plan(name="ngram-baselines", train=[], search=search)
+    return Plan(name="ngram-baselines" + ("" if tag == NGRAM_TAG else f"-{tag}"), train=[], search=search)
 
 
 def ngram_grid() -> Plan:
@@ -293,6 +296,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "cross": lambda: cross(datasets),
         "replay": lambda: replay(datasets),
         "ngram-baselines": ngram_baselines,
+        "ngram-baselines-old": lambda: ngram_baselines(NGRAM_OLD_TAG),
         "ngram-grid": ngram_grid,
         "ngram-gates": ngram_gates,
         "ngram-confirm": lambda: ngram_confirm(datasets),
