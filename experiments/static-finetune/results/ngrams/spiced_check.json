@@ -1,0 +1,29 @@
+[
+  {
+    "name": "G2",
+    "spiced": "v2.5.0-unstable+models.metal (840011c44d)",
+    "reference": "NgramEncoder",
+    "texts": 405,
+    "min_cosine": 0.9999999999833904,
+    "median_cosine": 0.9999999999997331,
+    "max_abs_diff": 1.8179245348248774e-06
+  },
+  {
+    "name": "G2 rows matter",
+    "spiced": "v2.5.0-unstable+models.metal (840011c44d)",
+    "reference": "model2vec without n-grams",
+    "texts": 405,
+    "min_cosine": 0.22214322152148377,
+    "median_cosine": 0.7996833434355064,
+    "max_abs_diff": 0.2133207699602127
+  },
+  {
+    "name": "G1",
+    "spiced": "v2.5.0-unstable+models.metal (840011c44d)",
+    "reference": "v2.5.0-unstable+models.metal (60eaf209cd)",
+    "texts": 405,
+    "min_cosine": 0.9999999999999998,
+    "median_cosine": 1.0,
+    "max_abs_diff": 0.0
+  }
+]
