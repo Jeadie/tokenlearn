@@ -1,4 +1,5 @@
-//! Per-text encode latency of model2vec-rs models, the call that spiced makes for each text.
+//! Per-text encode latency of model2vec-rs models. `encode_single` runs `encode_with_args` with
+//! at most 512 tokens; spiced embeds texts with `encode_with_args`.
 //!
 //! Usage: ngram_latency <texts.json> <passes> <label=model_dir>...
 //!

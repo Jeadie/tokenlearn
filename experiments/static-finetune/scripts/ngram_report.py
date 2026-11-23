@@ -27,6 +27,7 @@ from plans import (
     NGRAM_TAG,
     best_ngram_setting,
     best_setting,
+    drop_name,
     ngram_forgetting_variants,
     ngram_settings,
     without_ngrams,
@@ -82,7 +83,7 @@ def available(e: Entry, dataset: str, have: set[tuple[str, str]]) -> bool:
     return all((r, dataset) in have for r in e.runs)
 
 
-def ndcg10(per_query: pd.DataFrame, e: Entry, dataset: str) -> pd.Series:
+def ndcg10(per_query: pd.DataFrame, e: Entry, dataset: str) -> pd.DataFrame:
     """Per-query NDCG@10 of each run of an entry, one column per run."""
     rows = per_query[(per_query["dataset"] == dataset) & per_query["run"].isin(e.runs)]
     rows = rows[(rows["metric"] == "ndcg") & (rows["k"] == 10)]
@@ -291,7 +292,19 @@ def final_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons
             if available(ng, other, have) and available(base, other, have):
                 result = compare(per_query, other, ng, base, f"trained on {dataset}")
                 comparisons += result
-                rows += [r for r in result if r["metric"] == "ndcg@10"]
+                delta = next(r for r in result if r["metric"] == "ndcg@10")
+                rows.append(
+                    {
+                        "trained on": dataset,
+                        "eval": other,
+                        "queries": delta["queries"],
+                        "no n-grams": f"{ndcg10(per_query, base, other).mean(axis=1).mean():.4f}",
+                        "with n-grams": f"{ndcg10(per_query, ng, other).mean(axis=1).mean():.4f}",
+                        "mean Δ": delta["mean Δ"],
+                        "95% CI": delta["95% CI"],
+                        "excludes 0": delta["excludes 0"],
+                    }
+                )
     if rows:
         lines += section + [to_markdown(pd.DataFrame(rows), index=False), ""]
     return lines
@@ -344,6 +357,52 @@ def candidate_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], compari
     ]
 
 
+def drop_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons: list[dict]) -> list[str]:
+    """The chosen n-gram models with and without their n-gram rows (make_ngram_drop.py), on test."""
+    rows = []
+    for dataset in DATASETS:
+        spec = chosen(dataset)
+        if spec is None:
+            continue
+        specs = seeds(spec, FINAL_SEEDS)
+        ng = entry("ngrams", "with n-grams", specs, "test")
+        drop_runs = tuple(f"{drop_name(s.name)}-test-{NGRAM_TAG}" for s in specs)
+        drop = Entry(key="drop", label="with n-grams, rows removed", runs=drop_runs)
+        base = entry(
+            "none", "no n-grams", seeds(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), FINAL_SEEDS), "test"
+        )
+        for other in DATASETS:
+            if not all(available(e, other, have) for e in (ng, drop, base)):
+                continue
+            rows_part = compare(per_query, other, ng, drop, f"trained on {dataset}: n-gram rows")
+            tokens_part = compare(per_query, other, drop, base, f"trained on {dataset}: token rows")
+            comparisons += rows_part + tokens_part
+            a = next(r for r in rows_part if r["metric"] == "ndcg@10")
+            b = next(r for r in tokens_part if r["metric"] == "ndcg@10")
+            rows.append(
+                {
+                    "trained on": dataset,
+                    "eval": other,
+                    "no n-grams": f"{ndcg10(per_query, base, other).mean(axis=1).mean():.4f}",
+                    "with n-grams": f"{ndcg10(per_query, ng, other).mean(axis=1).mean():.4f}",
+                    "with n-grams, rows removed": f"{ndcg10(per_query, drop, other).mean(axis=1).mean():.4f}",
+                    "token rows: removed − no n-grams [95% CI]": f"{b['mean Δ']} {b['95% CI']}",
+                    "n-gram rows: with − removed [95% CI]": f"{a['mean Δ']} {a['95% CI']}",
+                }
+            )
+    if not rows:
+        return []
+    return [
+        "## Where the change comes from: n-gram rows and token rows (test NDCG@10, 5 seeds)",
+        "",
+        "The token rows of an n-gram model train together with its n-gram rows. Removing the n-gram",
+        "rows from the saved model splits the change into a token-row part and an n-gram-row part.",
+        "",
+        to_markdown(pd.DataFrame(rows), index=False),
+        "",
+    ]
+
+
 def size_lines() -> list[str]:
     """Size of each dataset's model file without n-grams and with its chosen n-grams (seed 42)."""
     rows = []
@@ -378,8 +437,9 @@ def main() -> None:
         if (spec := chosen(dataset)) is not None:
             specs += seeds(spec, FINAL_SEEDS)
         if dataset == "fiqa" and spec is not None:
-            specs += [s for v in ngram_forgetting_variants() for s in seeds(v, FINAL_SEEDS)]
-        names = {s.name for s in specs} | {zero_name(dataset)}
+            variants = ngram_forgetting_variants()
+            specs += [s for v in variants + [without_ngrams(v) for v in variants] for s in seeds(v, FINAL_SEEDS)]
+        names = {s.name for s in specs} | {zero_name(dataset)} | {drop_name(s.name) for s in specs}
         wanted |= {(r, d) for r, d in have if any(r.startswith(n + "-") for n in names)}
     per_query, run_level = read_runs(wanted)
     check(per_query, run_level)
@@ -391,6 +451,7 @@ def main() -> None:
     lines += coverage_lines()
     lines += final_lines(per_query, have, comparisons)
     lines += candidate_lines(per_query, have, comparisons)
+    lines += drop_lines(per_query, have, comparisons)
     lines += size_lines()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "report.md").write_text("\n".join(lines))

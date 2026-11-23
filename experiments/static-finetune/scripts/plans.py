@@ -260,6 +260,25 @@ def zero_name(dataset: str) -> str:
     return replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42).name + "-ngzero"
 
 
+def drop_name(name: str) -> str:
+    """The copy of an n-gram model without its n-gram tensors (make_ngram_drop.py)."""
+    return f"{name}-ngdrop"
+
+
+def ngram_drop() -> Plan:
+    """The chosen n-gram models without their n-gram rows, on test: in domain, and FiQA's on every dataset."""
+    search = []
+    for dataset in DATASETS:
+        spec = best_ngram_setting(dataset)
+        evals = DATASETS if dataset == "fiqa" else (dataset,)
+        search += [
+            SearchSpec(model=drop_name(replace(spec, seed=seed).name), eval_dataset=e, split="test", tag=NGRAM_TAG)
+            for seed in FINAL_SEEDS
+            for e in evals
+        ]
+    return Plan(name="ngram-drop", train=[], search=search)
+
+
 def spec_from_info(name: str) -> TrainSpec:
     """The TrainSpec of a trained sweep model, from its training record."""
     info = json.loads((SWEEP_INFO_DIR / f"{name}.json").read_text())
@@ -289,7 +308,7 @@ def ngram_settings(dataset: str) -> dict[str, tuple[TrainSpec, list[float]]]:
         model = record["model"]
         if record["eval_dataset"] != dataset or record["split"] != "dev" or not record["metrics"]:
             continue
-        if "-ng" not in model or model.endswith("-ngzero") or record["exit_code"] != 0:
+        if "-ng" not in model or model.endswith(("-ngzero", "-ngdrop")) or record["exit_code"] != 0:
             continue
         found.setdefault(setting_of(model), {})[model] = record["metrics"]["ndcg"]["10"]
     out = {}
@@ -424,6 +443,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "ngram-final": lambda: ngram_final(datasets),
         "ngram-forgetting": ngram_forgetting,
         "ngram-forgetting-reference": ngram_forgetting_reference,
+        "ngram-drop": ngram_drop,
     }
 
 

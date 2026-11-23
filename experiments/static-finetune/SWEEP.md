@@ -1,5 +1,7 @@
 # Part 2: training sweep
 
+> **Part 3:** [NGRAMS.md](NGRAMS.md) adds token n-gram rows to the final models of this part.
+
 Part 1 ([README.md](README.md)) found that a corpus fine-tune gave potion-base-8M only +0.004 to
 +0.006 NDCG@10. This sweep asks why, and how much better the fine-tune can be. It changes, one
 at a time:

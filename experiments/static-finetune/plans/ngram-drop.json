@@ -1,0 +1,156 @@
+{
+  "name": "ngram-drop",
+  "train": [],
+  "search": [
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s42-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s43-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s42-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s43-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42-ngdrop",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s43-ngdrop",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-ngdrop",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-ngdrop",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop",
+      "eval_dataset": "scifact",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop",
+      "eval_dataset": "nfcorpus",
+      "split": "test",
+      "tag": "ng"
+    },
+    {
+      "model": "sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-ngdrop",
+      "eval_dataset": "fiqa",
+      "split": "test",
+      "tag": "ng"
+    }
+  ]
+}
