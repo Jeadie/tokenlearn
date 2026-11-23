@@ -1,0 +1,10 @@
+gate,eval,split,runs,values,different,max_abs_diff
+G1,scifact,dev,"old build vs new build, 5 seeds",87200,0,0.0
+G1,scifact,test,"old build vs new build, 5 seeds",60000,0,0.0
+G3,scifact,dev,"zero n-gram rows vs none, seed 42",17440,0,0.0
+G1,nfcorpus,dev,"old build vs new build, 5 seeds",64800,419,1.0
+G1,nfcorpus,test,"old build vs new build, 5 seeds",64600,212,1.0
+G3,nfcorpus,dev,"zero n-gram rows vs none, seed 42",12960,57,1.0
+G1,fiqa,dev,"old build vs new build, 5 seeds",100000,0,0.0
+G1,fiqa,test,"old build vs new build, 5 seeds",129600,0,0.0
+G3,fiqa,dev,"zero n-gram rows vs none, seed 42",20000,0,0.0

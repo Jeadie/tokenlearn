@@ -130,6 +130,8 @@ def gate_lines(per_query: pd.DataFrame, have: set[tuple[str, str]]) -> list[str]
     if rows:
         lines += ["Search results, every metric@k of every query (`different`: |Δ| > 1e-9):", ""]
         lines += [to_markdown(pd.DataFrame(rows), index=False), ""]
+        OUT_DIR.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows).to_csv(OUT_DIR / "gates.csv", index=False)
     return lines
 
 

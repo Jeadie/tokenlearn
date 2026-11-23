@@ -355,7 +355,8 @@ done
 $PY make_ngram_drop.py
 $PY sweep.py ../plans/ngram-drop.json $NEW
 
-$PY ngram_report.py                # results/ngrams/report.md, paired_comparisons.csv
+$PY ngram_report.py                # results/ngrams/report.md, paired_comparisons.csv, gates.csv
+$PY ngram_page_data.py             # results/ngrams/page_data.json, the report page's data
 $PY ngram_latency.py               # results/ngrams/latency.json; run on an idle machine
 ```
 
