@@ -144,11 +144,14 @@ class NgramModelForSimilarity(StaticModelForSimilarity):
     drop_id: int | None
     # The n-gram rows' learning rate, as a fraction of the token rows' learning rate.
     lr_scale: float = 1.0
+    # nn.Embedding, or ScaledRows around it (which has the parts model2vec uses: forward and `weight`).
+    embeddings: torch.nn.Module
 
     def _initialize(self) -> None:
         """model2vec's initialization; then scale the n-gram rows when they have a learning rate of their own."""
         super()._initialize()
         if self.lr_scale != 1.0:
+            assert isinstance(self.embeddings, torch.nn.Embedding)
             self.embeddings = ScaledRows(self.embeddings, self.n_tokens, self.lr_scale)
 
     def _prepare_dataset(self, X: list[str], y: torch.Tensor, max_length: int = MAX_TOKENS) -> TextDataset:
