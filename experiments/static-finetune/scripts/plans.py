@@ -52,6 +52,13 @@ NGRAM_SEEDS = (42, 43)
 # token rows', and a larger K (round 1 was better at its largest K on every dataset).
 NGRAM_LR_SCALES = (0.1, 0.3)
 NGRAM_BIG_K = 256_000
+# Round 3 combines what helped in round 2: SciFact and NFCorpus gained from a lower n-gram learning rate,
+# FiQA from a larger K at the full learning rate. (orders, K, n-gram lr scale) per dataset.
+NGRAM_ROUND3: dict[str, tuple[tuple[tuple[int, ...], int, float], ...]] = {
+    "fiqa": (((2,), 1_000_000, 1.0), ((2,), 256_000, 0.3)),
+    "scifact": (((2,), 256_000, 0.3), ((2, 3), 64_000, 0.3)),
+    "nfcorpus": (((2,), 256_000, 0.3), ((2, 3), 64_000, 0.3)),
+}
 NGRAM_ORDER = ("fiqa", "scifact", "nfcorpus")
 NGRAM_TAG = "ng"
 # The same baselines searched again with the build of Parts 1 and 2, for gate G1 (the collector lost
@@ -226,6 +233,20 @@ def ngram_grid() -> Plan:
     return Plan(name="ngram-grid", train=train, search=search)
 
 
+def ngram_grid3() -> Plan:
+    """Round 3: the combinations in NGRAM_ROUND3, on each dataset's final setting, seeds 42 and 43."""
+    train = []
+    for dataset in NGRAM_ORDER:
+        best = best_setting(dataset, min_seeds=len(FINAL_SEEDS))
+        train += [
+            replace(best, seed=seed, ngram_orders=orders, ngram_k=k, ngram_lr_scale=scale)
+            for seed in NGRAM_SEEDS
+            for orders, k, scale in NGRAM_ROUND3[dataset]
+        ]
+    search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev", tag=NGRAM_TAG) for t in train]
+    return Plan(name="ngram-grid3", train=train, search=search)
+
+
 def ngram_gates() -> Plan:
     """The zero-row n-gram models (make_ngram_zero.py) on dev: they must score as their base models."""
     search = [
@@ -351,6 +372,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "ngram-baselines-old": lambda: ngram_baselines(NGRAM_OLD_TAG),
         "ngram-grid": ngram_grid,
         "ngram-grid2": ngram_grid2,
+        "ngram-grid3": ngram_grid3,
         "ngram-gates": ngram_gates,
         "ngram-confirm": lambda: ngram_confirm(datasets),
         "ngram-final": lambda: ngram_final(datasets),
