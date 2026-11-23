@@ -1,0 +1,110 @@
+[
+  {
+    "texts": 648,
+    "order": "forward",
+    "model": "no-ngrams",
+    "p50_us": 22.125,
+    "p99_9_us": 44.958,
+    "p99_us": 39.416,
+    "samples": 25920
+  },
+  {
+    "texts": 648,
+    "order": "forward",
+    "model": "no-ngrams-again",
+    "p50_us": 22.166,
+    "p99_9_us": 45.0,
+    "p99_us": 39.5,
+    "samples": 25920
+  },
+  {
+    "texts": 648,
+    "order": "forward",
+    "model": "ngrams:sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42",
+    "p50_us": 24.625,
+    "p99_9_us": 51.5,
+    "p99_us": 44.667,
+    "samples": 25920
+  },
+  {
+    "texts": 648,
+    "order": "reverse",
+    "model": "ngrams:sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42",
+    "p50_us": 24.583,
+    "p99_9_us": 52.625,
+    "p99_us": 45.084,
+    "samples": 25920
+  },
+  {
+    "texts": 648,
+    "order": "reverse",
+    "model": "no-ngrams-again",
+    "p50_us": 22.083,
+    "p99_9_us": 45.542,
+    "p99_us": 39.666,
+    "samples": 25920
+  },
+  {
+    "texts": 648,
+    "order": "reverse",
+    "model": "no-ngrams",
+    "p50_us": 22.125,
+    "p99_9_us": 45.25,
+    "p99_us": 39.791,
+    "samples": 25920
+  },
+  {
+    "texts": 1000,
+    "order": "forward",
+    "model": "no-ngrams",
+    "p50_us": 142.167,
+    "p99_9_us": 797.292,
+    "p99_us": 762.167,
+    "samples": 20000
+  },
+  {
+    "texts": 1000,
+    "order": "forward",
+    "model": "no-ngrams-again",
+    "p50_us": 142.459,
+    "p99_9_us": 794.834,
+    "p99_us": 762.667,
+    "samples": 20000
+  },
+  {
+    "texts": 1000,
+    "order": "forward",
+    "model": "ngrams:sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42",
+    "p50_us": 175.125,
+    "p99_9_us": 928.75,
+    "p99_us": 902.459,
+    "samples": 20000
+  },
+  {
+    "texts": 1000,
+    "order": "reverse",
+    "model": "ngrams:sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s42",
+    "p50_us": 176.792,
+    "p99_9_us": 942.0,
+    "p99_us": 903.625,
+    "samples": 20000
+  },
+  {
+    "texts": 1000,
+    "order": "reverse",
+    "model": "no-ngrams-again",
+    "p50_us": 142.75,
+    "p99_9_us": 794.209,
+    "p99_us": 760.791,
+    "samples": 20000
+  },
+  {
+    "texts": 1000,
+    "order": "reverse",
+    "model": "no-ngrams",
+    "p50_us": 142.666,
+    "p99_9_us": 796.917,
+    "p99_us": 762.708,
+    "samples": 20000
+  }
+]

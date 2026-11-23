@@ -1,0 +1,47 @@
+00:39:03 plan ngram-confirm-scifact-nfcorpus-fiqa: 9 to train, 9 to search
+00:39:03 [train start] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44
+00:39:03 [train start] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45
+00:39:03 [train start] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46
+00:39:03 [train start] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44
+00:41:13 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-dev-ng
+00:41:14 [train done ] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44
+00:41:14 [train start] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45
+00:41:21 [done ] slot=0 exit=0 7s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-dev-ng
+00:41:21 [search done] exit=0 ndcg@10=0.3303 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s44-dev-ng (nfcorpus)
+00:43:55 [train done ] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44
+00:43:55 [train start] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46
+00:43:55 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-dev-ng
+00:43:55 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-dev-ng
+00:43:55 [train done ] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46
+00:43:55 [train start] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44
+00:44:04 [train done ] sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45
+00:44:04 [train start] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45
+00:44:05 [done ] slot=0 exit=0 9s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-dev-ng
+00:44:05 [search done] exit=0 ndcg@10=0.7035 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s46-dev-ng (scifact)
+00:44:05 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-dev-ng
+00:44:05 [done ] slot=1 exit=0 9s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-dev-ng
+00:44:05 [search done] exit=0 ndcg@10=0.6985 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s44-dev-ng (scifact)
+00:44:13 [done ] slot=0 exit=0 8s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-dev-ng
+00:44:13 [search done] exit=0 ndcg@10=0.7032 sw-distill-cls-scifact+sents+trainq-lr0.1-ng2k64r0.3-s45-dev-ng (scifact)
+00:44:49 [train done ] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45
+00:44:49 [train start] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46
+00:44:50 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-dev-ng
+00:44:56 [done ] slot=1 exit=0 6s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-dev-ng
+00:44:56 [search done] exit=0 ndcg@10=0.3451 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s45-dev-ng (nfcorpus)
+00:46:21 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-dev-ng
+00:46:22 [train done ] sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46
+00:46:29 [done ] slot=0 exit=0 8s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-dev-ng
+00:46:29 [search done] exit=0 ndcg@10=0.3333 sw-potion-x10.5-mean-nfcorpus-lr0.03-ng2k256r0.3-s46-dev-ng (nfcorpus)
+01:04:48 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44
+01:04:48 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-dev-ng
+01:05:18 [done ] slot=1 exit=0 30s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-dev-ng
+01:05:18 [search done] exit=0 ndcg@10=0.2853 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s44-dev-ng (fiqa)
+01:07:03 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-dev-ng
+01:07:04 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46
+01:07:06 [train done ] sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45
+01:07:06 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-dev-ng
+01:07:31 [done ] slot=0 exit=0 29s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-dev-ng
+01:07:31 [search done] exit=0 ndcg@10=0.2983 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s46-dev-ng (fiqa)
+01:07:35 [done ] slot=1 exit=0 30s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-dev-ng
+01:07:35 [search done] exit=0 ndcg@10=0.2892 sw-distill-mean-fiqa+trainq-lr0.3-ng2k1000-s45-dev-ng (fiqa)
+01:07:35 plan ngram-confirm-scifact-nfcorpus-fiqa finished, 0 failures

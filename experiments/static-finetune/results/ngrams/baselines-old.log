@@ -1,0 +1,92 @@
+23:05:01 plan ngram-baselines-old: 0 to train, 30 to search
+23:05:01 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-dev-old
+23:05:01 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s43-dev-old
+23:05:09 [done ] slot=1 exit=0 8s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s43-dev-old
+23:05:09 [search done] exit=0 ndcg@10=0.6726 sw-distill-cls-scifact+sents+trainq-lr0.1-s43-dev-old (scifact)
+23:05:09 [done ] slot=0 exit=0 8s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-dev-old
+23:05:09 [search done] exit=0 ndcg@10=0.6685 sw-distill-cls-scifact+sents+trainq-lr0.1-s42-dev-old (scifact)
+23:05:09 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s44-dev-old
+23:05:09 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s45-dev-old
+23:05:17 [done ] slot=0 exit=0 7s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s44-dev-old
+23:05:17 [search done] exit=0 ndcg@10=0.6675 sw-distill-cls-scifact+sents+trainq-lr0.1-s44-dev-old (scifact)
+23:05:17 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s46-dev-old
+23:05:17 [done ] slot=1 exit=0 7s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s45-dev-old
+23:05:17 [search done] exit=0 ndcg@10=0.6629 sw-distill-cls-scifact+sents+trainq-lr0.1-s45-dev-old (scifact)
+23:05:17 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-test-old
+23:05:23 [done ] slot=1 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s42-test-old
+23:05:23 [search done] exit=0 ndcg@10=0.6505 sw-distill-cls-scifact+sents+trainq-lr0.1-s42-test-old (scifact)
+23:05:23 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s43-test-old
+23:05:25 [done ] slot=0 exit=0 8s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s46-dev-old
+23:05:25 [search done] exit=0 ndcg@10=0.6653 sw-distill-cls-scifact+sents+trainq-lr0.1-s46-dev-old (scifact)
+23:05:25 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s44-test-old
+23:05:29 [done ] slot=1 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s43-test-old
+23:05:29 [search done] exit=0 ndcg@10=0.6459 sw-distill-cls-scifact+sents+trainq-lr0.1-s43-test-old (scifact)
+23:05:29 [start] slot=1 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s45-test-old
+23:05:31 [done ] slot=0 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s44-test-old
+23:05:31 [search done] exit=0 ndcg@10=0.6585 sw-distill-cls-scifact+sents+trainq-lr0.1-s44-test-old (scifact)
+23:05:31 [start] slot=0 scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s46-test-old
+23:05:35 [done ] slot=1 exit=0 6s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s45-test-old
+23:05:35 [search done] exit=0 ndcg@10=0.6532 sw-distill-cls-scifact+sents+trainq-lr0.1-s45-test-old (scifact)
+23:05:35 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-dev-old
+23:05:36 [done ] slot=0 exit=0 5s scifact/sw-distill-cls-scifact+sents+trainq-lr0.1-s46-test-old
+23:05:36 [search done] exit=0 ndcg@10=0.6588 sw-distill-cls-scifact+sents+trainq-lr0.1-s46-test-old (scifact)
+23:05:36 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-dev-old
+23:05:41 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-dev-old
+23:05:41 [search done] exit=0 ndcg@10=0.32 sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-dev-old (nfcorpus)
+23:05:41 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-dev-old
+23:05:42 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-dev-old
+23:05:42 [search done] exit=0 ndcg@10=0.3222 sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-dev-old (nfcorpus)
+23:05:42 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-dev-old
+23:05:46 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-dev-old
+23:05:46 [search done] exit=0 ndcg@10=0.3166 sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-dev-old (nfcorpus)
+23:05:46 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-dev-old
+23:05:47 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-dev-old
+23:05:47 [search done] exit=0 ndcg@10=0.3273 sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-dev-old (nfcorpus)
+23:05:47 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-test-old
+23:05:51 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-dev-old
+23:05:51 [search done] exit=0 ndcg@10=0.3186 sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-dev-old (nfcorpus)
+23:05:51 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-test-old
+23:05:52 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-test-old
+23:05:52 [search done] exit=0 ndcg@10=0.3272 sw-potion-x10.5-mean-nfcorpus-lr0.03-s42-test-old (nfcorpus)
+23:05:52 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-test-old
+23:05:56 [done ] slot=1 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-test-old
+23:05:56 [search done] exit=0 ndcg@10=0.3289 sw-potion-x10.5-mean-nfcorpus-lr0.03-s43-test-old (nfcorpus)
+23:05:56 [start] slot=1 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-test-old
+23:05:57 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-test-old
+23:05:57 [search done] exit=0 ndcg@10=0.3253 sw-potion-x10.5-mean-nfcorpus-lr0.03-s44-test-old (nfcorpus)
+23:05:57 [start] slot=0 nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-test-old
+23:06:03 [done ] slot=1 exit=0 6s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-test-old
+23:06:03 [search done] exit=0 ndcg@10=0.3227 sw-potion-x10.5-mean-nfcorpus-lr0.03-s45-test-old (nfcorpus)
+23:06:03 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-dev-old
+23:06:03 [done ] slot=0 exit=0 5s nfcorpus/sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-test-old
+23:06:03 [search done] exit=0 ndcg@10=0.3229 sw-potion-x10.5-mean-nfcorpus-lr0.03-s46-test-old (nfcorpus)
+23:06:03 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-dev-old
+23:06:35 [done ] slot=1 exit=0 33s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-dev-old
+23:06:35 [search done] exit=0 ndcg@10=0.2135 sw-distill-mean-fiqa+trainq-lr0.3-s42-dev-old (fiqa)
+23:06:35 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-dev-old
+23:06:35 [done ] slot=0 exit=0 32s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-dev-old
+23:06:35 [search done] exit=0 ndcg@10=0.2185 sw-distill-mean-fiqa+trainq-lr0.3-s43-dev-old (fiqa)
+23:06:35 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-dev-old
+23:07:08 [done ] slot=1 exit=0 32s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-dev-old
+23:07:08 [search done] exit=0 ndcg@10=0.217 sw-distill-mean-fiqa+trainq-lr0.3-s44-dev-old (fiqa)
+23:07:08 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-dev-old
+23:07:08 [done ] slot=0 exit=0 32s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-dev-old
+23:07:08 [search done] exit=0 ndcg@10=0.2189 sw-distill-mean-fiqa+trainq-lr0.3-s45-dev-old (fiqa)
+23:07:08 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-test-old
+23:07:40 [done ] slot=1 exit=0 33s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-dev-old
+23:07:40 [search done] exit=0 ndcg@10=0.2235 sw-distill-mean-fiqa+trainq-lr0.3-s46-dev-old (fiqa)
+23:07:40 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-test-old
+23:07:45 [done ] slot=0 exit=0 38s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s42-test-old
+23:07:45 [search done] exit=0 ndcg@10=0.2288 sw-distill-mean-fiqa+trainq-lr0.3-s42-test-old (fiqa)
+23:07:45 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-test-old
+23:08:16 [done ] slot=1 exit=0 36s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s43-test-old
+23:08:16 [search done] exit=0 ndcg@10=0.2295 sw-distill-mean-fiqa+trainq-lr0.3-s43-test-old (fiqa)
+23:08:16 [start] slot=1 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-test-old
+23:08:20 [done ] slot=0 exit=0 35s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s44-test-old
+23:08:20 [search done] exit=0 ndcg@10=0.2213 sw-distill-mean-fiqa+trainq-lr0.3-s44-test-old (fiqa)
+23:08:20 [start] slot=0 fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-test-old
+23:08:53 [done ] slot=1 exit=0 37s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s45-test-old
+23:08:53 [search done] exit=0 ndcg@10=0.2348 sw-distill-mean-fiqa+trainq-lr0.3-s45-test-old (fiqa)
+23:08:55 [done ] slot=0 exit=0 35s fiqa/sw-distill-mean-fiqa+trainq-lr0.3-s46-test-old
+23:08:55 [search done] exit=0 ndcg@10=0.225 sw-distill-mean-fiqa+trainq-lr0.3-s46-test-old (fiqa)
+23:08:55 plan ngram-baselines-old finished, 0 failures

@@ -1,0 +1,184 @@
+{
+  "name": "sw-distill-mean-fiqa+trainq-lr0.3-ng23k16-s43",
+  "base": "distill",
+  "base_source": "/Users/jeadie_compute/Github/tokenlearn/models/static-finetune/bge-base-en-v1.5-distill-256",
+  "scale": 1.0,
+  "target": "mean",
+  "dataset": "fiqa",
+  "extras": [
+    "trainq"
+  ],
+  "lr": 0.3,
+  "seed": 43,
+  "full_epochs": null,
+  "patience": 10,
+  "min_delta": 0.0,
+  "lr_threshold": 0.0001,
+  "max_epochs": 300,
+  "n_corpus": 57600,
+  "n_train": 57340,
+  "n_val": 5760,
+  "epochs_run": 23,
+  "best_epoch": 12,
+  "best_val_loss": 0.10202161967754364,
+  "wall_time_s": 681.5,
+  "torch_threads": 2,
+  "libraries": {
+    "model2vec": "0.8.2",
+    "torch": "2.7.1",
+    "lightning": "2.6.1",
+    "sentence-transformers": "5.4.1",
+    "transformers": "5.3.0",
+    "tokenizers": "0.22.2",
+    "datasets": "4.8.4"
+  },
+  "curve": [
+    {
+      "epoch": 0,
+      "val_loss": 0.19724690914154053,
+      "train_loss": 0.20398326218128204,
+      "lr": 0.3
+    },
+    {
+      "epoch": 1,
+      "val_loss": 0.16459257900714874,
+      "train_loss": 0.16447368264198303,
+      "lr": 0.3
+    },
+    {
+      "epoch": 2,
+      "val_loss": 0.14232222735881805,
+      "train_loss": 0.14202429354190826,
+      "lr": 0.3
+    },
+    {
+      "epoch": 3,
+      "val_loss": 0.1274314522743225,
+      "train_loss": 0.11929549276828766,
+      "lr": 0.3
+    },
+    {
+      "epoch": 4,
+      "val_loss": 0.11755134910345078,
+      "train_loss": 0.1072211042046547,
+      "lr": 0.3
+    },
+    {
+      "epoch": 5,
+      "val_loss": 0.11112736910581589,
+      "train_loss": 0.0968332290649414,
+      "lr": 0.3
+    },
+    {
+      "epoch": 6,
+      "val_loss": 0.107317253947258,
+      "train_loss": 0.08670207113027573,
+      "lr": 0.3
+    },
+    {
+      "epoch": 7,
+      "val_loss": 0.10467569530010223,
+      "train_loss": 0.0824197456240654,
+      "lr": 0.3
+    },
+    {
+      "epoch": 8,
+      "val_loss": 0.1035865992307663,
+      "train_loss": 0.07720496505498886,
+      "lr": 0.3
+    },
+    {
+      "epoch": 9,
+      "val_loss": 0.10251130908727646,
+      "train_loss": 0.07333417981863022,
+      "lr": 0.3
+    },
+    {
+      "epoch": 10,
+      "val_loss": 0.10231488198041916,
+      "train_loss": 0.07053676247596741,
+      "lr": 0.3
+    },
+    {
+      "epoch": 11,
+      "val_loss": 0.10218800604343414,
+      "train_loss": 0.06855727732181549,
+      "lr": 0.3
+    },
+    {
+      "epoch": 12,
+      "val_loss": 0.10202161967754364,
+      "train_loss": 0.06795701384544373,
+      "lr": 0.3
+    },
+    {
+      "epoch": 13,
+      "val_loss": 0.10269100219011307,
+      "train_loss": 0.06518997997045517,
+      "lr": 0.3
+    },
+    {
+      "epoch": 14,
+      "val_loss": 0.10299170017242432,
+      "train_loss": 0.06403107941150665,
+      "lr": 0.3
+    },
+    {
+      "epoch": 15,
+      "val_loss": 0.1034223884344101,
+      "train_loss": 0.06336569041013718,
+      "lr": 0.3
+    },
+    {
+      "epoch": 16,
+      "val_loss": 0.10373248159885406,
+      "train_loss": 0.06346574425697327,
+      "lr": 0.3
+    },
+    {
+      "epoch": 17,
+      "val_loss": 0.10388977080583572,
+      "train_loss": 0.05651121214032173,
+      "lr": 0.15
+    },
+    {
+      "epoch": 18,
+      "val_loss": 0.10426505655050278,
+      "train_loss": 0.055461667478084564,
+      "lr": 0.15
+    },
+    {
+      "epoch": 19,
+      "val_loss": 0.10526641458272934,
+      "train_loss": 0.05642009899020195,
+      "lr": 0.15
+    },
+    {
+      "epoch": 20,
+      "val_loss": 0.10549859702587128,
+      "train_loss": 0.05641169846057892,
+      "lr": 0.15
+    },
+    {
+      "epoch": 21,
+      "val_loss": 0.10594393312931061,
+      "train_loss": 0.05145857855677605,
+      "lr": 0.075
+    },
+    {
+      "epoch": 22,
+      "val_loss": 0.10669781267642975,
+      "train_loss": 0.05309852585196495,
+      "lr": 0.075
+    }
+  ],
+  "ngram_orders": [
+    2,
+    3
+  ],
+  "ngram_k": 16000,
+  "ngram_min_count": 2,
+  "n_ngrams": 16000,
+  "ngrams_per_train_text": 102.16,
+  "train_texts_with_ngram": 0.9953
+}
