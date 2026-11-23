@@ -48,8 +48,10 @@ GRID_ORDER = ("scifact", "fiqa", "nfcorpus")
 # The n-gram grid: (orders, K) on each dataset's final setting.
 NGRAM_SETTINGS = (((2,), 16_000), ((2,), 64_000), ((2, 3), 16_000), ((2, 3), 64_000))
 NGRAM_SEEDS = (42, 43)
-# Round 2: the n-gram rows' learning rate as a fraction of the token rows' (on each dataset's best round-1 setting).
+# Round 2, on each dataset's best round-1 setting: the n-gram rows' learning rate as a fraction of the
+# token rows', and a larger K (round 1 was better at its largest K on every dataset).
 NGRAM_LR_SCALES = (0.1, 0.3)
+NGRAM_BIG_K = 256_000
 NGRAM_ORDER = ("fiqa", "scifact", "nfcorpus")
 NGRAM_TAG = "ng"
 # The same baselines searched again with the build of Parts 1 and 2, for gate G1 (the collector lost
@@ -288,13 +290,13 @@ def best_ngram_setting(dataset: str, lr_scale: float | None = None) -> TrainSpec
 
 
 def ngram_grid2() -> Plan:
-    """Round 2: each dataset's best round-1 setting with a lower learning rate for the n-gram rows."""
-    train = [
-        replace(best_ngram_setting(dataset, lr_scale=1.0), seed=seed, ngram_lr_scale=scale)
-        for dataset in NGRAM_ORDER
-        for seed in NGRAM_SEEDS
-        for scale in NGRAM_LR_SCALES
-    ]
+    """Round 2: each dataset's best round-1 setting with a lower n-gram learning rate, or with a larger K."""
+    train = []
+    for dataset in NGRAM_ORDER:
+        best = best_ngram_setting(dataset, lr_scale=1.0)
+        variants = [replace(best, ngram_lr_scale=scale) for scale in NGRAM_LR_SCALES]
+        variants.append(replace(best, ngram_k=NGRAM_BIG_K))
+        train += [replace(v, seed=seed) for seed in NGRAM_SEEDS for v in variants]
     search = [SearchSpec(model=t.name, eval_dataset=t.dataset, split="dev", tag=NGRAM_TAG) for t in train]
     return Plan(name="ngram-grid2", train=train, search=search)
 
