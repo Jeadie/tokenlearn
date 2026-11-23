@@ -347,6 +347,29 @@ def ngram_final(datasets: tuple[str, ...]) -> Plan:
     return Plan(name=f"ngram-final-{'-'.join(datasets)}", train=train, search=search)
 
 
+def ngram_forgetting_variants() -> list[TrainSpec]:
+    """Two FiQA settings (seed 42) that may lose less on SciFact and NFCorpus than FiQA's chosen n-gram model.
+
+    A lower n-gram learning rate, as SciFact's and NFCorpus's chosen settings have (2-grams, K=256k, lr ×0.3);
+    and the chosen setting with Part 2's C4 replay text.
+    """
+    chosen = best_ngram_setting("fiqa")
+    return [
+        replace(chosen, ngram_k=256_000, ngram_lr_scale=0.3),
+        replace(chosen, extras=tuple(sorted((*chosen.extras, "c4")))),
+    ]
+
+
+def ngram_forgetting() -> Plan:
+    """The forgetting candidates with seeds 42-46: FiQA dev, and the test queries of every dataset."""
+    train = [replace(v, seed=seed) for v in ngram_forgetting_variants() for seed in FINAL_SEEDS]
+    search = [SearchSpec(model=t.name, eval_dataset="fiqa", split="dev", tag=NGRAM_TAG) for t in train]
+    search += [
+        SearchSpec(model=t.name, eval_dataset=other, split="test", tag=NGRAM_TAG) for t in train for other in DATASETS
+    ]
+    return Plan(name="ngram-forgetting", train=train, search=search)
+
+
 def write(plan: Plan) -> None:
     """Write one plan file."""
     PLANS_DIR.mkdir(exist_ok=True)
@@ -376,6 +399,7 @@ def plan_builders(datasets: tuple[str, ...], top: int) -> dict[str, Callable[[],
         "ngram-gates": ngram_gates,
         "ngram-confirm": lambda: ngram_confirm(datasets),
         "ngram-final": lambda: ngram_final(datasets),
+        "ngram-forgetting": ngram_forgetting,
     }
 
 

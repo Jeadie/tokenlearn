@@ -27,6 +27,7 @@ from plans import (
     NGRAM_TAG,
     best_ngram_setting,
     best_setting,
+    ngram_forgetting_variants,
     ngram_settings,
     zero_name,
 )
@@ -295,6 +296,66 @@ def final_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons
     return lines
 
 
+def candidate_lines(per_query: pd.DataFrame, have: set[tuple[str, str]], comparisons: list[dict]) -> list[str]:
+    """FiQA's forgetting candidates (5 seeds) on each dataset's test queries, next to the chosen n-gram model."""
+    chosen_spec = chosen("fiqa")
+    if chosen_spec is None:
+        return []
+    base = entry("none", "no n-grams", seeds(best_setting("fiqa", min_seeds=len(FINAL_SEEDS)), FINAL_SEEDS), "test")
+    picked = entry("chosen", "chosen", seeds(chosen_spec, FINAL_SEEDS), "test")
+    rows = []
+    for variant in ngram_forgetting_variants():
+        name = label(variant) + (" + C4 replay" if "c4" in variant.extras else "")
+        candidate = entry("candidate", name, seeds(variant, FINAL_SEEDS), "test")
+        for dataset in DATASETS:
+            if not all(available(e, dataset, have) for e in (base, picked, candidate)):
+                continue
+            result = compare(per_query, dataset, candidate, base, f"FiQA candidate: {name}")
+            comparisons += result
+            delta = next(r for r in result if r["metric"] == "ndcg@10")
+            rows.append(
+                {
+                    "variant": name,
+                    "eval": dataset,
+                    "no n-grams": f"{ndcg10(per_query, base, dataset).mean(axis=1).mean():.4f}",
+                    f"chosen ({label(chosen_spec)})": f"{ndcg10(per_query, picked, dataset).mean(axis=1).mean():.4f}",
+                    "candidate": f"{ndcg10(per_query, candidate, dataset).mean(axis=1).mean():.4f}",
+                    "candidate − no n-grams [95% CI]": f"{delta['mean Δ']} {delta['95% CI']}",
+                }
+            )
+    if not rows:
+        return []
+    return [
+        "## Forgetting: FiQA candidates (test NDCG@10, 5 seeds)",
+        "",
+        to_markdown(pd.DataFrame(rows), index=False),
+        "",
+    ]
+
+
+def size_lines() -> list[str]:
+    """Size of each dataset's model file without n-grams and with its chosen n-grams (seed 42)."""
+    rows = []
+    for dataset in DATASETS:
+        spec = chosen(dataset)
+        if spec is None:
+            continue
+        base = SWEEP_MODELS_DIR / replace(best_setting(dataset, min_seeds=len(FINAL_SEEDS)), seed=42).name
+        ngram = SWEEP_MODELS_DIR / replace(spec, seed=42).name
+        rows.append(
+            {
+                "eval": dataset,
+                "setting": label(spec),
+                "n-grams kept": info(replace(spec, seed=42))["n_ngrams"],
+                "model.safetensors without (MB)": round((base / "model.safetensors").stat().st_size / 1e6, 1),
+                "with (MB)": round((ngram / "model.safetensors").stat().st_size / 1e6, 1),
+            }
+        )
+    if not rows:
+        return []
+    return ["## Model size (float32, seed 42)", "", to_markdown(pd.DataFrame(rows), index=False), ""]
+
+
 def main() -> None:
     """Write the report."""
     have = passed_runs()
@@ -305,6 +366,8 @@ def main() -> None:
         specs += [s for spec, _ in ngram_settings(dataset).values() for s in seeds(spec, NGRAM_SEEDS)]
         if (spec := chosen(dataset)) is not None:
             specs += seeds(spec, FINAL_SEEDS)
+        if dataset == "fiqa" and spec is not None:
+            specs += [s for v in ngram_forgetting_variants() for s in seeds(v, FINAL_SEEDS)]
         names = {s.name for s in specs} | {zero_name(dataset)}
         wanted |= {(r, d) for r, d in have if any(r.startswith(n + "-") for n in names)}
     per_query, run_level = read_runs(wanted)
@@ -316,6 +379,8 @@ def main() -> None:
     lines += grid_lines(per_query, have, comparisons)
     lines += coverage_lines()
     lines += final_lines(per_query, have, comparisons)
+    lines += candidate_lines(per_query, have, comparisons)
+    lines += size_lines()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "report.md").write_text("\n".join(lines))
     pd.DataFrame(comparisons).to_csv(OUT_DIR / "paired_comparisons.csv", index=False)
